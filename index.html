@@ -76,16 +76,16 @@
   #xTip{font-size:clamp(12px,3.2vw,15px);color:#8ea0c8;text-align:center;margin-top:10px;max-width:420px;}
 
   /* ---------- overlay ---------- */
-  #overlay{position:fixed;inset:0;display:none;align-items:center;justify-content:center;
-    background:rgba(6,10,26,.8);z-index:20;}
-  #card2{background:#fff;color:#1e293b;border-radius:24px;padding:24px;text-align:center;max-width:86%;
-    box-shadow:0 12px 40px rgba(0,0,0,.5);}
-  #card2 h1{margin:4px 0 6px;font-size:clamp(22px,6vw,36px);}
-  #card2 p{margin:6px 0 16px;font-size:clamp(14px,3.8vw,19px);color:#475569;}
-  #oEmoji{font-size:clamp(44px,13vw,72px);}
-  #card2 button{background:#4ade80;color:#06331a;border:none;border-radius:14px;padding:12px 20px;
-    font-weight:bold;font-size:clamp(15px,4vw,20px);cursor:pointer;margin:4px;box-shadow:0 4px 0 rgba(0,0,0,.25);}
-  #card2 button:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(0,0,0,.25);}
+  #overlay{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);display:none;flex-direction:column;
+    align-items:center;z-index:20;max-width:90vw;width:min(450px,90vw);}
+  #card2{background:#fff;color:#1e293b;border-radius:20px;padding:16px 18px;text-align:center;width:100%;
+    box-shadow:0 8px 28px rgba(0,0,0,.5);}
+  #card2 h1{margin:2px 0 3px;font-size:clamp(18px,5vw,26px);}
+  #card2 p{margin:4px 0 10px;font-size:clamp(12px,3.4vw,16px);color:#475569;line-height:1.3;}
+  #oEmoji{font-size:clamp(32px,10vw,50px);}
+  #card2 button{background:#4ade80;color:#06331a;border:none;border-radius:12px;padding:9px 15px;
+    font-weight:bold;font-size:clamp(13px,3.6vw,18px);cursor:pointer;margin:3px;box-shadow:0 3px 0 rgba(0,0,0,.2);}
+  #card2 button:active{transform:translateY(1px);box-shadow:0 2px 0 rgba(0,0,0,.2);}
   .float{animation:bob 1.2s ease-in-out infinite;}
   @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
 </style>
@@ -205,6 +205,9 @@ function slide(f1,f2,dur){
   }catch(e){}
 }
 function chord(notes){ notes.forEach((f,i)=>setTimeout(()=>beep(f,0.28,0.2), i*110)); }
+let curClip=null;
+function playClip(file){ if(muted) return; try{ if(curClip){curClip.pause();} curClip=new Audio(file); curClip.volume=1; curClip.play().catch(()=>{}); }catch(e){} }
+const CLIP_WIN='yesyoudidit.wav', CLIP_TRY='never-give-up.wav';
 function say(text){
   if(muted || !('speechSynthesis' in window)) return;
   try{ window.speechSynthesis.cancel();
@@ -215,7 +218,7 @@ function say(text){
 function setMuteIcons(){ document.querySelectorAll('[data-mute]').forEach(b=>b.textContent=muted?'🔇':'🔊'); }
 document.querySelectorAll('[data-mute]').forEach(b=>b.onclick=function(){
   muted=!muted; setMuteIcons();
-  if(muted && 'speechSynthesis' in window){ try{window.speechSynthesis.cancel();}catch(e){} }
+  if(muted){ try{ if(curClip) curClip.pause(); }catch(e){} if('speechSynthesis' in window){ try{window.speechSynthesis.cancel();}catch(e){} } }
   else { primeAudio(); beep(660,0.1); }
 });
 
@@ -327,7 +330,7 @@ const Physics = (function(){
   function pWin(){
     if(levelIndex>store.pMax) store.pMax=levelIndex;
     saveStore();
-    chord([523,659,784]); say(levelIndex>=LEVELS.length-1?'You finished all ten stages! Amazing, Yuvaan!':'You did it! Great job!');
+    playClip(CLIP_WIN);
     const last=levelIndex>=LEVELS.length-1;
     renderDots();
     showOverlay(last?'🏆':'🎉', last?'ALL 10 STAGES DONE!':'Stage Cleared!',
@@ -336,7 +339,7 @@ const Physics = (function(){
           :[{t:'Next Stage ▶',fn:()=>loadStage(levelIndex+1)},{t:'Replay',fn:()=>{strokes=[];resetBall();hideOverlay();}}]);
   }
   function pMiss(){
-    beep(180,0.35,0.22); say('So close! Never quit. Try again!');
+    playClip(CLIP_TRY);
     showOverlay('🙂','Try Again!','Never quit — fix your slide a little and go again. 💪',
       [{t:'Keep My Slide ✏️',fn:()=>{resetBall();hideOverlay();}},{t:'Start Fresh 🧽',fn:()=>{strokes=[];resetBall();hideOverlay();}}]);
   }
@@ -460,14 +463,14 @@ const XO = (function(){
   function finish(r){ over=true; busy=false; attempts[level]=(attempts[level]||0)+1; updateHead(); render(r.line);
     if(r.who===HUMAN) win(); else if(r.who===AI) lose(); else draw(); }
   function win(){ const last=level>=20; if(level>=store.xoUnlocked && level<20) store.xoUnlocked=level+1; saveStore();
-    chord(last?[523,659,784,1047]:[523,659,784]); say(last?'You beat all twenty levels! Amazing, Yuvaan!':'You win! Great job, Yuvaan!');
+    playClip(CLIP_WIN);
     showOverlay(last?'🏆':'🎉', last?'YOU BEAT ALL 20!':'You Win!',
       last?'You cleared every level — even SUPER HARD! So proud of you, Yuvaan!':WINM[Math.floor(Math.random()*WINM.length)],
       last?[{t:'Play Again 🔄',fn:()=>{level=1;start();}},{t:'🏠 Menu',fn:goMenu}]
           :[{t:'Next Level ▶',fn:()=>{level++;start(true);}},{t:'Replay',fn:()=>start()}]); }
-  function lose(){ beep(180,0.4,0.25); say('Oh no! Never give up. Try again!');
+  function lose(){ playClip(CLIP_TRY);
     showOverlay('🙂','Try Again!',LOSEM[Math.floor(Math.random()*LOSEM.length)],[{t:'Try Again 💪',fn:()=>start()}]); }
-  function draw(){ beep(300,0.3,0.2); say("It's a tie! So close. Try again!");
+  function draw(){ playClip(CLIP_TRY);
     showOverlay('🤝','So Close!',DRAWM[Math.floor(Math.random()*DRAWM.length)],[{t:'Try Again 🎯',fn:()=>start()}]); }
 
   document.getElementById('xNew').onclick=()=>start();
