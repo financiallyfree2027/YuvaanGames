@@ -146,18 +146,18 @@ var DEFSKIP={skip2:[2,94],skip5:[5,85],skip10:[10,70]};
 var THIRDS={after:1/3,before:1/3,between:1/3};
 var SIX={after:1/6,before:1/6,between:1/6,skip2:1/6,skip5:1/6,skip10:1/6};
 var LEVELS=[
- {n:8, strip:true, min:1, max:9,  types:{after:1},                    g:[['after',1],['after',2]]},
- {n:8, strip:true, min:1, max:14, types:{after:1},                    g:[['after',9],['after',10]]},
- {n:8, strip:true, min:2, max:10, types:{before:1},                   g:[['before',2],['before',3]]},
- {n:8, strip:true, min:2, max:15, types:{before:1},                   g:[['before',10],['before',11]]},
- {n:8, strip:true, min:1, max:20, types:{after:.5,before:.5},         g:[['after',20],['before',20]]},
- {n:8, strip:true, min:1, max:20, types:{between:.6,after:.2,before:.2}, g:[['between',6],['between',1]]},
- {n:8, strip:false,min:1, max:20, types:{after:.34,before:.33,between:.33}, g:[]},
- {n:8, strip:false,min:1, max:30, types:THIRDS, g:[['after',19],['before',30]]},
- {n:8, strip:false,min:1, max:30, types:THIRDS, g:[['after',29],['between',19]]},
- {n:10,strip:false,min:1, max:50, types:THIRDS, g:[['after',39],['before',40]]},
- {n:10,strip:false,min:1, max:50, types:THIRDS, g:[['after',49],['between',29]]},
- {n:10,strip:false,min:20,max:70, types:THIRDS, g:[['before',60],['after',59]]},
+ {n:8, strip:false,min:1, max:10, types:{after:.5,before:.5},         g:[]},
+ {n:8, strip:false,min:1, max:15, types:{after:.5,before:.5},         g:[['after',9],['before',10]]},
+ {n:8, strip:false,min:1, max:20, types:{after:.35,before:.35,between:.3}, g:[['between',6]]},
+ {n:8, strip:false,min:1, max:25, types:THIRDS, g:[['before',20]]},
+ {n:8, strip:false,min:1, max:30, types:THIRDS, g:[['after',20],['before',20]]},
+ {n:8, strip:false,min:1, max:40, types:THIRDS, g:[['between',19]]},
+ {n:8, strip:false,min:1, max:50, types:THIRDS, g:[]},
+ {n:8, strip:false,min:1, max:60, types:THIRDS, g:[['after',19],['before',30]]},
+ {n:8, strip:false,min:1, max:70, types:THIRDS, g:[['after',29],['between',19]]},
+ {n:10,strip:false,min:1, max:80, types:THIRDS, g:[['after',39],['before',40]]},
+ {n:10,strip:false,min:1, max:90, types:THIRDS, g:[['after',49],['between',29]]},
+ {n:10,strip:false,min:20,max:100,types:THIRDS, g:[['before',60],['after',59]]},
  {n:10,strip:false,min:1, max:100,types:THIRDS, g:[['after',69],['before',70]]},
  {n:10,strip:false,min:40,max:100,types:THIRDS, g:[['after',79],['before',90],['after',89]]},
  {n:10,strip:false,min:1, max:100,types:THIRDS, g:[['before',1]]},
@@ -311,9 +311,11 @@ function save(){ try{ localStorage.setItem(KEY,JSON.stringify(store)); }catch(e)
 /* ================================================================
    SOUNDS  (WebAudio oscillator beeps only)
 ================================================================ */
-var muted=false, actx=null;
+var muted=false, actx=null, curClip=null;
 function prime(){ try{ actx=actx||new (window.AudioContext||window.webkitAudioContext)();
   if(actx.state==='suspended') actx.resume(); }catch(e){} }
+function playClip(f){ if(muted) return; try{ if(curClip) curClip.pause();
+  curClip=new Audio(f); curClip.volume=1; curClip.play().catch(function(){}); }catch(e){} }
 function tone(freq,dur,vol,type,delay){
   if(muted) return;
   try{ prime();
@@ -353,6 +355,7 @@ function sWhoosh(){ slideTone(500,750,0.12); }
 function sTick(){ tone(990,0.06,0.12); }
 document.getElementById('muteBtn').onclick=function(){
   muted=!muted; this.textContent=muted?'🔇':'🔊';
+  if(muted&&curClip){ try{ curClip.pause(); }catch(e){} }
   if(!muted){ prime(); tone(660,0.1,0.12); }
 };
 document.addEventListener('touchstart',prime,{once:true});
@@ -434,12 +437,10 @@ function renderDots(){
     var cls='ndot';
     if(i===S.lv) cls+=' cur';
     else if((store.stars[i]||0)>0) cls+=' done';
-    else if(i<=store.unlocked) cls+=' unlocked';
+    else cls+=' unlocked';
     d.className=cls;
     d.textContent=(store.stars[i]||0)>=3?'★':i;
-    if(i<=store.unlocked){
-      (function(n){ d.onclick=function(){ sTap(); startLevel(n); }; })(i);
-    }
+    (function(n){ d.onclick=function(){ sTap(); startLevel(n); }; })(i);
     elDots.appendChild(d);
   }
 }
@@ -478,10 +479,10 @@ function renderQ(){
   renderTicks();
   if(q.type==='after'){
     elSmall.textContent='What comes';
-    elBig.innerHTML='<span class="w-after">AFTER</span> <span class="num">'+q.t+'</span> <span class="w-after">→</span>';
+    elBig.innerHTML='<span class="w-after">AFTER</span> <span class="num">'+q.t+'</span>';
   } else if(q.type==='before'){
     elSmall.textContent='What comes';
-    elBig.innerHTML='<span class="w-before">←</span> <span class="w-before">BEFORE</span> <span class="num">'+q.t+'</span>';
+    elBig.innerHTML='<span class="w-before">BEFORE</span> <span class="num">'+q.t+'</span>';
   } else if(q.type==='between'){
     elSmall.textContent='What comes';
     elBig.innerHTML='<span class="w-between">BETWEEN</span>'+
@@ -491,7 +492,7 @@ function renderQ(){
     elSmall.textContent='Keep counting!';
     elBig.innerHTML='<span class="num">'+q.t+', '+(q.t+st)+', '+(q.t+2*st)+',</span> <span class="w-skip">?</span>';
   }
-  elStrip.innerHTML=L.strip?stripHTML(q):'';
+  elStrip.innerHTML='';
   var opts=makeOptions(q,S.lv), tries=0;
   while(tries++<10){
     var set={}, ok=true;
@@ -554,7 +555,7 @@ function choose(i,btn){
     sArp();
     btn.classList.add('correct');
     setTimeout(function(){ burstAt(btn); },80);
-    setTimeout(function(){ showFB(correctHTML(q)); flipStrip(a); },250);
+    setTimeout(function(){ showFB(correctHTML(q)); },250);
     elScore.textContent='Score '+S.score;
     renderTicks();
     setTimeout(next,1800);
@@ -565,7 +566,7 @@ function choose(i,btn){
     var bs=elOpts.querySelectorAll('.opt'), cbtn=null;
     for(var k=0;k<bs.length;k++) if(S.opts[k]===a) cbtn=bs[k];
     setTimeout(function(){ if(cbtn) cbtn.classList.add('reveal'); },450);
-    setTimeout(function(){ showFB(wrongHTML(q)); flipStrip(a); },600);
+    setTimeout(function(){ showFB(wrongHTML(q)); },600);
     renderTicks();
     setTimeout(next,3200);
   }
@@ -614,6 +615,7 @@ function summary(){
     mkBtn('Try Again 💪',function(){ startLevel(S.lv); });
   }
   if(pass){
+    playClip('yesyoudidit.wav');
     sFanfare();
     levelBursts();
     if(finished) setTimeout(levelBursts,600);
@@ -632,7 +634,6 @@ function summary(){
 
 function startLevel(lv){
   lv=Math.max(1,Math.min(20,lv));
-  if(lv>store.unlocked) lv=store.unlocked;
   S={lv:lv,qs:genLevel(lv),qi:0,correct:0,score:0,results:[],locked:false};
   store.level=lv; save();
   hideFB();
@@ -642,7 +643,7 @@ function startLevel(lv){
 }
 
 /* ================= BOOT ================= */
-startLevel(Math.min(store.level||1, store.unlocked||1));
+startLevel(store.level||1);
 
 })();
 </script>
