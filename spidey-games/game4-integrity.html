@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>The Lost &amp; Found Hero</title>
+<style>
+/* ============================================================
+   THE LOST & FOUND HERO — 20 levels of integrity/honesty
+   Web Buddy returns lost items. No losing, no scolding, ever.
+   ============================================================ */
+*{margin:0;padding:0;box-sizing:border-box;-webkit-user-select:none;user-select:none;
+  -webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;height:100%;overflow:hidden;
+  font-family:'Comic Sans MS','Chalkboard SE','Marker Felt',sans-serif;}
+body{touch-action:none;}
+/* while the level map is open, let vertical pans reach #mapScroll */
+body.mapOpen{touch-action:pan-y;}
+button{font-family:inherit;border:none;cursor:pointer;touch-action:none;}
+.node{touch-action:pan-y;}   /* map nodes must not swallow scroll drags */
+
+/* ---------- Stage & scene ---------- */
+#stage{position:fixed;inset:0;overflow:hidden;background:#87CEEB;}
+#scene{position:absolute;inset:0;overflow:hidden;
+  background:linear-gradient(#87CEEB 0%,#B8E0F0 45%,#D8F0C8 100%);
+  transition:filter 1.6s ease;}
+#scene.somber{filter:saturate(.38) brightness(.9);}   /* gentle "keep" mood */
+#ground{position:absolute;left:0;right:0;bottom:0;height:21%;
+  background:linear-gradient(#8FC96B,#74AC52);border-top:6px solid #66A046;}
+#ground::before{content:"";position:absolute;left:0;right:0;top:14px;height:4px;
+  background:repeating-linear-gradient(90deg,rgba(255,255,255,.4) 0 60px,transparent 60px 90px);opacity:.7;}
+#props{position:absolute;inset:0;pointer-events:none;}
+.prop{position:absolute;line-height:1;pointer-events:none;}
+.cloud{position:absolute;font-size:64px;opacity:.85;animation:drift 40s linear infinite;pointer-events:none;}
+@keyframes drift{from{transform:translateX(-15vw)}to{transform:translateX(115vw)}}
+#scene.night .cloud,#scene.indoor .cloud{display:none;}
+#spot{position:absolute;bottom:8%;width:340px;height:78%;display:none;pointer-events:none;z-index:12;
+  background:radial-gradient(ellipse 50% 46% at 50% 78%,rgba(255,245,190,.5),rgba(255,245,190,.12) 60%,transparent 75%);}
+#scene.spotlit #spot{display:block;}
+.poster{position:absolute;bottom:52%;left:60%;background:#FFF;border:4px solid #B08A2E;border-radius:10px;
+  padding:8px 12px;font-size:24px;font-weight:bold;color:#7A4F00;text-align:center;line-height:1.2;
+  transform:rotate(-4deg);box-shadow:0 5px 10px rgba(0,0,0,.2);z-index:12;pointer-events:none;}
+#statue{position:absolute;bottom:18%;left:7%;width:170px;z-index:16;display:none;text-align:center;
+  transform:translateY(160px);transition:transform 1.4s cubic-bezier(.2,1.4,.4,1);}
+#statue .stop{font-size:84px;line-height:1;filter:sepia(1) saturate(3) hue-rotate(-12deg) drop-shadow(0 0 12px #FFC93C);}
+#statue .sbase{margin-top:4px;background:linear-gradient(#D8D8E4,#AEAEC2);border-radius:10px;padding:10px 6px;
+  font-size:21px;font-weight:bold;color:#3B3B5C;box-shadow:0 7px 0 #8A8AA0;}
+
+/* ---------- Hero (Web Buddy) ---------- */
+#hero{position:absolute;left:0;bottom:15%;width:130px;height:190px;will-change:transform;z-index:20;}
+#heroInner{width:100%;height:100%;animation:idleBounce 1.2s ease-in-out infinite;}
+@keyframes idleBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+#heroFlip{width:100%;height:100%;transition:transform .25s;}
+#hero.faceLeft #heroFlip{transform:scaleX(-1);}
+#hero.hug #heroInner{animation:hugPose .8s ease-in-out infinite;}
+@keyframes hugPose{0%,100%{transform:rotate(6deg) translateY(0)}50%{transform:rotate(6deg) translateY(-8px)}}
+.legA,.legB{transform-box:fill-box;transform-origin:50% 10%;}
+#hero.walking .legA{animation:swingA .38s ease-in-out infinite;}
+#hero.walking .legB{animation:swingB .38s ease-in-out infinite;}
+@keyframes swingA{0%,100%{transform:rotate(24deg)}50%{transform:rotate(-24deg)}}
+@keyframes swingB{0%,100%{transform:rotate(-24deg)}50%{transform:rotate(24deg)}}
+#hero.walking #heroInner{animation:none;}
+#cape{transform-box:fill-box;transform-origin:top center;display:none;}
+#hero.caped #cape{display:block;animation:flutter 1s ease-in-out infinite;}
+@keyframes flutter{0%,100%{transform:skewX(0deg) scaleX(1)}50%{transform:skewX(-12deg) scaleX(1.12)}}
+#crown{position:absolute;top:-38px;left:32px;font-size:52px;display:none;z-index:22;
+  animation:bob 1.6s ease-in-out infinite;}
+#hero.crowned #crown{display:block;}
+#heroThought{position:absolute;top:-72px;left:76px;width:96px;height:82px;background:#FFF;
+  border-radius:46%;display:none;align-items:center;justify-content:center;font-size:44px;
+  box-shadow:0 4px 10px rgba(0,0,0,.15);animation:bob 1.6s ease-in-out infinite;z-index:25;}
+#heroThought::after{content:"";position:absolute;bottom:-16px;left:14px;width:16px;height:16px;
+  background:#FFF;border-radius:50%;box-shadow:-12px 12px 0 -5px #FFF;}
+#heroThought.show{display:flex;}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+
+/* ---------- Citizens (owners & friends) ---------- */
+.citizen{position:absolute;bottom:15%;z-index:15;transition:transform .3s;}
+.citizen .cbody{width:100%;height:100%;position:relative;}
+.citizen.happy .cbody{animation:joyJump .55s ease-in-out infinite;}
+@keyframes joyJump{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-26px) rotate(3deg)}}
+.citizen .face{position:absolute;top:2px;left:50%;transform:translateX(-50%);line-height:1;}
+.citizen .tears{position:absolute;top:38%;left:50%;transform:translateX(-50%);font-size:22px;
+  animation:tearFall 1.4s ease-in infinite;}
+@keyframes tearFall{0%{opacity:0;transform:translate(-50%,0)}30%{opacity:1}
+  100%{opacity:0;transform:translate(-50%,26px)}}
+.citizen.teary .tears{font-size:32px;animation-duration:.9s;}
+.citizen.happy .tears,.citizen.calm .tears{display:none;}
+.citizen .bubble{position:absolute;top:-86px;left:58%;width:100px;height:86px;background:#FFF;
+  border-radius:46%;border:5px solid #FFF;display:flex;align-items:center;justify-content:center;font-size:46px;
+  box-shadow:0 4px 10px rgba(0,0,0,.15);animation:bob 1.8s ease-in-out infinite;}
+.citizen .bubble::after{content:"";position:absolute;bottom:-18px;left:10px;width:16px;height:16px;
+  background:#FFF;border-radius:50%;box-shadow:-12px 12px 0 -5px #FFF;}
+.citizen.happy .bubble{display:none;}
+.citizen.wiggle{animation:wig .5s;}
+@keyframes wig{0%,100%{transform:rotate(0)}25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
+.tinyCitizen{position:absolute;bottom:15%;width:76px;height:104px;z-index:14;transition:transform 1s ease-out;}
+.tinyCitizen .tface{position:absolute;top:0;left:50%;transform:translateX(-50%);font-size:38px;}
+.tinyCitizen.cheering{animation:joyJump .5s ease-in-out infinite;}
+.tinyCitizen.marching{animation:march 8s linear forwards;}
+@keyframes march{from{transform:translateX(-20vw)}to{transform:translateX(120vw)}}
+
+/* ---------- Sparkling lost item & sand mound ---------- */
+#item{position:absolute;bottom:15.5%;width:110px;height:110px;z-index:18;
+  display:flex;align-items:center;justify-content:center;font-size:66px;
+  filter:drop-shadow(0 0 14px #FFC93C);animation:itemGlow 1s ease-in-out infinite;}
+@keyframes itemGlow{0%,100%{transform:scale(1);filter:drop-shadow(0 0 8px #FFC93C)}
+  50%{transform:scale(1.12);filter:drop-shadow(0 0 22px #FFC93C)}}
+#item.torch{animation:torchGlow 1s ease-in-out infinite;}
+@keyframes torchGlow{0%,100%{transform:scale(1);filter:drop-shadow(0 0 18px #FFF3A0)}
+  50%{transform:scale(1.12);filter:drop-shadow(0 0 40px #FFF3A0)}}
+#item::before,#item::after{content:"✨";position:absolute;font-size:30px;animation:spk 1.1s ease-in-out infinite;}
+#item::before{top:-8px;left:-4px;}
+#item::after{bottom:-4px;right:-8px;animation-delay:.55s;}
+@keyframes spk{0%,100%{opacity:0;transform:scale(.4)}50%{opacity:1;transform:scale(1.2)}}
+#sand{position:absolute;bottom:14.8%;width:160px;height:112px;z-index:19;display:none;
+  align-items:center;justify-content:center;font-size:40px;
+  border-radius:50% 50% 46% 46%/62% 62% 40% 40%;
+  background:radial-gradient(circle at 40% 32%,#F7E7C2,#E4C98F 68%,#D6B87A);
+  box-shadow:0 5px 0 rgba(0,0,0,.12);transition:opacity .3s,transform .3s;}
+#sand::before{content:"✨❓✨";}
+.puff{position:absolute;z-index:56;font-size:34px;pointer-events:none;animation:puffUp .8s ease-out forwards;}
+@keyframes puffUp{0%{opacity:1;transform:translateY(0) scale(.6)}100%{opacity:0;transform:translateY(-70px) scale(1.5)}}
+
+/* ---------- Choice cards ---------- */
+#choices{position:absolute;inset:0;z-index:60;display:none;align-items:center;justify-content:center;
+  gap:6vw;background:rgba(30,40,70,.28);}
+#choices.show{display:flex;}
+.card{width:min(38vw,320px);min-width:220px;min-height:250px;border-radius:32px;background:#FFF;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  box-shadow:0 12px 0 rgba(0,0,0,.18);padding:18px;animation:cardIn .4s ease-out backwards;}
+.card:active{transform:scale(.94);}
+.card .big{font-size:88px;line-height:1.1;}
+.card .lbl{font-size:32px;font-weight:bold;text-align:center;line-height:1.15;}
+#cardGive{border:8px solid #4CAF50;}  #cardGive .lbl{color:#2E7D32;}
+#cardKeep{border:8px solid #1E5AE8;animation-delay:.12s;}  #cardKeep .lbl{color:#1E5AE8;}
+#cardKeep.tempting{animation:cardIn .4s ease-out backwards,temptPulse 1s ease-in-out .5s infinite;}
+@keyframes temptPulse{0%,100%{box-shadow:0 12px 0 rgba(0,0,0,.18)}
+  50%{box-shadow:0 12px 0 rgba(0,0,0,.18),0 0 34px #FFC93C;}}
+@keyframes cardIn{from{opacity:0;transform:translateY(50px) scale(.7)}to{opacity:1;transform:none}}
+
+/* ---------- HUD ---------- */
+#levelChip{position:absolute;top:14px;right:16px;z-index:70;background:rgba(255,255,255,.88);
+  border-radius:24px;padding:14px 24px;font-size:32px;font-weight:bold;color:#1E5AE8;
+  box-shadow:0 4px 10px rgba(0,0,0,.15);display:none;}
+#muteBtn,#mapBtn{position:absolute;top:14px;z-index:70;width:96px;height:96px;border-radius:28px;
+  background:rgba(255,255,255,.9);font-size:48px;box-shadow:0 5px 0 rgba(0,0,0,.18);}
+#muteBtn{left:16px;}
+#mapBtn{left:128px;display:none;}
+#muteBtn:active,#mapBtn:active{transform:scale(.92);}
+#message{position:absolute;top:16px;left:50%;transform:translateX(-50%);z-index:65;max-width:66vw;
+  background:#FFF;border:6px solid #FFC93C;border-radius:26px;padding:12px 26px;font-size:30px;
+  color:#3B3B3B;text-align:center;box-shadow:0 6px 14px rgba(0,0,0,.15);display:none;line-height:1.25;}
+#message.show{display:block;animation:msgIn .35s ease-out;}
+@keyframes msgIn{from{opacity:0;transform:translate(-50%,-24px)}to{opacity:1;transform:translate(-50%,0)}}
+#banner{position:absolute;top:32%;left:0;width:100%;z-index:80;text-align:center;font-size:60px;
+  font-weight:bold;color:#E53935;text-shadow:0 4px 0 #FFF,0 8px 14px rgba(0,0,0,.2);
+  display:none;pointer-events:none;}
+#banner.show{display:block;animation:bannerSlide 1s cubic-bezier(.2,1.4,.4,1);}
+@keyframes bannerSlide{from{transform:translateX(-110vw)}to{transform:translateX(0)}}
+
+/* ---------- Celebration bits ---------- */
+.heart{position:absolute;z-index:55;font-size:36px;pointer-events:none;animation:heartUp 1.5s ease-out forwards;}
+@keyframes heartUp{0%{opacity:1;transform:translateY(0) scale(.5)}
+  100%{opacity:0;transform:translateY(-160px) scale(1.5)}}
+.confetti{position:absolute;top:-30px;width:14px;height:22px;z-index:85;pointer-events:none;
+  animation:confFall linear forwards;}
+@keyframes confFall{0%{transform:translateY(0) rotate(0)}100%{transform:translateY(110vh) rotate(720deg)}}
+
+/* ---------- Celebration overlay (stars + next) ---------- */
+#celebrate{position:absolute;inset:0;z-index:95;display:none;align-items:center;justify-content:center;
+  background:rgba(20,32,62,.45);}
+#celebrate.show{display:flex;}
+#celeBox{background:#FFF;border-radius:36px;border:8px solid #FFC93C;padding:24px 34px;
+  display:flex;flex-direction:column;align-items:center;gap:14px;box-shadow:0 14px 0 rgba(0,0,0,.2);
+  max-width:88vw;animation:cardIn .45s ease-out;}
+#celeTitle{font-size:42px;color:#E53935;font-weight:bold;text-align:center;line-height:1.15;}
+#celeStars{font-size:72px;display:flex;gap:10px;}
+#celeStars span{opacity:.22;}
+#celeStars span.on{opacity:1;animation:starPop .6s cubic-bezier(.2,2.2,.4,1);}
+@keyframes starPop{0%{transform:scale(0)}60%{transform:scale(1.7) rotate(18deg)}100%{transform:scale(1)}}
+#nextBtn{min-width:320px;height:112px;border-radius:30px;background:#4CAF50;color:#FFF;
+  font-size:42px;font-weight:bold;box-shadow:0 9px 0 #2E7D32;animation:playPulse 1.2s ease-in-out infinite;}
+#toMapBtn{min-width:250px;height:96px;border-radius:26px;background:#FFC93C;color:#7A4F00;
+  font-size:34px;font-weight:bold;box-shadow:0 8px 0 #D9A520;}
+#nextBtn:active,#toMapBtn:active{transform:scale(.94);}
+
+/* ---------- Level map ---------- */
+#mapScreen{position:absolute;inset:0;z-index:90;display:none;flex-direction:column;background:#14203E;}
+#mapScreen.show{display:flex;}
+#mapHead{display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:12px 18px;background:rgba(255,255,255,.1);z-index:2;}
+#mapTitle{font-size:min(6vw,36px);font-weight:bold;color:#FFF;text-shadow:0 3px 0 rgba(0,0,0,.35);}
+#continueBtn{min-width:230px;height:92px;border-radius:26px;background:#4CAF50;color:#FFF;
+  font-size:32px;font-weight:bold;box-shadow:0 7px 0 #2E7D32;}
+#continueBtn:active{transform:scale(.94);}
+#mapScroll{flex:1;overflow-y:auto;touch-action:pan-y;position:relative;-webkit-overflow-scrolling:touch;}
+#mapInner{position:relative;width:100%;
+  background:linear-gradient(#7EC8F0 0%,#D8F0C8 7%,#FFE3B3 15%,#BDE4F5 23%,#A8E4F0 31%,
+    #F2DEB0 39%,#E8D9C4 47%,#EAF4FA 55%,#22335C 63%,#F7C8D0 70%,#8A9BBF 77%,
+    #2A2440 87%,#FF9E5E 95%,#FFC93C 100%);}
+#pathSvg{position:absolute;inset:0;width:100%;pointer-events:none;}
+.mapDeco{position:absolute;font-size:46px;opacity:.9;margin-left:-23px;pointer-events:none;}
+.node{position:absolute;width:106px;height:106px;margin-left:-53px;border-radius:50%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;
+  font-weight:bold;box-shadow:0 8px 0 rgba(0,0,0,.28);border:6px solid #FFF;}
+.node:active{transform:scale(.94);}
+.node .nnum{font-size:30px;line-height:1;}
+.node .nico{font-size:26px;line-height:1.1;}
+.node .nstars{font-size:16px;letter-spacing:-2px;line-height:1.2;}
+.node.open{background:#FFC93C;color:#7A4F00;animation:playPulse 1.1s ease-in-out infinite;}
+.node.done{background:#4CAF50;color:#FFF;}
+.node.locked{background:radial-gradient(circle at 35% 30%,#C4CAD8,#9AA2B5);color:#5B6270;
+  border-color:#D8DCE6;}
+.node.locked .nico{font-size:34px;}
+.node.wiggle{animation:wig .5s;}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#FFF;
+  border:5px solid #FFC93C;border-radius:22px;padding:14px 26px;font-size:28px;color:#3B3B3B;
+  display:none;z-index:120;box-shadow:0 6px 14px rgba(0,0,0,.2);text-align:center;max-width:82vw;}
+
+/* ---------- Start screen ---------- */
+#startScreen{position:absolute;inset:0;z-index:100;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:26px;text-align:center;
+  background:linear-gradient(#87CEEB,#FFE9A8);}
+#startScreen h1{font-size:min(9vw,68px);color:#E53935;text-shadow:0 4px 0 #FFF;}
+#startScreen p{font-size:32px;color:#1E5AE8;max-width:80vw;}
+#playBtn{width:230px;height:230px;border-radius:50%;background:#4CAF50;color:#FFF;font-size:100px;
+  box-shadow:0 12px 0 #2E7D32;animation:playPulse 1.2s ease-in-out infinite;}
+#playBtn:active{transform:scale(.92);}
+@keyframes playPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="scene">
+    <div id="props"></div>
+    <div class="cloud" style="top:6%;animation-duration:55s;">☁️</div>
+    <div class="cloud" style="top:14%;animation-duration:75s;animation-delay:-30s;">☁️</div>
+    <div id="ground"></div>
+    <div id="spot"></div>
+    <div id="statue"><div class="stop">🦸</div><div class="sbase">HERO of<br>HONESTY ⭐</div></div>
+    <div id="owners"></div>
+    <div id="sand"></div>
+    <div id="item"></div>
+    <div id="crowd"></div>
+
+    <!-- Web Buddy: chibi hero SVG -->
+    <div id="hero">
+      <div id="heroThought"></div>
+      <div id="crown">👑</div>
+      <div id="heroInner"><div id="heroFlip">
+        <svg viewBox="0 0 130 190" width="130" height="190" xmlns="http://www.w3.org/2000/svg">
+          <path id="cape" d="M42 92 Q30 140 24 172 Q65 160 106 172 Q100 140 88 92 Z" fill="#C62828"/>
+          <g class="legA"><rect x="44" y="128" width="18" height="46" rx="9" fill="#E53935"/>
+            <ellipse cx="53" cy="176" rx="12" ry="8" fill="#C62828"/></g>
+          <g class="legB"><rect x="68" y="128" width="18" height="46" rx="9" fill="#E53935"/>
+            <ellipse cx="77" cy="176" rx="12" ry="8" fill="#C62828"/></g>
+          <rect x="40" y="86" width="50" height="52" rx="22" fill="#1E5AE8"/>
+          <rect x="26" y="92" width="16" height="40" rx="8" fill="#E53935" transform="rotate(14 34 92)"/>
+          <circle cx="30" cy="133" r="9" fill="#C62828"/>
+          <rect x="88" y="92" width="16" height="40" rx="8" fill="#E53935" transform="rotate(-14 96 92)"/>
+          <circle cx="100" cy="133" r="9" fill="#C62828"/>
+          <circle cx="65" cy="48" r="42" fill="#E53935"/>
+          <g stroke="#FFF" stroke-width="2" fill="none" opacity=".4">
+            <path d="M35 30 Q65 44 95 30"/>
+            <path d="M28 48 Q65 64 102 48"/>
+            <path d="M33 66 Q65 82 97 66"/>
+            <line x1="65" y1="8" x2="65" y2="30"/>
+            <line x1="38" y1="18" x2="50" y2="36"/>
+            <line x1="92" y1="18" x2="80" y2="36"/>
+            <line x1="26" y1="42" x2="42" y2="50"/>
+          </g>
+          <ellipse cx="48" cy="48" rx="13" ry="17" fill="#FFF" transform="rotate(-8 48 48)"/>
+          <ellipse cx="82" cy="48" rx="13" ry="17" fill="#FFF" transform="rotate(8 82 48)"/>
+          <ellipse cx="48" cy="50" rx="5" ry="7" fill="#222"/>
+          <ellipse cx="82" cy="50" rx="5" ry="7" fill="#222"/>
+          <text id="heldItem" x="100" y="128" font-size="38" text-anchor="middle" style="display:none;">🧸</text>
+        </svg>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- Choice cards -->
+  <div id="choices">
+    <button class="card" id="cardGive">
+      <div class="big" id="giveFace">🥹</div>
+      <div class="big">🤝</div>
+      <div class="lbl">Give it back!</div>
+    </button>
+    <button class="card" id="cardKeep">
+      <div class="big">🎒</div>
+      <div class="lbl">Keep it!</div>
+    </button>
+  </div>
+
+  <div id="levelChip"></div>
+  <button id="muteBtn">🔊</button>
+  <button id="mapBtn">🗺️</button>
+  <div id="message"></div>
+  <div id="banner"></div>
+
+  <!-- Celebration overlay -->
+  <div id="celebrate">
+    <div id="celeBox">
+      <div id="celeTitle">You did it! 🎉</div>
+      <div id="celeStars"><span>⭐</span><span>⭐</span><span>⭐</span></div>
+      <button id="nextBtn">Next Level ▶️</button>
+      <button id="toMapBtn">Map 🗺️</button>
+    </div>
+  </div>
+
+  <!-- Level map -->
+  <div id="mapScreen">
+    <div id="mapHead">
+      <div id="mapTitle">🕸️ Honesty Trail 🕸️</div>
+      <button id="continueBtn">Continue ▶️</button>
+    </div>
+    <div id="mapScroll"><div id="mapInner"></div></div>
+  </div>
+  <div id="toast"></div>
+
+  <div id="startScreen">
+    <h1>🕸️ The Lost &amp; Found Hero 🕸️</h1>
+    <p>Help Web Buddy give lost things back — 20 adventures! 🦸</p>
+    <button id="playBtn">▶️</button>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   SETTINGS — reusable scene renderer data.
+   sky: gradient | gr: [top,bottom,border] ground colors
+   props: [emoji, left%, fontSizePx, bottom% (default 19)]
+   flags: night, indoor
+   ============================================================ */
+var SETTINGS={
+  park:{sky:"linear-gradient(#7EC8F0,#BDE4F5 45%,#D8F0C8)",gr:["#8FC96B","#74AC52","#66A046"],
+    props:[["🌳",3,110],["🌳",84,120],["🌷",26,44],["🪑",58,60],["🦋",68,36,44]]},
+  market:{sky:"linear-gradient(#FFD9A0,#FFE3B3 50%,#FFEFD0)",gr:["#D9B478","#C9A468","#B8945A"],
+    props:[["⛱",6,120],["🍉",14,52],["🍌",21,46],["🧺",78,58],["🏪",88,116]]},
+  playground:{sky:"linear-gradient(#7EC8F0,#BDE4F5 50%,#CFEFC9)",gr:["#E8C98F","#D9B478","#C9A468"],
+    props:[["🛝",8,110],["🎠",86,104],["🌳",70,92],["⚽",30,36]]},
+  school:{sky:"linear-gradient(#9ED4F0,#C8E8F8 50%,#E0F2E0)",gr:["#B8B8B8","#A0A0A0","#909090"],
+    props:[["🏫",8,130],["🎒",78,56],["🌳",90,96],["✏️",34,40]]},
+  field:{sky:"linear-gradient(#7EC8F0,#BDE4F5 55%,#C8EEC0)",gr:["#6FBF56","#5AA845","#4E9A3C"],
+    props:[["🥅",5,96],["🚩",86,76],["🌳",93,92]]},
+  beach:{sky:"linear-gradient(#7EC8F0 0%,#A8E4F0 45%,#4FC3DF 62%,#3FB5D4 68%)",gr:["#F2DEB0","#E8CE98","#D9BC82"],
+    props:[["⛱",8,116],["🦀",30,42],["🌴",86,124],["⛵",60,54,60]]},
+  library:{sky:"linear-gradient(#C9A78A,#D9BCA0 55%,#E8D4BC)",gr:["#8A6B4F","#77593F","#684D36"],
+    props:[["📚",6,88],["📚",16,72],["🪟",80,84,55],["🕰️",90,64,50]],indoor:1},
+  icecream:{sky:"linear-gradient(#9ED4F0,#C8E8F8 50%,#FFE9C8)",gr:["#E8C98F","#D9B478","#C9A468"],
+    props:[["🎪",8,120],["🍦",20,68],["🎈",84,64,48],["🍨",90,52]]},
+  snow:{sky:"linear-gradient(#CFE4F0,#E4F1F8 55%,#F2FAFF)",gr:["#F4FAFF","#E2EFF8","#CFE0EE"],
+    props:[["⛄",8,96],["🏠",84,120],["❄️",30,36,62],["🌨️",55,50,70],["🌲",70,90]]},
+  nightstreet:{sky:"linear-gradient(#0E1A3A,#22335C 60%,#31456E)",gr:["#3A4666","#2E3A56","#252F48"],
+    props:[["🏠",6,112],["🏠",85,122],["🌙",76,78,76],["⭐",30,28,80],["⭐",52,22,86],["⭐",14,24,72]],night:1},
+  lawn:{sky:"linear-gradient(#8ECCF0,#C4E6F8 50%,#D8F0C8)",gr:["#8FC96B","#74AC52","#66A046"],
+    props:[["🎪",6,116],["🎁",80,58],["🎈",88,66,50],["🎈",14,60,54],["🎀",40,40,46]]},
+  petshop:{sky:"linear-gradient(#C8B4E8,#DACCF0 55%,#EAE2F8)",gr:["#B08A5E","#9E794F","#8C6A42"],
+    props:[["🏪",6,120],["🐶",20,54],["🐦",82,48,52],["🐠",90,44]],indoor:1},
+  subway:{sky:"linear-gradient(#5A6B8C,#71829E 55%,#8A9BB4)",gr:["#8A8A96","#75757F","#63636C"],
+    props:[["🚇",6,108],["🎸",22,58],["🎫",84,44],["💡",50,44,66]],indoor:1},
+  busstop:{sky:"linear-gradient(#101C3E,#243660 60%,#334870)",gr:["#3A4666","#2E3A56","#252F48"],
+    props:[["🚏",8,96],["🚌",80,104],["🌙",70,78,76],["⭐",34,26,82],["⭐",56,22,74]],night:1},
+  stadium:{sky:"linear-gradient(#7EC8F0,#BDE4F5 50%,#C8EEC0)",gr:["#C96F4A","#B85F3C","#A85332"],
+    props:[["🏟️",6,128],["🚩",86,78],["👏",30,44,58],["🎌",60,50,60]]},
+  museum:{sky:"linear-gradient(#2A2440,#3A3156 55%,#453A66)",gr:["#5C5470","#4C4560","#3E3850"],
+    props:[["🏛️",6,118],["🖼️",78,84,50],["🖼️",30,74,55],["⭐",50,20,80]],night:1,indoor:1},
+  sunset:{sky:"linear-gradient(#FF9E5E,#FFBE6E 45%,#FFC93C 70%,#FFE9A8)",gr:["#F2DEB0","#E8CE98","#D9BC82"],
+    props:[["🌴",6,124],["🌞",78,92,66],["⛵",56,58,58],["🐚",30,40]]}
+};
+
+/* ============================================================
+   LEVELS — 20 scenarios. owner:{f sad, h happy, shirt, x, small}
+   find:[citizens] = tap-the-right-owner levels (own:1 marks true owner)
+   flags: buried, quiet, tempt, night(torch glow), spot, group, poster,
+   loud, finale
+   ============================================================ */
+var LEVELS=[
+ {item:"🧸",name:"teddy",set:"park",intro:"A tiny toddler dropped her teddy — right there! 🧸 Tap it!",
+  owner:{f:"😢",h:"😄",shirt:"#F4A261",x:.62,small:1},itemX:.5},
+ {item:"🎈",name:"balloon",set:"park",intro:"A small girl lost her red balloon! 🎈 Tap it!",
+  owner:{f:"😢",h:"🥰",shirt:"#F7C8D0",x:.74,small:1},itemX:.44},
+ {item:"🍎",name:"apple",set:"market",intro:"The fruit seller dropped a shiny apple! 🍎 Tap it!",
+  owner:{f:"😟",h:"😁",shirt:"#A8D8C8",x:.74},itemX:.42},
+ {item:"🧢",name:"cap",set:"playground",intro:"A boy on the swing lost his cap! 🧢 Tap it!",
+  owner:{f:"😢",h:"😄",shirt:"#7FB3D5",x:.72,small:1},itemX:.42},
+ {item:"🖍️",name:"crayons",set:"school",intro:"Someone lost their crayons at school! 🖍️ Tap them!",itemX:.42,
+  find:[{f:"🙂",shirt:"#C9A7EB",x:.62,bub:"🎈"},
+        {f:"😢",h:"😄",shirt:"#F4A261",x:.8,bub:"🖍️",own:1}],
+  findMsg:"Who lost the crayons? Look at the thought bubbles! 💭"},
+ {item:"⚽",name:"ball",set:"field",intro:"The whole team lost their ball! ⚽ Tap it!",
+  owner:{f:"😟",h:"🤩",shirt:"#7FB3D5",x:.72},group:1,itemX:.4},
+ {item:"🕶️",name:"sunglasses",set:"beach",intro:"Grandma lost her sunglasses! 🕶️ Tap them!",
+  owner:{f:"👵",h:"👵",shirt:"#C9A7EB",x:.74},itemX:.44},
+ {item:"🐚",name:"shell bucket",set:"beach",intro:"Something is buried! Rub the sand away! 🖐️",
+  owner:{f:"😢",h:"😄",shirt:"#F7C8D0",x:.76,small:1},itemX:.45,buried:1},
+ {item:"📚",name:"books",set:"library",intro:"Shhh... 🤫 The librarian lost her books! 📚 Tap them!",
+  owner:{f:"🤓",h:"😊",shirt:"#6B5B95",x:.73},itemX:.42,quiet:1},
+ {item:"🍦",name:"ice-cream coupon",set:"icecream",intro:"Oooh! A FREE ice-cream coupon! 🍦 A kid dropped it! Tap it!",
+  owner:{f:"😢",h:"😋",shirt:"#FFC93C",x:.75,small:1},itemX:.45,tempt:1},
+ {item:"🧣",name:"scarf",set:"snow",intro:"Brrr! Someone lost a warm scarf! 🧣 Tap it!",itemX:.38,
+  find:[{f:"🙂",shirt:"#A8D8C8",x:.56,bub:"🧤"},
+        {f:"🥶",h:"😊",shirt:"#7FB3D5",x:.72,bub:"🧣",own:1},
+        {f:"😊",shirt:"#F7C8D0",x:.88,bub:"☂️"}],
+  findMsg:"Who lost the scarf? Match the thought bubbles! 💭"},
+ {item:"🔦",name:"flashlight",set:"nightstreet",intro:"The night watchman lost his flashlight! 🔦 Tap the glow!",
+  owner:{f:"😟",h:"😄",shirt:"#3E6B8C",x:.72},itemX:.45,torch:1},
+ {item:"🎂",name:"cupcake box",set:"lawn",intro:"The birthday girl lost her cupcake box! 🎂 Tap it!",
+  owner:{f:"😢",h:"🥳",shirt:"#F7C8D0",x:.75,small:1},itemX:.42},
+ {item:"🐹",name:"hamster",set:"petshop",intro:"A lost hamster — just like the poster! 🐹 Tap it!",
+  owner:{f:"😟",h:"😄",shirt:"#7FB3D5",x:.75,small:1},itemX:.42,poster:1},
+ {item:"🪙",name:"shiny coin",set:"subway",intro:"Wow... a SHINY coin! 🪙 The musician dropped it! Tap it!",
+  owner:{f:"😢",h:"🥰",shirt:"#6B5B95",x:.73},itemX:.45,tempt:1},
+ {item:"🎮",name:"game player",set:"busstop",intro:"WOW! A real game player! 🎮 A kid left it! Tap it!",
+  owner:{f:"😢",h:"🤩",shirt:"#F4A261",x:.76,small:1},itemX:.44,tempt:1,torch:1},
+ {item:"👛",name:"purse",set:"market",intro:"Someone lost a little purse! 👛 Tap it!",itemX:.38,
+  find:[{f:"🙂",shirt:"#A8D8C8",x:.56,bub:"👜"},
+        {f:"😊",shirt:"#FFC93C",x:.72,bub:"🎒"},
+        {f:"😢",h:"😄",shirt:"#F7C8D0",x:.88,bub:"👛",own:1}],
+  findMsg:"Whose purse is it? Match the thought bubbles! 💭"},
+ {item:"🏅",name:"gold medal",set:"stadium",intro:"A runner lost his gold medal! 🏅 Tap it!",
+  owner:{f:"😭",h:"🤩",shirt:"#E88A5D",x:.73},itemX:.44,loud:1},
+ {item:"💎",name:"gem",set:"museum",intro:"The museum gem is out of its case! 💎 The guard is worried! Tap it!",
+  owner:{f:"😟",h:"😄",shirt:"#3E6B8C",x:.74},itemX:.46,spot:1,tempt:1},
+ {item:"💰",name:"town treasure",set:"sunset",intro:"WOW! The town treasure! 💰 The mayor is looking everywhere! Tap it!",
+  owner:{f:"😟",h:"🤗",shirt:"#FFC93C",x:.74},itemX:.44,tempt:1,finale:1}
+];
+
+/* ============================================================
+   STATE & PERSISTENCE — localStorage with in-memory fallback
+   ============================================================ */
+var store={unlocked:1,stars:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]};
+function loadStore(){
+  try{
+    var s=localStorage.getItem("yuvaan_honesty");
+    if(s){ var o=JSON.parse(s);
+      if(o && typeof o.unlocked==="number") store.unlocked=Math.min(Math.max(o.unlocked,1),20);
+      if(o && o.stars && o.stars.length===20) store.stars=o.stars.map(function(v){return +v||0;});
+    }
+  }catch(e){}
+}
+function saveStore(){
+  try{ localStorage.setItem("yuvaan_honesty",JSON.stringify(store)); }catch(e){}
+}
+
+var cur=0, keepCount=0, busy=true, muted=false, phase="idle", token=0;
+var quietMode=false, foundOwner=false, sandLeft=0, dug=true;
+var ownerMain=null, trueOwnerData=null;
+
+var $=function(id){return document.getElementById(id);};
+var scene=$("scene"), hero=$("hero"), itemEl=$("item"), sandEl=$("sand"),
+    msgEl=$("message"), choicesEl=$("choices"), bannerEl=$("banner"),
+    crowdEl=$("crowd"), heldItem=$("heldItem"), heroThought=$("heroThought"),
+    ownersEl=$("owners"), propsEl=$("props"), groundEl=$("ground"),
+    toastEl=$("toast");
+
+function later(fn,ms){ var t=token; return setTimeout(function(){ if(t===token) fn(); },ms); }
+
+/* ============================================================
+   AUDIO — Web Audio only. Warm loop, thin solo on "keep",
+   whisper-quiet in the library.
+   ============================================================ */
+var AC=null, master=null, musicGain=null, musicMode="full";
+var step=0, nextTime=0, schedTimer=null;
+var STEP=60/110/2;
+var C4=261.6,D4=293.7,E4=329.6,G4=392,A4=440,C5=523.3,D5=587.3,E5=659.3,G5=784,A5=880;
+var MEL=[C5,0,E5,0,G5,0,E5,0, A5,0,G5,0,E5,0,D5,0];
+var BASS=[130.8,0,0,0,196,0,0,0, 110,0,0,0,196,0,0,0];
+var SOFT=[E4,0,0,0,D4,0,0,0, C4,0,0,0,D4,0,0,0];
+
+function qf(){ return quietMode?.4:1; }
+function initAudio(){
+  if(AC) return;
+  AC=new (window.AudioContext||window.webkitAudioContext)();
+  master=AC.createGain(); master.gain.value=muted?0:1; master.connect(AC.destination);
+  musicGain=AC.createGain(); musicGain.gain.value=.15; musicGain.connect(master);
+  nextTime=AC.currentTime+.1;
+  schedTimer=setInterval(scheduler,90);
+}
+function tone(freq,t,dur,type,vol,dest){
+  if(!AC||!freq) return;
+  var o=AC.createOscillator(), g=AC.createGain();
+  o.type=type; o.frequency.value=freq;
+  g.gain.setValueAtTime(.0001,t);
+  g.gain.linearRampToValueAtTime(vol,t+.02);
+  g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  o.connect(g); g.connect(dest||master);
+  o.start(t); o.stop(t+dur+.05);
+}
+function scheduler(){
+  while(nextTime<AC.currentTime+.18){
+    if(musicMode==="full"){
+      if(MEL[step]) tone(MEL[step],nextTime,.22,"square",.5,musicGain);
+      if(BASS[step]) tone(BASS[step],nextTime,.45,"triangle",.8,musicGain);
+    }else{
+      if(step%2===0 && SOFT[step]) tone(SOFT[step],nextTime,.9,"triangle",.5,musicGain);
+    }
+    step=(step+1)%16; nextTime+=STEP;
+  }
+}
+function setMusic(mode){                     /* full vs thin lonely solo */
+  musicMode=mode;
+  if(!AC) return;
+  var t=AC.currentTime;
+  musicGain.gain.cancelScheduledValues(t);
+  musicGain.gain.setValueAtTime(musicGain.gain.value,t);
+  musicGain.gain.linearRampToValueAtTime((mode==="full"?.15:.09)*qf(),t+1.2);
+}
+function swellMusic(){
+  if(!AC) return;
+  var t=AC.currentTime;
+  musicGain.gain.cancelScheduledValues(t);
+  musicGain.gain.setValueAtTime(musicGain.gain.value,t);
+  musicGain.gain.linearRampToValueAtTime(.32*qf(),t+.3);
+  musicGain.gain.linearRampToValueAtTime(.15*qf(),t+2.4);
+}
+function sparkleSound(){
+  if(!AC) return;
+  var t=AC.currentTime, notes=[C5,E5,G5,C5*2];
+  for(var i=0;i<notes.length;i++) tone(notes[i],t+i*.09,.25,"square",.25*qf(),master);
+}
+function cheerSound(vol){
+  if(!AC) return;
+  var v=(vol||.35)*qf();
+  var len=AC.sampleRate*1.4, buf=AC.createBuffer(1,len,AC.sampleRate), d=buf.getChannelData(0);
+  for(var i=0;i<len;i++) d[i]=(Math.random()*2-1)*(1-i/len);
+  var src=AC.createBufferSource(); src.buffer=buf;
+  var f=AC.createBiquadFilter(); f.type="bandpass"; f.frequency.value=1100; f.Q.value=.6;
+  var g=AC.createGain(); g.gain.value=v;
+  src.connect(f); f.connect(g); g.connect(master); src.start();
+  var t=AC.currentTime;
+  for(var j=0;j<5;j++) tone(700+Math.random()*500,t+j*.15,.2,"sine",.12*qf(),master);
+}
+function starDing(){ if(!AC)return; var t=AC.currentTime;
+  tone(A5,t,.3,"sine",.35*qf(),master); tone(C5*2,t+.12,.5,"sine",.35*qf(),master); }
+function softHmm(){                          /* gentle "not quite" — never harsh */
+  if(!AC) return; var t=AC.currentTime;
+  tone(E4,t,.3,"sine",.2,master); tone(D4,t+.22,.45,"sine",.2,master);
+}
+function rubSound(){ if(!AC)return;
+  tone(200+Math.random()*120,AC.currentTime,.12,"triangle",.15,master); }
+function fanfare(){
+  if(!AC) return;
+  var t=AC.currentTime, seq=[C5,C5,G5,E5,G5,C5*2], durs=[.18,.18,.3,.3,.3,.9];
+  var tt=t;
+  for(var i=0;i<seq.length;i++){ tone(seq[i],tt,durs[i]+.1,"square",.4,master);
+    tone(seq[i]/2,tt,durs[i]+.1,"triangle",.5,master); tt+=durs[i]; }
+  tone(E5*2,tt,1.2,"square",.25,master);
+}
+
+/* ============================================================
+   HERO MOVEMENT
+   ============================================================ */
+var heroX=0;
+function stageW(){ return window.innerWidth; }
+var HOME_X=.08;
+function placeHero(x){ heroX=x; hero.style.transform="translateX("+x+"px)"; }
+function walkTo(fracX,cb){
+  var t=token;
+  var target=fracX*stageW()-65;
+  hero.classList.add("walking");
+  hero.classList.toggle("faceLeft",target<heroX);
+  var last=null, SPEED=280;
+  function stepFn(ts){
+    if(t!==token) return;
+    if(last===null) last=ts;
+    var dt=(ts-last)/1000; last=ts;
+    var dir=target>heroX?1:-1, move=SPEED*dt*dir;
+    if(Math.abs(target-heroX)<=Math.abs(move)){ placeHero(target);
+      hero.classList.remove("walking"); if(cb)cb(); return; }
+    placeHero(heroX+move);
+    requestAnimationFrame(stepFn);
+  }
+  requestAnimationFrame(stepFn);
+}
+
+/* ============================================================
+   SCENE RENDERER — one builder for all 17 settings
+   ============================================================ */
+function citizenSVG(shirt,w,h){
+  return '<svg viewBox="0 0 150 200" width="'+w+'" height="'+h+'" xmlns="http://www.w3.org/2000/svg">'+
+    '<rect x="45" y="66" width="60" height="72" rx="26" fill="'+shirt+'"/>'+
+    '<rect x="30" y="72" width="14" height="38" rx="7" fill="'+shirt+'"/>'+
+    '<rect x="106" y="72" width="14" height="38" rx="7" fill="'+shirt+'"/>'+
+    '<rect x="52" y="134" width="16" height="42" rx="8" fill="#8A6B4F"/>'+
+    '<rect x="82" y="134" width="16" height="42" rx="8" fill="#8A6B4F"/>'+
+    '<ellipse cx="60" cy="180" rx="13" ry="7" fill="#5B4632"/>'+
+    '<ellipse cx="90" cy="180" rx="13" ry="7" fill="#5B4632"/></svg>';
+}
+function applySetting(key,L){
+  var S=SETTINGS[key];
+  scene.style.background=S.sky;
+  scene.classList.toggle("night",!!S.night);
+  scene.classList.toggle("indoor",!!S.indoor);
+  scene.classList.toggle("spotlit",!!L.spot);
+  groundEl.style.background="linear-gradient("+S.gr[0]+","+S.gr[1]+")";
+  groundEl.style.borderTopColor=S.gr[2];
+  var html="";
+  for(var i=0;i<S.props.length;i++){
+    var p=S.props[i];
+    html+='<div class="prop" style="left:'+p[1]+'%;font-size:'+p[2]+'px;bottom:'+(p[3]!==undefined?p[3]:19)+'%;">'+p[0]+'</div>';
+  }
+  propsEl.innerHTML=html;
+  if(L.poster){
+    var po=document.createElement("div"); po.className="poster";
+    po.innerHTML="LOST! 🐹<br>Have you<br>seen me?";
+    propsEl.appendChild(po);
+  }
+  if(L.spot) $("spot").style.left=(L.itemX*100-14)+"%";
+}
+function buildCitizen(c,interactive){
+  var small=c.small, w=small?110:150, h=small?150:200;
+  var d=document.createElement("div");
+  d.className="citizen";
+  d.style.left=(c.x*100)+"%"; d.style.width=w+"px"; d.style.height=h+"px";
+  var bubble=c.bub!==undefined?c.bub:LEVELS[cur].item;
+  d.innerHTML='<div class="cbody">'+citizenSVG(c.shirt,w,h)+
+    '<div class="face" style="font-size:'+(small?50:66)+'px;">'+c.f+'</div>'+
+    '<div class="tears">💧</div>'+
+    '<div class="bubble">'+bubble+'</div></div>';
+  d.dataset.own=c.own?"1":"";
+  if(interactive){
+    d.addEventListener("pointerdown",function(){ onCitizenTap(d,c); });
+  }
+  ownersEl.appendChild(d);
+  return d;
+}
+
+/* ============================================================
+   UI HELPERS
+   ============================================================ */
+function say(txt,ms){
+  msgEl.textContent=""; msgEl.classList.remove("show");
+  void msgEl.offsetWidth;
+  msgEl.textContent=txt; msgEl.classList.add("show");
+  if(ms) later(function(){ msgEl.classList.remove("show"); },ms);
+}
+var toastTimer=null;
+function toast(txt){
+  toastEl.textContent=txt; toastEl.style.display="block";
+  if(toastTimer) clearTimeout(toastTimer);
+  toastTimer=setTimeout(function(){ toastEl.style.display="none"; },2200);
+}
+function burstHearts(fracX){
+  for(var i=0;i<10;i++){
+    var h=document.createElement("div"); h.className="heart";
+    h.textContent=["💕","💖","💗"][i%3];
+    h.style.left=(fracX*100+(Math.random()*12-6))+"%";
+    h.style.bottom=(32+Math.random()*10)+"%";
+    h.style.animationDelay=(Math.random()*.5)+"s";
+    scene.appendChild(h);
+    setTimeout(function(el){return function(){el.remove();};}(h),2200);
+  }
+}
+function confetti(n){
+  var colors=["#E53935","#1E5AE8","#FFC93C","#4CAF50","#F7C8D0","#6B5B95"];
+  for(var i=0;i<n;i++){
+    var c=document.createElement("div"); c.className="confetti";
+    c.style.left=(Math.random()*100)+"vw";
+    c.style.background=colors[i%colors.length];
+    c.style.animationDuration=(2+Math.random()*2.5)+"s";
+    c.style.animationDelay=(Math.random()*1.2)+"s";
+    $("stage").appendChild(c);
+    setTimeout(function(el){return function(){el.remove();};}(c),5200);
+  }
+}
+function showBanner(txt,ms){
+  bannerEl.textContent=txt; bannerEl.classList.remove("show");
+  void bannerEl.offsetWidth; bannerEl.classList.add("show");
+  if(ms) later(function(){ bannerEl.classList.remove("show"); },ms);
+}
+function tinyCitizen(x,face,cls){
+  var d=document.createElement("div");
+  d.className="tinyCitizen "+(cls||"");
+  d.style.left=x+"%";
+  var colors=["#F4A261","#A8D8C8","#C9A7EB","#7FB3D5","#F7C8D0","#FFC93C"];
+  d.innerHTML=citizenSVG(colors[Math.floor(Math.random()*colors.length)],76,104)+
+    '<div class="tface">'+face+'</div>';
+  crowdEl.appendChild(d);
+  return d;
+}
+
+/* ============================================================
+   LEVEL FLOW
+   ============================================================ */
+function startLevel(i){
+  token++;
+  cur=i; keepCount=0; foundOwner=false; phase="idle"; busy=false;
+  var L=LEVELS[i];
+  quietMode=!!L.quiet;
+  /* reset visuals */
+  document.body.classList.remove("mapOpen");
+  $("mapScreen").classList.remove("show");
+  $("celebrate").classList.remove("show");
+  bannerEl.classList.remove("show"); msgEl.classList.remove("show");
+  scene.classList.remove("somber");
+  hero.classList.remove("hug","caped","crowned","faceLeft","walking");
+  heroThought.classList.remove("show");
+  heldItem.style.display="none";
+  crowdEl.innerHTML=""; ownersEl.innerHTML="";
+  $("statue").style.display="none"; $("statue").style.transform="translateY(160px)";
+  $("levelChip").style.display="block";
+  $("levelChip").textContent="Level "+(i+1)+" "+L.item;
+  $("mapBtn").style.display="block";
+  $("cardKeep").classList.toggle("tempting",!!L.tempt);
+  applySetting(L.set,L);
+  setMusic("full");
+
+  /* owners */
+  if(L.find){
+    trueOwnerData=null;
+    for(var k=0;k<L.find.length;k++){
+      var c=L.find[k];
+      var el=buildCitizen(c,true);
+      el.classList.add("calm");                 /* nobody cries until we know */
+      if(c.own){ ownerMain=el; trueOwnerData=c; }
+    }
+  }else{
+    ownerMain=buildCitizen(L.owner,false);
+    trueOwnerData=L.owner;
+    if(L.group){                                /* team of kids beside the captain */
+      tinyCitizen(L.owner.x*100+11,"😟","");
+      tinyCitizen(L.owner.x*100+19,"🙁","");
+    }
+  }
+
+  /* item + optional sand */
+  itemEl.textContent=L.item;
+  itemEl.style.left=(L.itemX*100-4)+"%";
+  itemEl.classList.toggle("torch",!!L.torch);
+  $("giveFace").textContent=L.find?"🥺":L.owner.f;
+  if(L.buried){
+    dug=false; sandLeft=5;
+    itemEl.style.display="none";
+    sandEl.style.display="flex";
+    sandEl.style.left=(L.itemX*100-5.5)+"%";
+    sandEl.style.opacity=1; sandEl.style.transform="scale(1)";
+  }else{
+    dug=true;
+    sandEl.style.display="none";
+    itemEl.style.display="flex";
+  }
+  placeHero(HOME_X*stageW()-65);
+  say(L.intro);
+}
+
+/* ----- sand rub (L8) ----- */
+var rubbing=false, lastRX=0, lastRY=0, rubDist=0;
+function doRub(){
+  if(dug||sandLeft<=0) return;
+  sandLeft--;
+  rubSound();
+  var p=document.createElement("div"); p.className="puff"; p.textContent="💨";
+  p.style.left=sandEl.style.left; p.style.bottom="26%";
+  scene.appendChild(p); setTimeout(function(){p.remove();},900);
+  sandEl.style.opacity=(sandLeft/5*.9+.1);
+  sandEl.style.transform="scale("+(0.55+sandLeft/5*.45)+")";
+  if(sandLeft<=0){
+    dug=true;
+    sandEl.style.display="none";
+    itemEl.style.display="flex";
+    sparkleSound();
+    say("You found the shell bucket! 🐚 Tap it!");
+  }
+}
+sandEl.addEventListener("pointerdown",function(e){
+  rubbing=true; lastRX=e.clientX; lastRY=e.clientY; rubDist=0; doRub();
+});
+sandEl.addEventListener("pointermove",function(e){
+  if(!rubbing) return;
+  rubDist+=Math.abs(e.clientX-lastRX)+Math.abs(e.clientY-lastRY);
+  lastRX=e.clientX; lastRY=e.clientY;
+  if(rubDist>60){ rubDist=0; doRub(); }
+});
+document.addEventListener("pointerup",function(){ rubbing=false; });
+
+/* ----- tap the sparkling item ----- */
+function onItemTap(){
+  if(busy||phase!=="idle"||!dug||itemEl.style.display==="none") return;
+  busy=true; phase="toItem";
+  var L=LEVELS[cur];
+  say("Web Buddy is going to get it!",2500);
+  walkTo(L.itemX,function(){
+    itemEl.style.display="none";
+    heldItem.textContent=L.item; heldItem.style.display="block";
+    sparkleSound();
+    later(showChoices,600);
+  });
+}
+function showChoices(){ phase="choice"; choicesEl.classList.add("show"); }
+function hideChoices(){ choicesEl.classList.remove("show"); }
+
+/* ----- GIVE: full celebration (also after changing your mind) ----- */
+function onGive(){
+  if(phase!=="choice") return;
+  hideChoices();
+  var L=LEVELS[cur];
+  scene.classList.remove("somber");
+  heroThought.classList.remove("show");
+  setMusic("full");
+  if(L.find && !foundOwner){ startFindPhase(); return; }
+  deliver();
+}
+
+/* ----- FIND-OWNER phase (L5 / L11 / L17) ----- */
+function startFindPhase(){
+  phase="find";
+  say(LEVELS[cur].findMsg);
+}
+function onCitizenTap(el,c){
+  if(phase!=="find") return;
+  if(c.own){
+    foundOwner=true; phase="deliver";
+    el.classList.remove("calm");
+    starDing();
+    say("Yes! It's theirs! 🎯",2200);
+    deliver();
+  }else{
+    softHmm();
+    el.classList.remove("wiggle"); void el.offsetWidth; el.classList.add("wiggle");
+    say("Hmm, not theirs! Check the thought bubbles 💭",2600);
+  }
+}
+
+/* ----- deliver to the true owner ----- */
+function deliver(){
+  phase="deliver";
+  var L=LEVELS[cur], od=trueOwnerData;
+  say("Web Buddy gives the "+L.name+" back! 🤝",3000);
+  walkTo(od.x-0.1,function(){
+    heldItem.style.display="none";
+    var all=ownersEl.querySelectorAll(".citizen");
+    for(var i=0;i<all.length;i++){
+      all[i].classList.remove("teary","calm");
+      all[i].classList.add("happy");
+    }
+    ownerMain.querySelector(".face").textContent=od.h||"😄";
+    hero.classList.add("hug");
+    burstHearts(od.x-0.03);
+    swellMusic(); cheerSound(); confetti(30);
+    if(L.loud){                                 /* stadium roars extra loud */
+      later(function(){ cheerSound(.5); fanfare(); },400);
+      later(function(){ cheerSound(.45); },1200);
+    }
+    if(L.group){
+      var tk=crowdEl.querySelectorAll(".tinyCitizen");
+      for(var j=0;j<tk.length;j++){ tk[j].classList.add("cheering");
+        tk[j].querySelector(".tface").textContent="🥳"; }
+    }
+    var c1=tinyCitizen(-10,"🎉","cheering"), c2=tinyCitizen(104,"🥳","cheering");
+    later(function(){ c1.style.transform="translateX("+(stageW()*.2)+"px)";
+      c2.style.transform="translateX(-"+(stageW()*.18)+"px)"; },50);
+    later(function(){ showBanner("HERO! 🦸",2400);
+      say("You gave it back! What a hero! 🌟",3200); },900);
+    if(L.finale){ later(finale,2600); }
+    else{ later(finishLevel,3800); }
+  });
+}
+
+/* ----- KEEP: no buzzer, no scolding — a quiet gentle moment ----- */
+function onKeep(){
+  if(phase!=="choice") return;
+  hideChoices(); phase="keep";
+  keepCount++;
+  var L=LEVELS[cur];
+  scene.classList.add("somber");                /* world loses its color */
+  setMusic("soft");                             /* music thins to a lonely solo */
+  ownerMain.classList.remove("calm");
+  ownerMain.classList.add("teary");             /* the owner misses it */
+  heroThought.textContent=trueOwnerData.f;
+  hero.classList.add("faceLeft");
+  later(function(){ hero.classList.remove("faceLeft");
+    heroThought.classList.add("show"); },1200);
+  later(function(){ say("They miss it... what would a hero do? 💭"); },1800);
+  later(function(){
+    heroThought.classList.remove("show");
+    showChoices();                              /* same two cards, no pressure */
+  },4600);
+}
+
+/* ----- level complete: stars, save, overlay ----- */
+function calcStars(){ return keepCount===0?3:(keepCount===1?2:1); }
+function saveResult(){
+  var s=calcStars();
+  if(s>store.stars[cur]) store.stars[cur]=s;
+  if(cur+2>store.unlocked) store.unlocked=Math.min(cur+2,20);
+  saveStore();
+  return s;
+}
+function finishLevel(){
+  phase="done";
+  var s=saveResult();
+  var box=$("celeStars").children;
+  for(var i=0;i<3;i++) box[i].classList.remove("on");
+  $("celeTitle").textContent=cur===19?"You finished ALL 20 levels! 🏆":"Level "+(cur+1)+" done! 🎉";
+  $("nextBtn").style.display=cur<19?"block":"none";
+  $("celebrate").classList.add("show");
+  for(var j=0;j<s;j++){
+    (function(k){ later(function(){ box[k].classList.add("on"); starDing(); },400+k*450); })(j);
+  }
+}
+
+/* ----- L20 FINALE: parade, statue, cape + crown ----- */
+function finale(){
+  phase="finale";
+  hero.classList.add("caped","crowned");
+  fanfare(); swellMusic(); confetti(70); cheerSound(.5);
+  showBanner("🎉 HERO OF HONESTY! 🎉");
+  say("The whole town came to cheer for YOU! ❤️");
+  $("statue").style.display="block";
+  later(function(){ $("statue").style.transform="translateY(0)"; starDing(); },600);
+  /* every owner from the whole game marches by to cheer */
+  var faces=["😄","🥰","😁","🤩","👵","😋","😊","🥳","🤗","😄","🥰","😁"];
+  for(var i=0;i<12;i++){
+    var t=tinyCitizen(-14-i*9,faces[i],"marching");
+    t.style.animationDelay=(i*.45)+"s";
+  }
+  later(function(){ confetti(50); cheerSound(.5); fanfare(); },2600);
+  later(function(){ confetti(40); cheerSound(.4); },4600);
+  later(finishLevel,6200);
+}
+
+/* ============================================================
+   LEVEL MAP — vertical web-path through vignettes
+   ============================================================ */
+var NODE_GAP=170, NODE_TOP=110;
+var mapBuilt=false;
+function nodeX(i){ return [24,50,76,50][i%4]; }
+function nodeY(i){ return NODE_TOP+i*NODE_GAP; }
+function buildMap(){
+  var inner=$("mapInner");
+  var H=NODE_TOP+19*NODE_GAP+160;
+  inner.style.height=H+"px";
+  var pts="";
+  for(var i=0;i<20;i++) pts+=nodeX(i)+","+nodeY(i)+" ";
+  var html='<svg id="pathSvg" viewBox="0 0 100 '+H+'" preserveAspectRatio="none" height="'+H+'">'+
+    '<polyline points="'+pts+'" fill="none" stroke="rgba(255,255,255,.75)" stroke-width="5" '+
+    'stroke-dasharray="2 10" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>';
+  /* decorations along the trail */
+  var decos=[["🌳",8,1],["🏪",88,2.6],["🎠",10,3.4],["🏫",90,4.4],["🌴",8,6.6],
+    ["🏖️",90,7.4],["📚",10,8.6],["🍦",88,9.4],["⛄",10,10.6],["🌙",88,11.4],
+    ["🎂",10,12.6],["🐹",88,13.4],["🚇",10,14.6],["🌃",88,15.4],["🏟️",10,17.2],
+    ["🏛️",88,18.2],["🌅",50,19.55]];
+  for(var d=0;d<decos.length;d++){
+    html+='<div class="mapDeco" style="left:'+decos[d][1]+'%;top:'+(NODE_TOP+decos[d][2]*NODE_GAP-70)+'px;">'+decos[d][0]+'</div>';
+  }
+  inner.innerHTML=html;
+  for(var n=0;n<20;n++){
+    var el=document.createElement("button");
+    el.className="node";
+    el.style.left=nodeX(n)+"%";
+    el.style.top=(nodeY(n)-53)+"px";
+    el.dataset.i=n;
+    el.addEventListener("pointerdown",onNodeTap);
+    inner.appendChild(el);
+  }
+  mapBuilt=true;
+}
+function refreshMap(){
+  if(!mapBuilt) buildMap();
+  var nodes=$("mapInner").querySelectorAll(".node");
+  for(var i=0;i<20;i++){
+    var el=nodes[i], st=store.stars[i];
+    el.classList.remove("open","done","locked");
+    if(st>0){
+      el.classList.add("done");
+      el.innerHTML='<div class="nnum">'+(i+1)+'</div><div class="nstars">'+
+        "⭐".repeat(st)+'</div>';
+    }else if(i<store.unlocked){
+      el.classList.add("open");
+      el.innerHTML='<div class="nnum">'+(i+1)+'</div><div class="nico">'+LEVELS[i].item+'</div>';
+    }else{
+      el.classList.add("locked");
+      el.innerHTML='<div class="nico">🔒</div><div class="nstars">🕸️</div>';
+    }
+  }
+}
+function nextUnbeaten(){
+  for(var i=0;i<20;i++){ if(store.stars[i]===0) return Math.min(i,store.unlocked-1); }
+  return 19;
+}
+function scrollToNode(i,smooth){
+  var y=nodeY(i)-$("mapScroll").clientHeight/2;
+  if(y<0) y=0;
+  $("mapScroll").scrollTo({top:y,behavior:smooth?"smooth":"auto"});
+}
+function onNodeTap(e){
+  var el=e.currentTarget, i=+el.dataset.i;
+  if(i>=store.unlocked && store.stars[i]===0){
+    el.classList.remove("wiggle"); void el.offsetWidth; el.classList.add("wiggle");
+    softHmm();
+    toast("Locked in a web cocoon! 🕸️ Finish Level "+store.unlocked+" first! 🔒");
+    return;
+  }
+  starDing();
+  startLevel(i);
+}
+function showMap(scrollSmooth){
+  token++;
+  phase="map"; busy=true;
+  $("celebrate").classList.remove("show");
+  $("levelChip").style.display="none";
+  $("mapBtn").style.display="none";
+  msgEl.classList.remove("show"); bannerEl.classList.remove("show");
+  choicesEl.classList.remove("show");
+  scene.classList.remove("somber");
+  setMusic("full"); quietMode=false;
+  refreshMap();
+  document.body.classList.add("mapOpen");
+  $("mapScreen").classList.add("show");
+  scrollToNode(nextUnbeaten(),scrollSmooth);
+}
+
+/* ============================================================
+   INPUT & BOOT — pointer events only, iPad friendly
+   ============================================================ */
+["contextmenu","gesturestart","dblclick","selectstart"].forEach(function(ev){
+  document.addEventListener(ev,function(e){ e.preventDefault(); },{passive:false});
+});
+document.addEventListener("touchmove",function(e){
+  if(!e.target.closest||!e.target.closest("#mapScroll")) e.preventDefault();
+},{passive:false});
+
+itemEl.addEventListener("pointerdown",onItemTap);
+$("cardGive").addEventListener("pointerdown",onGive);
+$("cardKeep").addEventListener("pointerdown",onKeep);
+$("muteBtn").addEventListener("pointerdown",function(){
+  muted=!muted;
+  $("muteBtn").textContent=muted?"🔇":"🔊";
+  if(master) master.gain.value=muted?0:1;
+});
+$("mapBtn").addEventListener("pointerdown",function(){ showMap(false); });
+$("toMapBtn").addEventListener("pointerdown",function(){ showMap(false); });
+$("nextBtn").addEventListener("pointerdown",function(){
+  var n=cur+1;
+  if(n<20 && n<store.unlocked) startLevel(n);
+  else showMap(false);
+});
+$("continueBtn").addEventListener("pointerdown",function(){
+  scrollToNode(nextUnbeaten(),true);
+});
+$("playBtn").addEventListener("pointerdown",function(){
+  initAudio();
+  if(AC && AC.state==="suspended") AC.resume();
+  $("startScreen").style.display="none";
+  showMap(false);
+});
+
+window.addEventListener("resize",function(){
+  if(heroX>stageW()) placeHero(stageW()*.5);
+});
+
+loadStore();
+placeHero(HOME_X*window.innerWidth-65);
+</script>
+</body>
+</html>
