@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🕸️ Yuvaan's Spidey Games</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body { height:100%; }
+  body {
+    font-family:'Comic Sans MS','Chalkboard SE','Marker Felt',sans-serif;
+    background:linear-gradient(180deg,#87CEEB 0%,#FFE9A8 100%);
+    height:100%; overflow:hidden; user-select:none; -webkit-user-select:none;
+    touch-action:manipulation;
+  }
+  .screen { position:fixed; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; transition:opacity .35s, transform .35s; }
+  .hidden { opacity:0; pointer-events:none; transform:scale(.94); }
+
+  /* ---------- SCREEN 1 : one big icon ---------- */
+  #homeIcon {
+    width:min(46vmin,300px); height:min(46vmin,300px); border-radius:22%;
+    background:linear-gradient(160deg,#E53935,#b71c1c);
+    border:6px solid #fff; box-shadow:0 14px 40px rgba(0,0,0,.28);
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+    animation:pulse 1.6s ease-in-out infinite; position:relative; overflow:hidden;
+  }
+  @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
+  #homeIcon:active { transform:scale(.95); }
+  #homeIcon svg { width:82%; height:82%; }
+  .home-title { margin-top:26px; font-size:clamp(26px,4.5vw,42px); color:#1E5AE8; text-shadow:2px 2px 0 #fff; }
+  .home-hint { margin-top:10px; font-size:clamp(18px,2.5vw,24px); color:#7a5c00; animation:blink 1.6s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.35} }
+
+  /* ---------- SCREEN 2 : game drawer ---------- */
+  #drawer { justify-content:flex-start; padding:20px 16px; overflow-y:auto; }
+  .drawer-head { display:flex; align-items:center; gap:14px; margin:8px 0 18px; }
+  .mini-badge {
+    width:64px; height:64px; border-radius:22%; background:linear-gradient(160deg,#E53935,#b71c1c);
+    border:3px solid #fff; display:flex; align-items:center; justify-content:center; font-size:34px;
+    box-shadow:0 4px 10px rgba(0,0,0,.2);
+  }
+  .drawer-head h1 { font-size:clamp(24px,4vw,36px); color:#1E5AE8; text-shadow:2px 2px 0 #fff; }
+  .icon-grid {
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:26px; width:100%; max-width:1050px; padding-bottom:30px;
+  }
+  .app {
+    display:flex; flex-direction:column; align-items:center; gap:10px; cursor:pointer;
+    transition:transform .15s;
+  }
+  .app:active { transform:scale(.93); }
+  .app-icon {
+    width:min(38vmin,220px); height:min(38vmin,220px); border-radius:22%;
+    border:6px solid #fff; box-shadow:0 10px 26px rgba(0,0,0,.22); overflow:hidden;
+    position:relative;
+  }
+  .app-icon svg { width:100%; height:100%; display:block; }
+  .app-name { font-size:clamp(18px,2.6vw,24px); color:#333; font-weight:bold; text-align:center; text-shadow:1px 1px 0 #fff; }
+  .app-progress {
+    font-size:16px; color:#7a5c00; background:rgba(255,255,255,.85); border-radius:999px;
+    padding:4px 14px; min-height:28px;
+  }
+
+  /* ---------- game overlay ---------- */
+  #overlay { position:fixed; inset:0; z-index:50; background:#000; display:none; }
+  #overlay.open { display:block; }
+  #overlay iframe { width:100%; height:100%; border:0; }
+  #closeBtn {
+    position:fixed; top:10px; right:10px; z-index:60; width:80px; height:80px;
+    border-radius:50%; border:4px solid #fff; background:#E53935; color:#fff;
+    font-size:32px; font-weight:bold; display:none; cursor:pointer;
+    box-shadow:0 4px 12px rgba(0,0,0,.4); font-family:inherit;
+  }
+  #overlay.open ~ #closeBtn { display:block; }
+</style>
+</head>
+<body>
+
+<!-- ============ SCREEN 1 : the one icon ============ -->
+<div class="screen" id="home">
+  <div id="homeIcon" aria-label="Open games">
+    <!-- Web Buddy face + web -->
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <g stroke="#fff" stroke-width="2.5" opacity="0.4" fill="none">
+        <path d="M100 0 V200 M0 100 H200 M30 30 L170 170 M170 30 L30 170"/>
+        <circle cx="100" cy="100" r="46"/><circle cx="100" cy="100" r="78"/>
+      </g>
+      <circle cx="100" cy="100" r="58" fill="#E53935" stroke="#8e1b18" stroke-width="4"/>
+      <g stroke="#fff" stroke-width="1.8" opacity="0.45" fill="none">
+        <path d="M100 42 V158 M46 80 Q100 96 154 80 M50 126 Q100 110 150 126"/>
+      </g>
+      <ellipse cx="78" cy="96" rx="20" ry="26" fill="#fff" stroke="#111" stroke-width="4" transform="rotate(-8 78 96)"/>
+      <ellipse cx="122" cy="96" rx="20" ry="26" fill="#fff" stroke="#111" stroke-width="4" transform="rotate(8 122 96)"/>
+    </svg>
+  </div>
+  <div class="home-title">Yuvaan's Spidey Games</div>
+  <div class="home-hint">👆 Tap to open!</div>
+</div>
+
+<!-- ============ SCREEN 2 : game icons ============ -->
+<div class="screen hidden" id="drawer">
+  <div class="drawer-head">
+    <div class="mini-badge" id="backHome">🕷️</div>
+    <h1>Pick your adventure! 🎮</h1>
+  </div>
+  <div class="icon-grid">
+
+    <!-- 1 SWING -->
+    <div class="app" data-src="spidey-games/game1-never-quit.html" data-key="yuvaan_swing">
+      <div class="app-icon"><svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="sky1" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#87CEEB"/><stop offset="1" stop-color="#FFB347"/></linearGradient></defs>
+        <rect width="200" height="200" fill="url(#sky1)"/>
+        <circle cx="160" cy="40" r="18" fill="#FFE9A8" opacity=".9"/>
+        <g fill="#3E6B8C"><rect x="0" y="120" width="52" height="80" rx="6"/></g>
+        <g fill="#6B5B95"><rect x="150" y="110" width="50" height="90" rx="6"/></g>
+        <g fill="#FFE9A8"><rect x="10" y="132" width="10" height="10" rx="2"/><rect x="30" y="150" width="10" height="10" rx="2"/>
+          <rect x="162" y="124" width="10" height="10" rx="2"/><rect x="180" y="146" width="10" height="10" rx="2"/></g>
+        <path d="M26 118 Q100 40 175 108" stroke="#fff" stroke-width="4" stroke-dasharray="8 6" fill="none"/>
+        <path d="M100 66 L100 118" stroke="#fff" stroke-width="4"/>
+        <g transform="translate(100 132)">
+          <ellipse cx="0" cy="22" rx="14" ry="18" fill="#1E5AE8"/>
+          <circle cx="0" cy="-2" r="20" fill="#E53935"/>
+          <ellipse cx="-8" cy="-3" rx="6.5" ry="9" fill="#fff" stroke="#111" stroke-width="2.4" transform="rotate(-8 -8 -3)"/>
+          <ellipse cx="8" cy="-3" rx="6.5" ry="9" fill="#fff" stroke="#111" stroke-width="2.4" transform="rotate(8 8 -3)"/>
+          <path d="M-12 34 q-8 8 -14 4 M12 34 q8 8 14 4" stroke="#E53935" stroke-width="7" stroke-linecap="round" fill="none"/>
+        </g>
+        <g opacity=".7" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round">
+          <path d="M52 96 q10 -6 20 -4 M46 112 q12 -8 24 -6"/>
+        </g>
+        <ellipse cx="100" cy="192" rx="34" ry="12" fill="#fff" opacity=".9"/>
+        <path d="M74 192 h52" stroke="#87CEEB" stroke-width="3" stroke-dasharray="6 5"/>
+      </svg></div>
+      <div class="app-name">🏙️ Swing &amp; Swing Again!</div>
+      <div class="app-progress" data-prog>Ready to play!</div>
+    </div>
+
+    <!-- 2 SIGNAL -->
+    <div class="app" data-src="spidey-games/game2-self-control.html" data-key="yuvaan_signal">
+      <div class="app-icon"><svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <rect width="200" height="200" fill="#BDE7B0"/>
+        <ellipse cx="60" cy="200" rx="90" ry="30" fill="#8FD07C"/>
+        <g transform="translate(44 40)">
+          <rect x="-24" y="0" width="48" height="118" rx="16" fill="#444"/>
+          <rect x="-6" y="118" width="12" height="30" fill="#333"/>
+          <circle cx="0" cy="24" r="14" fill="#7a2b28"/>
+          <circle cx="0" cy="58" r="14" fill="#8a7a2c"/>
+          <circle cx="0" cy="92" r="14" fill="#4CAF50"/>
+          <g stroke="#4CAF50" stroke-width="4" stroke-linecap="round" opacity=".85">
+            <path d="M-22 92 h-12 M22 92 h12 M-16 76 l-9 -8 M16 76 l9 -8 M-16 108 l-9 8 M16 108 l9 8"/>
+          </g>
+        </g>
+        <g transform="translate(138 74)">
+          <circle cx="0" cy="0" r="40" fill="#E53935"/>
+          <path d="M0 40 q6 12 0 22 q-6 10 0 18" stroke="#a02522" stroke-width="3" fill="none"/>
+          <path d="M-14 40 L0 74 L14 40" stroke="#fff" stroke-width="3" fill="none"/>
+          <rect x="-16" y="74" width="32" height="22" rx="6" fill="#c98a3d"/>
+          <g transform="translate(0 84)">
+            <circle cx="0" cy="0" r="12" fill="#9e9e9e"/>
+            <path d="M-9 -8 l-4 -7 l7 3 z M9 -8 l4 -7 l-7 3 z" fill="#9e9e9e"/>
+            <circle cx="-4" cy="-1" r="2.4" fill="#111"/><circle cx="4" cy="-1" r="2.4" fill="#111"/>
+            <path d="M-2 4 q2 2 4 0" stroke="#111" stroke-width="1.6" fill="none"/>
+          </g>
+        </g>
+      </svg></div>
+      <div class="app-name">🚦 Spidey Says: Thwip!</div>
+      <div class="app-progress" data-prog>Ready to play!</div>
+    </div>
+
+    <!-- 3 PUZZLE -->
+    <div class="app" data-src="spidey-games/game3-logic.html" data-key="yuvaan_logic">
+      <div class="app-icon"><svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <rect width="200" height="200" fill="#6B5B95"/>
+        <circle cx="100" cy="108" r="66" stroke="#fff" stroke-width="2" opacity=".3" fill="none"/>
+        <circle cx="100" cy="108" r="46" stroke="#fff" stroke-width="2" opacity=".3" fill="none"/>
+        <g transform="translate(56 108) rotate(-10)">
+          <path d="M-34 -30 h48 v18 a12 12 0 0 0 0 24 v18 h-48 z" fill="#FFC93C" stroke="#c79000" stroke-width="4" stroke-linejoin="round"/>
+        </g>
+        <g transform="translate(146 108) rotate(10)">
+          <path d="M34 -30 h-48 v18 a12 12 0 0 1 0 24 v18 h48 z" fill="#4DD0E1" stroke="#0097a7" stroke-width="4" stroke-linejoin="round"/>
+        </g>
+        <g fill="#fff">
+          <path d="M100 84 l4 12 12 4 -12 4 -4 12 -4 -12 -12 -4 12 -4 z"/>
+          <path d="M100 140 l2.5 7 7 2.5 -7 2.5 -2.5 7 -2.5 -7 -7 -2.5 7 -2.5 z" opacity=".85"/>
+        </g>
+        <g transform="translate(100 34)">
+          <circle cx="0" cy="10" r="22" fill="#E53935"/>
+          <ellipse cx="-8" cy="9" rx="7" ry="10" fill="#fff" stroke="#111" stroke-width="2.6" transform="rotate(-8 -8 9)"/>
+          <ellipse cx="8" cy="9" rx="7" ry="10" fill="#fff" stroke="#111" stroke-width="2.6" transform="rotate(8 8 9)"/>
+          <path d="M-22 22 q-8 4 -12 0 M22 22 q8 4 12 0" stroke="#E53935" stroke-width="7" stroke-linecap="round" fill="none"/>
+        </g>
+      </svg></div>
+      <div class="app-name">🧩 Two Pieces, One Hero!</div>
+      <div class="app-progress" data-prog>Ready to play!</div>
+    </div>
+
+    <!-- 4 TEDDY -->
+    <div class="app" data-src="spidey-games/game4-integrity.html" data-key="yuvaan_honesty">
+      <div class="app-icon"><svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <rect width="200" height="200" fill="#FFF3D6"/>
+        <g stroke="#e8d5a0" stroke-width="2" fill="none" opacity=".8">
+          <path d="M200 0 L156 44 M200 22 L170 52 M178 0 L148 30 M200 44 Q170 40 156 44 M178 0 Q174 24 148 30"/>
+        </g>
+        <path d="M100 54 c-14 -18 -44 -8 -44 14 c0 18 24 32 44 46 c20 -14 44 -28 44 -46 c0 -22 -30 -32 -44 -14 z"
+              fill="#F06292" stroke="#c2185b" stroke-width="3"/>
+        <path d="M118 62 l3 8 8 3 -8 3 -3 8 -3 -8 -8 -3 8 -3 z" fill="#fff"/>
+        <g transform="translate(100 128)">
+          <circle cx="-26" cy="-22" r="12" fill="#8d6e63"/><circle cx="26" cy="-22" r="12" fill="#8d6e63"/>
+          <circle cx="-26" cy="-22" r="6" fill="#d7b99a"/><circle cx="26" cy="-22" r="6" fill="#d7b99a"/>
+          <circle cx="0" cy="-12" r="30" fill="#a1887f"/>
+          <ellipse cx="0" cy="-4" rx="12" ry="9" fill="#d7ccc8"/>
+          <circle cx="-10" cy="-18" r="4" fill="#3e2723"/><circle cx="10" cy="-18" r="4" fill="#3e2723"/>
+          <circle cx="0" cy="-7" r="3.4" fill="#3e2723"/>
+          <path d="M0 -4 q0 5 5 6 M0 -4 q0 5 -5 6" stroke="#3e2723" stroke-width="2" fill="none"/>
+          <ellipse cx="0" cy="26" rx="26" ry="22" fill="#a1887f"/>
+          <ellipse cx="0" cy="28" rx="14" ry="12" fill="#d7ccc8"/>
+          <path d="M-2 22 v10 M-6 27 h9" stroke="#8d6e63" stroke-width="2"/>
+        </g>
+        <g transform="translate(100 176)">
+          <path d="M-44 24 q-6 -22 8 -26 q-2 -10 8 -12 q0 -8 10 -8 q2 -8 12 -6 q10 -2 12 6 q10 0 10 10 l0 36 z"
+                fill="#f7c59f" stroke="#d99e6a" stroke-width="3" stroke-linejoin="round"/>
+        </g>
+      </svg></div>
+      <div class="app-name">🧸 The Lost &amp; Found Hero</div>
+      <div class="app-progress" data-prog>Ready to play!</div>
+    </div>
+
+  </div>
+</div>
+
+<div id="overlay"><iframe id="gameFrame" src="about:blank" allow="autoplay"></iframe></div>
+<button id="closeBtn" aria-label="Close game">✕</button>
+
+<script>
+  var home = document.getElementById('home');
+  var drawer = document.getElementById('drawer');
+  var overlay = document.getElementById('overlay');
+  var frame = document.getElementById('gameFrame');
+  var closeBtn = document.getElementById('closeBtn');
+
+  document.getElementById('homeIcon').addEventListener('click', function(){
+    home.classList.add('hidden'); drawer.classList.remove('hidden'); refreshProgress();
+  });
+  document.getElementById('backHome').addEventListener('click', function(){
+    drawer.classList.add('hidden'); home.classList.remove('hidden');
+  });
+
+  // Progress badges: read each game's saved {unlocked, stars[]} if available
+  function refreshProgress(){
+    document.querySelectorAll('.app').forEach(function(app){
+      var el = app.querySelector('[data-prog]');
+      try {
+        var raw = localStorage.getItem(app.getAttribute('data-key'));
+        if (!raw) { el.textContent = 'Ready to play!'; return; }
+        var d = JSON.parse(raw);
+        var done = 0, stars = 0;
+        (d.stars || []).forEach(function(s){ if (s > 0) { done++; stars += s; } });
+        el.textContent = done >= 20 ? '🏆 All 20 done! ⭐' + stars
+                        : done > 0 ? '📍 Level ' + Math.min((d.unlocked || 1), 20) + '/20 · ⭐' + stars
+                        : 'Ready to play!';
+      } catch(e) { el.textContent = 'Ready to play!'; }
+    });
+  }
+
+  // Launch game fullscreen
+  document.querySelectorAll('.app').forEach(function(app){
+    app.addEventListener('click', function(){
+      frame.src = app.getAttribute('data-src');
+      overlay.classList.add('open');
+    });
+  });
+  closeBtn.addEventListener('click', function(){
+    overlay.classList.remove('open');
+    frame.src = 'about:blank'; // stops game + audio
+    refreshProgress();
+  });
+
+  // Block double-tap zoom & context menu
+  document.addEventListener('dblclick', function(e){ e.preventDefault(); });
+  document.addEventListener('contextmenu', function(e){ e.preventDefault(); });
+</script>
+</body>
+</html>

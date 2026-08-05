@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Swing &amp; Swing Again! 🕸️ — 20 Levels</title>
+<style>
+/* ============================================================
+   SWING & SWING AGAIN!  —  a never-quit game for little heroes
+   20-level edition: level map, balloon chains, moving anchors,
+   grand ice-cream finale. One file. No images. Web Audio only.
+   ============================================================ */
+*{margin:0;padding:0;box-sizing:border-box;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;height:100%;overflow:hidden;position:fixed;
+  font-family:'Comic Sans MS','Chalkboard SE','Marker Felt',sans-serif;}
+body{touch-action:none;}
+/* while the level map is open, let vertical pans reach #mapScroll */
+body.mapOpen, body.mapOpen #stage{touch-action:pan-y;}
+body{background:linear-gradient(#87CEEB 0%,#a8d8ef 45%,#ffd9a0 80%,#FFE9A8 100%);}
+body.sunset{background:linear-gradient(#3b3b7a 0%,#8a5aa8 30%,#ff8a5c 65%,#ffcf6e 100%);}
+
+#stage{position:fixed;inset:0;overflow:hidden;touch-action:none;}
+
+/* ---------- scaled world ---------- */
+#scaler{position:absolute;top:0;left:0;transform-origin:0 0;}
+.layer{position:absolute;top:0;left:0;height:700px;will-change:transform;}
+
+/* far decorative silhouettes */
+.farB{position:absolute;bottom:0;background:#b9d3e6;border-radius:6px 6px 0 0;}
+.midB{position:absolute;bottom:0;background:#8fb4cf;border-radius:8px 8px 0 0;}
+body.sunset .farB{background:#7a6aa0;}
+body.sunset .midB{background:#5d4f85;}
+#sun{position:absolute;left:340px;top:60px;width:110px;height:110px;border-radius:50%;
+  background:radial-gradient(circle at 40% 35%,#fff6c9,#FFC93C 70%);box-shadow:0 0 60px 24px rgba(255,201,60,.55);}
+body.sunset #sun{background:radial-gradient(circle at 40% 35%,#ffe0b8,#ff7043 70%);box-shadow:0 0 70px 30px rgba(255,112,67,.55);}
+.decoCloud{position:absolute;font-size:70px;opacity:.85;animation:drift 26s linear infinite;}
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(-260px)}}
+
+/* main buildings */
+.bldg{position:absolute;border-radius:10px 10px 0 0;box-shadow:inset 0 8px 0 rgba(255,255,255,.18);}
+.roofLip{position:absolute;height:16px;border-radius:8px;background:#2f5570;box-shadow:0 3px 0 rgba(0,0,0,.18);}
+.roofLip.purple{background:#544878;}
+.win-lit{position:absolute;width:26px;height:30px;border-radius:4px;background:#FFC93C;box-shadow:0 0 10px rgba(255,201,60,.8);}
+.win-dark{position:absolute;width:26px;height:30px;border-radius:4px;background:rgba(20,40,60,.45);}
+.goalFlag{position:absolute;font-size:64px;z-index:3;animation:flagWave 1.3s ease-in-out infinite;transform-origin:50% 100%;}
+@keyframes flagWave{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
+
+/* anchor balloon (two-swing chain) */
+.balloon{position:absolute;font-size:80px;z-index:4;animation:balBob 1.8s ease-in-out infinite;will-change:left;}
+@keyframes balBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+.balloonRing{position:absolute;width:150px;height:150px;border:5px dashed rgba(255,255,255,.75);border-radius:50%;
+  z-index:3;animation:ringPulse 1.2s ease-in-out infinite;will-change:left;}
+@keyframes ringPulse{0%,100%{transform:scale(1);opacity:.45}50%{transform:scale(1.12);opacity:.9}}
+
+/* wind sparkles (visual only) */
+.windSpark{position:absolute;font-size:34px;z-index:2;opacity:0;animation:sparkFly 3s linear forwards;}
+@keyframes sparkFly{0%{opacity:0;transform:translateX(0) translateY(0)}15%{opacity:.9}
+  85%{opacity:.9}100%{opacity:0;transform:translateX(-420px) translateY(-60px)}}
+
+/* ---------- hero ---------- */
+#hero{position:absolute;width:90px;height:110px;left:0;top:0;z-index:6;will-change:transform;transform-origin:45px 110px;}
+#heroInner{width:100%;height:100%;}
+#heroInner.idle{animation:idleBounce 1.2s ease-in-out infinite;}
+@keyframes idleBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+#heroInner.crouch{transform:translateY(8px) scaleY(.92);transform-origin:50% 100%;}
+.armL,.armR{transform-box:fill-box;transform-origin:50% 12%;transition:transform .25s ease;}
+.celebrate .armL{transform:rotate(155deg);}
+.celebrate .armR{transform:rotate(-155deg);}
+
+/* trampoline cloud */
+#cloud{position:absolute;width:330px;height:120px;z-index:4;transition:transform .18s ease;transform-origin:50% 100%;}
+#cloud.squish{transform:scaleY(.62) scaleX(1.18);}
+.puff{position:absolute;background:#fff;border-radius:50%;box-shadow:0 6px 14px rgba(120,160,200,.35);}
+
+/* ice-cream truck (grand finale) */
+#truck{position:absolute;width:210px;height:150px;z-index:3;animation:wiggle 1.6s ease-in-out infinite;transform-origin:50% 100%;}
+#truck.giant{transform:scale(1.55);transform-origin:50% 100%;animation:wiggleG 1.6s ease-in-out infinite;}
+@keyframes wiggle{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
+@keyframes wiggleG{0%,100%{transform:scale(1.55) rotate(-2deg)}50%{transform:scale(1.55) rotate(2deg)}}
+.truckBody{position:absolute;left:0;bottom:18px;width:210px;height:86px;background:#fff;border:5px solid #E53935;border-radius:16px;}
+.truckStripe{position:absolute;left:0;bottom:70px;width:200px;height:16px;border-radius:8px;
+  background:repeating-linear-gradient(90deg,#E53935 0 24px,#fff 24px 48px);}
+.truckWin{position:absolute;left:16px;bottom:40px;width:70px;height:44px;background:#bfe8ff;border:4px solid #1E5AE8;border-radius:10px;}
+.wheel{position:absolute;bottom:0;width:38px;height:38px;background:#333;border-radius:50%;border:7px solid #777;}
+.truckCone{position:absolute;left:120px;bottom:96px;font-size:64px;transform:rotate(8deg);}
+.truckNote{position:absolute;left:52px;bottom:110px;font-size:30px;animation:noteFloat 1.4s ease-in-out infinite;}
+@keyframes noteFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.friend{position:absolute;font-size:56px;z-index:4;animation:friendJump .9s ease-in-out infinite;transform-origin:50% 100%;}
+@keyframes friendJump{0%,100%{transform:translateY(0)}50%{transform:translateY(-26px)}}
+
+/* svg fx layer (webs, preview) */
+#fx{position:absolute;top:0;left:0;z-index:5;pointer-events:none;overflow:visible;}
+#preview{stroke:#fff;stroke-width:6;stroke-dasharray:4 16;stroke-linecap:round;fill:none;animation:pulseArc .7s ease-in-out infinite;}
+@keyframes pulseArc{0%,100%{opacity:.45}50%{opacity:1}}
+#chargeLine,#webLine{stroke:#fff;stroke-width:5;stroke-dasharray:10 8;stroke-linecap:round;}
+#splat line{stroke:#fff;stroke-width:4;stroke-linecap:round;}
+#splat{transition:transform .2s ease;}
+#splat.pulse{animation:splatPulse .7s ease-in-out infinite;}
+@keyframes splatPulse{0%,100%{opacity:.5}50%{opacity:1}}
+
+/* floating world text */
+.floatText{position:absolute;z-index:9;font-size:52px;font-weight:bold;color:#fff;
+  text-shadow:0 3px 0 rgba(0,0,0,.25), 0 0 18px rgba(255,255,255,.6);
+  animation:floatUp 1.2s ease-out forwards;white-space:nowrap;transform:translateX(-50%);}
+@keyframes floatUp{0%{opacity:0;transform:translateX(-50%) translateY(20px) scale(.5)}
+  25%{opacity:1;transform:translateX(-50%) translateY(0) scale(1.15)}
+  100%{opacity:0;transform:translateX(-50%) translateY(-90px) scale(1)}}
+
+/* ---------- HUD (unscaled) ---------- */
+#hud{position:fixed;inset:0;pointer-events:none;z-index:20;display:none;}
+#muteBtn,#hudMapBtn{position:absolute;top:14px;width:96px;height:96px;border-radius:26px;border:5px solid #fff;
+  background:#1E5AE8;color:#fff;font-size:44px;pointer-events:auto;box-shadow:0 6px 0 rgba(0,0,0,.2);
+  display:flex;align-items:center;justify-content:center;font-family:inherit;}
+#muteBtn{left:14px;}
+#hudMapBtn{right:14px;background:#7b47c9;}
+#muteBtn:active,#hudMapBtn:active{transform:scale(.93);}
+#tryBadge{position:absolute;top:16px;left:50%;transform:translateX(-50%);background:#E53935;color:#fff;
+  border:5px solid #fff;border-radius:40px;padding:10px 30px;font-size:30px;font-weight:bold;
+  box-shadow:0 6px 0 rgba(0,0,0,.2);white-space:nowrap;}
+#tryBadge.pop{animation:badgePop .4s ease;}
+@keyframes badgePop{0%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.25)}100%{transform:translateX(-50%) scale(1)}}
+#starBar{position:absolute;top:124px;right:18px;background:rgba(255,255,255,.85);border-radius:30px;
+  padding:8px 18px;font-size:38px;display:flex;gap:6px;box-shadow:0 4px 0 rgba(0,0,0,.15);}
+.starSlot{filter:grayscale(1) opacity(.35);transition:filter .3s;}
+.starSlot.earned{filter:none;}
+#msg{position:absolute;top:126px;left:50%;transform:translateX(-50%);font-size:36px;font-weight:bold;color:#fff;
+  text-shadow:0 3px 0 rgba(0,0,0,.3);background:rgba(30,90,232,.85);padding:10px 30px;border-radius:30px;
+  border:4px solid #fff;opacity:0;white-space:nowrap;max-width:92vw;overflow:hidden;text-overflow:ellipsis;}
+#msg.show{animation:msgIn 2.4s ease forwards;}
+@keyframes msgIn{0%{opacity:0;transform:translateX(-50%) scale(.6)}12%{opacity:1;transform:translateX(-50%) scale(1.08)}
+  20%{transform:translateX(-50%) scale(1)}80%{opacity:1}100%{opacity:0}}
+#hint{position:absolute;bottom:9vh;left:50%;transform:translateX(-50%);font-size:38px;font-weight:bold;color:#fff;
+  background:rgba(229,57,53,.9);border:5px solid #fff;border-radius:40px;padding:14px 34px;
+  animation:hintPulse 1.1s ease-in-out infinite;white-space:nowrap;box-shadow:0 6px 0 rgba(0,0,0,.2);}
+@keyframes hintPulse{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.1)}}
+
+/* tutorial hand (level 1) */
+#tutHand{position:fixed;bottom:18vh;left:50%;z-index:22;font-size:110px;pointer-events:none;display:none;
+  text-shadow:0 6px 12px rgba(0,0,0,.3);animation:tapDemo 2.2s ease-in-out infinite;}
+@keyframes tapDemo{0%{transform:translate(-50%,0) scale(1)}18%{transform:translate(-50%,26px) scale(.82)}
+  55%{transform:translate(-50%,26px) scale(.82)}70%{transform:translate(-50%,-14px) scale(1.08)}
+  100%{transform:translate(-50%,0) scale(1)}}
+
+/* ---------- banner + confetti + toast ---------- */
+#banner{position:fixed;top:-140px;left:50%;transform:translateX(-50%);z-index:30;background:#FFC93C;color:#B71C1C;
+  border:6px solid #fff;border-radius:30px;padding:18px 44px;font-size:46px;font-weight:bold;white-space:nowrap;
+  box-shadow:0 10px 0 rgba(0,0,0,.2);transition:top .6s cubic-bezier(.34,1.56,.64,1);}
+#banner.show{top:20px;}
+#confettiBox{position:fixed;inset:0;pointer-events:none;z-index:40;overflow:hidden;}
+.conf{position:absolute;top:-30px;border-radius:3px;animation:confFall linear forwards;}
+@keyframes confFall{0%{transform:translateY(0) rotate(0)}100%{transform:translateY(110vh) rotate(720deg)}}
+#toast{position:fixed;bottom:16vh;left:50%;transform:translateX(-50%) scale(0);z-index:70;background:#E53935;color:#fff;
+  border:5px solid #fff;border-radius:34px;padding:14px 34px;font-size:32px;font-weight:bold;white-space:nowrap;
+  box-shadow:0 6px 0 rgba(0,0,0,.25);transition:transform .25s cubic-bezier(.34,1.56,.64,1);}
+#toast.show{transform:translateX(-50%) scale(1);}
+
+/* ---------- overlays ---------- */
+.overlay{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:22px;text-align:center;padding:20px;}
+#startScreen{background:linear-gradient(#87CEEB,#FFE9A8);}
+#winScreen{background:rgba(30,90,232,.92);display:none;}
+.bigTitle{font-size:min(9vw,66px);font-weight:bold;color:#E53935;text-shadow:0 4px 0 #fff,0 8px 0 rgba(0,0,0,.15);}
+#winScreen .bigTitle{color:#FFC93C;text-shadow:0 4px 0 rgba(0,0,0,.3);}
+.subTitle{font-size:min(5.5vw,34px);color:#1E5AE8;font-weight:bold;background:rgba(255,255,255,.8);
+  padding:10px 26px;border-radius:26px;}
+.bigBtn{pointer-events:auto;border:none;font-family:inherit;font-weight:bold;color:#fff;background:#4CAF50;
+  font-size:42px;padding:24px 56px;border-radius:50px;border:6px solid #fff;box-shadow:0 8px 0 rgba(0,0,0,.25);
+  animation:btnPulse 1.2s ease-in-out infinite;}
+.bigBtn:active{transform:scale(.93);}
+@keyframes btnPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+.midBtn{pointer-events:auto;border:none;font-family:inherit;font-weight:bold;color:#fff;background:#7b47c9;
+  font-size:32px;padding:18px 40px;border-radius:44px;border:5px solid #fff;box-shadow:0 6px 0 rgba(0,0,0,.25);min-height:84px;}
+.midBtn:active{transform:scale(.93);}
+#startHero{width:160px;height:196px;animation:idleBounce 1.2s ease-in-out infinite;}
+#winStars{font-size:80px;display:flex;gap:10px;}
+#winStars span{opacity:0;transform:scale(0);animation:winStar .7s cubic-bezier(.34,1.56,.64,1) forwards;}
+@keyframes winStar{0%{opacity:0;transform:scale(0) rotate(-90deg)}60%{opacity:1;transform:scale(1.3) rotate(10deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
+#winTries{font-size:32px;color:#fff;background:rgba(255,255,255,.18);padding:10px 26px;border-radius:24px;}
+
+/* ---------- LEVEL MAP ---------- */
+#mapScreen{position:fixed;inset:0;z-index:45;display:none;
+  background:linear-gradient(#5a8fd6 0%,#87CEEB 30%,#a8d8ef 60%,#ffd9a0 90%,#FFE9A8 100%);}
+#mapTitle{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:48;font-size:min(7vw,44px);
+  font-weight:bold;color:#fff;text-shadow:0 3px 0 rgba(0,0,0,.3);background:rgba(30,90,232,.9);
+  border:5px solid #fff;border-radius:34px;padding:10px 34px;white-space:nowrap;pointer-events:none;}
+#mapScroll{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;touch-action:pan-y;
+  -webkit-overflow-scrolling:touch;}
+#mapPath{position:relative;width:100%;}
+#mapSvg{position:absolute;top:0;left:0;pointer-events:none;}
+.mapDeco{position:absolute;font-size:56px;pointer-events:none;opacity:.9;}
+.mapNode{position:absolute;width:96px;height:96px;border-radius:50%;border:6px solid #fff;
+  display:flex;align-items:center;justify-content:center;font-family:inherit;font-weight:bold;font-size:40px;
+  color:#fff;box-shadow:0 6px 0 rgba(0,0,0,.22);transform:translate(-50%,-50%);pointer-events:auto;}
+.mapNode.play{background:radial-gradient(circle at 35% 30%,#7ee085,#4CAF50);animation:nodePulse 1.1s ease-in-out infinite;}
+@keyframes nodePulse{0%,100%{transform:translate(-50%,-50%) scale(1);box-shadow:0 6px 0 rgba(0,0,0,.22),0 0 0 0 rgba(76,175,80,.5)}
+  50%{transform:translate(-50%,-50%) scale(1.12);box-shadow:0 6px 0 rgba(0,0,0,.22),0 0 0 18px rgba(76,175,80,0)}}
+.mapNode.done{background:radial-gradient(circle at 35% 30%,#7db8ff,#1E5AE8);}
+.mapNode.locked{background:radial-gradient(circle at 35% 30%,#c8c8c8,#8f8f8f);color:#f2f2f2;font-size:34px;}
+.mapNode.wiggle{animation:lockWiggle .5s ease;}
+@keyframes lockWiggle{0%,100%{transform:translate(-50%,-50%) rotate(0)}20%{transform:translate(-50%,-50%) rotate(-10deg)}
+  40%{transform:translate(-50%,-50%) rotate(9deg)}60%{transform:translate(-50%,-50%) rotate(-7deg)}80%{transform:translate(-50%,-50%) rotate(5deg)}}
+.nodeStars{position:absolute;left:50%;top:-34px;transform:translateX(-50%);display:flex;gap:2px;font-size:26px;
+  pointer-events:none;white-space:nowrap;}
+.nodeStars .off{filter:grayscale(1) opacity(.4);}
+.nodeStars span:nth-child(1){transform:translateY(8px) rotate(-18deg);}
+.nodeStars span:nth-child(3){transform:translateY(8px) rotate(18deg);}
+#continueBtn{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);z-index:48;pointer-events:auto;
+  border:6px solid #fff;font-family:inherit;font-weight:bold;color:#fff;background:#4CAF50;font-size:34px;
+  padding:18px 44px;border-radius:50px;box-shadow:0 8px 0 rgba(0,0,0,.25);min-height:84px;white-space:nowrap;
+  animation:btnPulse 1.2s ease-in-out infinite;}
+#continueBtn:active{transform:translateX(-50%) scale(.93);}
+</style>
+</head>
+<body>
+<div id="stage">
+  <!-- scaled game world -->
+  <div id="scaler">
+    <div class="layer" id="farLayer"></div>
+    <div class="layer" id="midLayer"></div>
+    <div class="layer" id="mainLayer"></div>
+  </div>
+
+  <!-- HUD -->
+  <div id="hud">
+    <button id="muteBtn" aria-label="sound">🔊</button>
+    <button id="hudMapBtn" aria-label="level map">🗺️</button>
+    <div id="tryBadge">🕸️ Tries: 0</div>
+    <div id="starBar">
+      <span class="starSlot earned" id="st0">⭐</span><span class="starSlot earned" id="st1">⭐</span>
+      <span class="starSlot earned" id="st2">⭐</span>
+    </div>
+    <div id="msg"></div>
+    <div id="hint" style="display:none">👆 Press and HOLD… then LET GO!</div>
+  </div>
+
+  <div id="tutHand">👆</div>
+  <div id="banner">🕸️ WOW! SUPER HERO! 🌟</div>
+  <div id="confettiBox"></div>
+  <div id="toast"></div>
+
+  <!-- START -->
+  <div class="overlay" id="startScreen">
+    <div class="bigTitle">🕷️ Swing &amp; Swing Again! 🕸️</div>
+    <div id="startHero"></div>
+    <div class="subTitle">👆 HOLD to make a web… LET GO to swing!</div>
+    <div class="subTitle">☁️ If you fall — BOING! — just try again! 💪</div>
+    <button class="bigBtn" id="playBtn">▶️ PLAY!</button>
+  </div>
+
+  <!-- LEVEL MAP -->
+  <div id="mapScreen">
+    <div id="mapTitle">🗺️ Pick a Level! 🕸️</div>
+    <div id="mapScroll"><div id="mapPath"></div></div>
+    <button id="continueBtn">▶️ Continue</button>
+  </div>
+
+  <!-- WIN -->
+  <div class="overlay" id="winScreen">
+    <div class="bigTitle" id="winTitle">🎉 LEVEL DONE! 🎉</div>
+    <div id="winStars"></div>
+    <div id="winTries"></div>
+    <div class="subTitle">You never gave up — that makes you a HERO! 🦸</div>
+    <button class="bigBtn" id="nextBtn">➡️ NEXT LEVEL!</button>
+    <button class="midBtn" id="toMapBtn">🗺️ Level Map</button>
+  </div>
+</div>
+
+<script>
+"use strict";
+/* ================================================================
+   LEVEL LADDER — 20 levels
+   g: gaps | min/max: gap width as fraction of screen | win: timing
+   window (fraction of the charge sweep that succeeds) | twist
+   ================================================================ */
+const LEVELS = [
+  { g:1, min:0.15, max:0.15, win:0.90, twist:'tutorial' },   // L1
+  { g:1, min:0.18, max:0.18, win:0.85, twist:null       },   // L2
+  { g:2, min:0.15, max:0.18, win:0.85, twist:null       },   // L3
+  { g:2, min:0.18, max:0.20, win:0.80, twist:null       },   // L4
+  { g:2, min:0.18, max:0.22, win:0.80, twist:'high'     },   // L5 higher roof
+  { g:3, min:0.18, max:0.22, win:0.78, twist:null       },   // L6
+  { g:3, min:0.20, max:0.24, win:0.75, twist:'low'      },   // L7 downhill fun
+  { g:3, min:0.20, max:0.25, win:0.75, twist:'wind'     },   // L8 wind sparkles
+  { g:4, min:0.20, max:0.25, win:0.72, twist:null       },   // L9
+  { g:4, min:0.22, max:0.26, win:0.72, twist:'chain1'   },   // L10 two-swing chain
+  { g:4, min:0.22, max:0.26, win:0.70, twist:'chain1'   },   // L11
+  { g:5, min:0.22, max:0.27, win:0.70, twist:null       },   // L12
+  { g:5, min:0.22, max:0.28, win:0.68, twist:'chain2'   },   // L13 two chain gaps
+  { g:5, min:0.24, max:0.28, win:0.68, twist:'mixed'    },   // L14 mixed heights
+  { g:5, min:0.24, max:0.28, win:0.68, twist:'move'     },   // L15 moving anchor
+  { g:6, min:0.24, max:0.29, win:0.66, twist:'move1'    },   // L16
+  { g:6, min:0.24, max:0.30, win:0.66, twist:'chainmove'},   // L17 chain + mover
+  { g:6, min:0.26, max:0.30, win:0.65, twist:'sunset'   },   // L18 sunset + 2 movers
+  { g:6, min:0.26, max:0.32, win:0.65, twist:'big'      },   // L19 big-jump chain 0.38
+  { g:7, min:0.24, max:0.32, win:0.65, twist:'finale'   },   // L20 GRAND FINALE
+];
+const CHAIN_FRAC = 0.35, BIG_FRAC = 0.38;
+const LEVEL_INTROS = {
+  1:"Hold… then let go! You can do it! 💪", 5:"Whoa — a TALL roof! Swing UP! ⬆️",
+  7:"A low roof — wheee, downhill! 🛝", 8:"Sparkly wind today! ✨",
+  10:"Grab the balloon mid-air! 🎈", 13:"TWO balloons to catch! 🎈🎈",
+  14:"Roofs go up and down! 🎢", 15:"The balloon is drifting — watch it! 👀",
+  17:"Balloon AND a drifting web spot! 🎈", 18:"Sunset swing time! 🌇",
+  19:"One GIANT jump — balloon will help! 🚀", 20:"FINAL LEVEL! Ice cream awaits! 🍦🍦🍦",
+};
+
+/* ================================================================
+   WORLD GEOMETRY  (design units; world is 700 tall, scaled to fit)
+   ================================================================ */
+const WORLD_H = 700, ROOF_W = 260, BASE_ROOF_Y = 430, CLOUD_TOP = 575;
+let roofs = [];          // {x, w, y}
+let gapsMeta = [];       // per gap: {frac,gapPx,chain,moving,ax,ay,baseAx,amp,balX,balY,balEl,ringEl}
+let WORLD_W = 2000;
+const heroHomeX = i => roofs[i].x + roofs[i].w - 60;
+const roofYof = i => roofs[i].y;
+
+/* ================================================================
+   PERSISTENCE — localStorage "yuvaan_swing", silent fallback
+   ================================================================ */
+const SAVE_KEY = 'yuvaan_swing';
+let save = { unlocked: 1, stars: new Array(20).fill(0) };
+function loadSave(){
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (raw){
+      const d = JSON.parse(raw);
+      if (d && typeof d === 'object'){
+        save.unlocked = Math.min(20, Math.max(1, (d.unlocked | 0) || 1));
+        if (Array.isArray(d.stars)){
+          save.stars = d.stars.slice(0, 20).map(x => Math.min(3, Math.max(0, x | 0)));
+        }
+        while (save.stars.length < 20) save.stars.push(0);
+      }
+    }
+  } catch(e){ /* in-memory fallback */ }
+}
+function persist(){
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch(e){ /* silent */ }
+}
+loadSave();
+
+/* ================================================================
+   STATE
+   ================================================================ */
+const S = {
+  phase: 'start',   // start|map|idle|charging|swinging|falling|bouncing|returning|walking|win
+  level: 1, roof: 0, tries: 0, missesOnGap: 0,
+  power: 0, chargeDir: 1,
+  camX: 0, scale: 1, viewW: 900,
+  fallX: 0, vy: 0, time: 0,
+};
+const hero = { x: 0, y: BASE_ROOF_Y, rot: 0, sx: 1, sy: 1 };
+let LV = LEVELS[0];
+
+/* ================================================================
+   DOM REFS + PERSISTENT ELEMENTS
+   ================================================================ */
+const $ = id => document.getElementById(id);
+const scaler = $('scaler'), mainL = $('mainLayer'), midL = $('midLayer'), farL = $('farLayer');
+const stage = $('stage');
+
+/* hero SVG — chibi web-buddy (original character, no branded assets) */
+function heroSVG(){
+  return `<svg viewBox="0 0 100 130" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+    <g class="armL"><rect x="20" y="72" width="12" height="32" rx="6" fill="#E53935"/>
+      <circle cx="26" cy="103" r="7" fill="#ef6f6c"/></g>
+    <g class="armR"><rect x="68" y="72" width="12" height="32" rx="6" fill="#E53935"/>
+      <circle cx="74" cy="103" r="7" fill="#ef6f6c"/></g>
+    <rect x="37" y="102" width="11" height="24" rx="5.5" fill="#E53935"/>
+    <rect x="52" y="102" width="11" height="24" rx="5.5" fill="#E53935"/>
+    <rect x="31" y="66" width="38" height="44" rx="17" fill="#1E5AE8"/>
+    <circle cx="50" cy="38" r="30" fill="#E53935"/>
+    <g stroke="#FFF" stroke-width="2" fill="none" opacity="0.4">
+      <path d="M32 20 Q50 32 68 20"/>
+      <path d="M26 32 Q50 46 74 32"/>
+      <path d="M24 44 Q50 60 76 44"/>
+      <line x1="50" y1="9"  x2="28" y2="48"/>
+      <line x1="50" y1="9"  x2="43" y2="56"/>
+      <line x1="50" y1="9"  x2="57" y2="56"/>
+      <line x1="50" y1="9"  x2="72" y2="48"/>
+    </g>
+    <ellipse cx="38" cy="42" rx="10.5" ry="14.5" fill="#FFF" stroke="#111" stroke-width="2.5"
+      transform="rotate(-14 38 42)"/>
+    <ellipse cx="62" cy="42" rx="10.5" ry="14.5" fill="#FFF" stroke="#111" stroke-width="2.5"
+      transform="rotate(14 62 42)"/>
+  </svg>`;
+}
+$('startHero').innerHTML = heroSVG();
+
+/* persistent world elements (re-appended on every level build) */
+const cloudEl = document.createElement('div');
+cloudEl.id = 'cloud';
+cloudEl.innerHTML = `
+  <div class="puff" style="left:0;top:44px;width:110px;height:76px"></div>
+  <div class="puff" style="left:70px;top:14px;width:130px;height:100px"></div>
+  <div class="puff" style="left:170px;top:30px;width:120px;height:86px"></div>
+  <div class="puff" style="left:240px;top:52px;width:90px;height:64px"></div>`;
+
+const fx = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+fx.setAttribute('id', 'fx');
+fx.setAttribute('height', WORLD_H);
+fx.innerHTML = `<path id="preview" d="" style="display:none"/>
+  <line id="chargeLine" style="display:none"/>
+  <line id="webLine" style="display:none"/>
+  <g id="splat" style="display:none">
+    ${[0,45,90,135,180,225,270,315].map(a => {
+      const r = a * Math.PI / 180;
+      return `<line x1="${Math.cos(r)*5}" y1="${Math.sin(r)*5}" x2="${Math.cos(r)*16}" y2="${Math.sin(r)*16}"/>`;
+    }).join('')}
+  </g>`;
+
+const heroEl = document.createElement('div');
+heroEl.id = 'hero';
+heroEl.innerHTML = `<div id="heroInner" class="idle">${heroSVG()}</div>`;
+
+let previewEl, chargeLineEl, webLineEl, splatEl, heroInner, truckEl = null, truckX = 0;
+function bindFxRefs(){
+  previewEl = $('preview'); chargeLineEl = $('chargeLine');
+  webLineEl = $('webLine'); splatEl = $('splat');
+  heroInner = $('heroInner');
+}
+
+/* ================================================================
+   LEVEL BUILD — layout roofs/gaps from screen fractions
+   ================================================================ */
+let windTimer = null;
+function clearWind(){ if (windTimer){ clearInterval(windTimer); windTimer = null; } }
+
+function buildLevel(n){
+  LV = LEVELS[n - 1];
+  resize();                                   // fresh viewW for fraction math
+  const vw = S.viewW;
+  const nGaps = LV.g, nRoofs = nGaps + 1;
+
+  /* which gaps are chain / moving, per twist */
+  const chainAt = [], moveAt = [];
+  const midG = Math.floor(nGaps / 2);
+  if (LV.twist === 'chain1') chainAt.push(midG);
+  if (LV.twist === 'chain2'){ chainAt.push(1, 3); }
+  if (LV.twist === 'move')  moveAt.push(midG);
+  if (LV.twist === 'move1') moveAt.push(midG);
+  if (LV.twist === 'chainmove'){ chainAt.push(2); moveAt.push(4); }
+  if (LV.twist === 'sunset'){ moveAt.push(1, 4); }
+  if (LV.twist === 'big') chainAt.push(midG);
+
+  /* gap fractions ramp from min to max across the level */
+  gapsMeta = [];
+  for (let i = 0; i < nGaps; i++){
+    let frac = nGaps === 1 ? LV.min : LV.min + (LV.max - LV.min) * (i / (nGaps - 1));
+    if (chainAt.includes(i)) frac = (LV.twist === 'big') ? BIG_FRAC : CHAIN_FRAC;
+    gapsMeta.push({ frac, gapPx: Math.max(130, frac * vw), chain: chainAt.includes(i),
+                    moving: moveAt.includes(i), ax:0, ay:95, baseAx:0,
+                    amp: 0.05 * vw, balX:0, balY:170, balEl:null, ringEl:null });
+  }
+
+  /* roof heights per twist */
+  const ys = new Array(nRoofs).fill(BASE_ROOF_Y);
+  if (LV.twist === 'high')  ys[1] = BASE_ROOF_Y - 70;          // +10% of screen height
+  if (LV.twist === 'low')   ys[2] = BASE_ROOF_Y + 60;          // downhill fun
+  if (LV.twist === 'mixed'){ for (let i = 1; i < nRoofs - 1; i++) ys[i] = (i % 2) ? 392 : 466; }
+
+  /* lay out roofs */
+  roofs = [];
+  let x = 120;
+  for (let i = 0; i < nRoofs; i++){
+    const w = (n === 20 && i === nRoofs - 1) ? 430 : ROOF_W;   // wide finale roof
+    roofs.push({ x, w, y: ys[i] });
+    x += w + (i < nGaps ? gapsMeta[i].gapPx : 0);
+  }
+  WORLD_W = roofs[nRoofs - 1].x + roofs[nRoofs - 1].w + 340;
+  [farL, midL, mainL].forEach(l => l.style.width = WORLD_W + 'px');
+
+  /* anchors + balloons per gap */
+  for (let i = 0; i < nGaps; i++){
+    const m = gapsMeta[i], a = roofs[i], b = roofs[i + 1];
+    m.balX = (a.x + a.w + b.x) / 2;
+    m.baseAx = m.chain ? (heroHomeX(i) + m.balX) / 2 : (heroHomeX(i) + b.x + 110) / 2;
+    m.ax = m.baseAx;
+  }
+
+  /* -------- parallax skylines -------- */
+  farL.innerHTML = `<div id="sun"></div>
+    <div class="decoCloud" style="left:600px;top:70px">☁️</div>
+    <div class="decoCloud" style="left:1400px;top:130px;animation-duration:34s">☁️</div>
+    <div class="decoCloud" style="left:2200px;top:50px;animation-duration:29s">☁️</div>`;
+  let fh = '';
+  for (let fx2 = 0; fx2 < WORLD_W; fx2 += 150){
+    const ht = 160 + ((fx2 * 7919) % 170);
+    fh += `<div class="farB" style="left:${fx2}px;width:110px;height:${ht}px"></div>`;
+  }
+  farL.innerHTML += fh;
+  let mh = '';
+  for (let mx = -60; mx < WORLD_W; mx += 210){
+    const ht = 220 + ((mx * 6271) % 190);
+    mh += `<div class="midB" style="left:${mx}px;width:150px;height:${ht}px"></div>`;
+  }
+  midL.innerHTML = mh;
+
+  /* -------- main buildings -------- */
+  let h = '';
+  roofs.forEach((r, i) => {
+    const purple = i % 2 === 1;
+    h += `<div class="bldg" style="left:${r.x}px;top:${r.y}px;width:${r.w}px;height:${WORLD_H - r.y}px;
+           background:${purple ? '#6B5B95' : '#3E6B8C'}"></div>`;
+    h += `<div class="roofLip ${purple ? 'purple' : ''}" style="left:${r.x - 8}px;top:${r.y - 6}px;width:${r.w + 16}px"></div>`;
+    const rows = Math.min(4, Math.floor((WORLD_H - r.y - 50) / 58));
+    const cols = Math.min(6, Math.floor((r.w - 40) / 54));
+    for (let row = 0; row < rows; row++){
+      for (let col = 0; col < cols; col++){
+        const lit = ((i * 13 + row * 7 + col * 5) % 3) !== 0;
+        h += `<div class="${lit ? 'win-lit' : 'win-dark'}"
+               style="left:${r.x + 30 + col * 54}px;top:${r.y + 34 + row * 58}px"></div>`;
+      }
+    }
+  });
+  mainL.innerHTML = h;
+
+  /* balloons + latch rings for chain gaps; drifting movers get a balloon too */
+  gapsMeta.forEach((m, i) => {
+    if (m.chain){
+      const ring = document.createElement('div');
+      ring.className = 'balloonRing';
+      ring.style.left = (m.balX - 75) + 'px'; ring.style.top = (m.balY + 55) + 'px';
+      mainL.appendChild(ring); m.ringEl = ring;
+      const bal = document.createElement('div');
+      bal.className = 'balloon'; bal.textContent = '🎈';
+      bal.style.left = (m.balX - 40) + 'px'; bal.style.top = (m.balY - 40) + 'px';
+      mainL.appendChild(bal); m.balEl = bal;
+    }
+  });
+
+  /* goal marker: flag every level, giant truck + friends on L20 */
+  truckEl = null;
+  const last = roofs[roofs.length - 1];
+  if (n === 20){
+    truckX = last.x + 120;
+    truckEl = document.createElement('div');
+    truckEl.id = 'truck'; truckEl.className = 'giant';
+    truckEl.style.left = truckX + 'px';
+    truckEl.style.top = (last.y - 150) + 'px';
+    truckEl.innerHTML = `
+      <div class="truckBody"></div><div class="truckStripe" style="left:5px"></div>
+      <div class="truckWin"></div>
+      <div class="wheel" style="left:26px"></div><div class="wheel" style="left:140px"></div>
+      <div class="truckCone">🍦</div><div class="truckNote">🎵</div>`;
+    mainL.appendChild(truckEl);
+    ['🧒','👧','🦸'].forEach((f, i) => {
+      const d = document.createElement('div');
+      d.className = 'friend'; d.textContent = f;
+      d.style.left = (last.x + 20 + i * 46) + 'px';
+      d.style.top = (last.y - 66) + 'px';
+      d.style.animationDelay = (i * 0.18) + 's';
+      mainL.appendChild(d);
+    });
+  } else {
+    const flag = document.createElement('div');
+    flag.className = 'goalFlag'; flag.textContent = '🚩';
+    flag.style.left = (last.x + last.w / 2 - 20) + 'px';
+    flag.style.top = (last.y - 66) + 'px';
+    mainL.appendChild(flag);
+  }
+
+  /* fx + cloud + hero back on top */
+  fx.setAttribute('width', WORLD_W);
+  mainL.appendChild(fx);
+  mainL.appendChild(cloudEl);
+  mainL.appendChild(heroEl);
+  bindFxRefs();
+
+  /* sky mood + wind */
+  document.body.classList.toggle('sunset', LV.twist === 'sunset');
+  clearWind();
+  if (LV.twist === 'wind'){
+    windTimer = setInterval(() => {
+      if (S.phase === 'map' || S.phase === 'start') return;
+      const sp = document.createElement('div');
+      sp.className = 'windSpark'; sp.textContent = Math.random() < 0.5 ? '✨' : '🌬️';
+      sp.style.left = (S.camX + S.viewW * (0.4 + Math.random() * 0.7)) + 'px';
+      sp.style.top = (120 + Math.random() * 300) + 'px';
+      mainL.appendChild(sp);
+      setTimeout(() => sp.remove(), 3100);
+    }, 700);
+  }
+
+  /* reset actors */
+  hero.x = heroHomeX(0); hero.y = roofYof(0); hero.rot = 0; hero.sx = hero.sy = 1;
+  heroEl.classList.remove('celebrate');
+  S.roof = 0; S.camX = Math.min(Math.max(hero.x - S.viewW * 0.35, 0), Math.max(0, WORLD_W - S.viewW));
+  S.power = 0;
+  positionCloudHome();
+}
+
+/* ================================================================
+   AUDIO — Web Audio API chiptune + SFX (no external files)
+   ================================================================ */
+const AU = { ctx: null, master: null, musicG: null, muted: false, step: 0, nextT: 0, whistle: null };
+const mfreq = m => 440 * Math.pow(2, (m - 69) / 12);
+const MELODY = [60,62,64,67, 64,62,60,null, 67,69,72,69, 67,64,62,null,
+                60,64,67,72, 69,67,64,null, 62,64,67,64, 62,60,null,null];
+const BASS = [48,43,45,43, 48,43,45,47];
+
+function audioInit(){
+  if (AU.ctx) { AU.ctx.resume(); return; }
+  AU.ctx = new (window.AudioContext || window.webkitAudioContext)();
+  AU.master = AU.ctx.createGain(); AU.master.gain.value = 0.15;
+  AU.master.connect(AU.ctx.destination);
+  AU.musicG = AU.ctx.createGain(); AU.musicG.gain.value = 0.7;
+  AU.musicG.connect(AU.master);
+  AU.nextT = AU.ctx.currentTime + 0.1;
+  setInterval(musicSchedule, 30);
+}
+function musicSchedule(){
+  if (!AU.ctx || AU.muted) { if (AU.ctx) AU.nextT = AU.ctx.currentTime + 0.1; return; }
+  const stepDur = 60 / 110 / 2;                       // eighth notes @110 BPM
+  while (AU.nextT < AU.ctx.currentTime + 0.15){
+    const n = MELODY[AU.step % 32];
+    if (n !== null) tone(mfreq(n), 'square', AU.nextT, 0.22, 0.045, AU.musicG);
+    if (AU.step % 4 === 0){
+      const b = BASS[(AU.step / 4) % 8];
+      tone(mfreq(b), 'triangle', AU.nextT, 0.45, 0.09, AU.musicG);
+    }
+    AU.step++; AU.nextT += stepDur;
+  }
+}
+function tone(freq, type, t, dur, vol, dest){
+  const o = AU.ctx.createOscillator(), g = AU.ctx.createGain();
+  o.type = type; o.frequency.setValueAtTime(freq, t);
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.linearRampToValueAtTime(vol, t + 0.015);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  o.connect(g); g.connect(dest || AU.master);
+  o.start(t); o.stop(t + dur + 0.05);
+}
+function noiseBurst(t, dur, vol){
+  const len = Math.max(1, Math.floor(AU.ctx.sampleRate * dur));
+  const buf = AU.ctx.createBuffer(1, len, AU.ctx.sampleRate);
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len);
+  const src = AU.ctx.createBufferSource(); src.buffer = buf;
+  const g = AU.ctx.createGain(); g.gain.value = vol;
+  src.connect(g); g.connect(AU.master); src.start(t);
+}
+const sfxOK = () => AU.ctx && !AU.muted;
+function sndThwip(){ if (sfxOK()) noiseBurst(AU.ctx.currentTime, 0.1, 0.5); }
+function sndBoing(){
+  if (!sfxOK()) return;
+  const t = AU.ctx.currentTime;
+  const o = AU.ctx.createOscillator(), g = AU.ctx.createGain();
+  o.type = 'sine';
+  o.frequency.setValueAtTime(160, t);
+  o.frequency.exponentialRampToValueAtTime(620, t + 0.09);
+  o.frequency.exponentialRampToValueAtTime(120, t + 0.4);
+  g.gain.setValueAtTime(0.35, t);
+  g.gain.exponentialRampToValueAtTime(0.001, t + 0.45);
+  o.connect(g); g.connect(AU.master); o.start(t); o.stop(t + 0.5);
+}
+function sndOops(){ if (!sfxOK()) return;
+  const t = AU.ctx.currentTime;
+  tone(392, 'triangle', t, 0.18, 0.12); tone(330, 'triangle', t + 0.16, 0.25, 0.12);
+}
+function sndYay(){ if (!sfxOK()) return;
+  const t = AU.ctx.currentTime;
+  tone(523, 'square', t, 0.12, 0.12); tone(659, 'square', t + 0.1, 0.12, 0.12);
+  tone(784, 'square', t + 0.2, 0.2, 0.12);
+}
+function sndSparkle(){ if (!sfxOK()) return;
+  const t = AU.ctx.currentTime;
+  [1046, 1318, 1568].forEach((f, i) => tone(f, 'triangle', t + i * 0.07, 0.16, 0.1));
+}
+function sndPop(){ if (!sfxOK()) return;
+  const t = AU.ctx.currentTime;
+  tone(880, 'sine', t, 0.1, 0.16); tone(1174, 'sine', t + 0.06, 0.14, 0.14);
+}
+function sndFanfare(){ if (!sfxOK()) return;
+  const t = AU.ctx.currentTime;
+  [523, 659, 784, 1046].forEach((f, i) => tone(f, 'triangle', t + i * 0.16, 0.34, 0.2));
+  tone(1046, 'triangle', t + 0.72, 0.7, 0.22);
+  noiseBurst(t + 0.72, 0.4, 0.25);
+}
+function whistleStart(dur){
+  if (!sfxOK()) return;
+  const t = AU.ctx.currentTime;
+  const o = AU.ctx.createOscillator(), g = AU.ctx.createGain();
+  o.type = 'sine';
+  o.frequency.setValueAtTime(280, t);
+  o.frequency.linearRampToValueAtTime(880, t + dur);
+  g.gain.setValueAtTime(0.07, t);
+  g.gain.linearRampToValueAtTime(0.001, t + dur + 0.05);
+  o.connect(g); g.connect(AU.master); o.start(t); o.stop(t + dur + 0.1);
+  AU.whistle = o;
+}
+function whistleStop(){ if (AU.whistle){ try { AU.whistle.stop(); } catch(e){} AU.whistle = null; } }
+
+/* mute toggle */
+$('muteBtn').addEventListener('pointerdown', e => {
+  e.stopPropagation(); e.preventDefault();
+  AU.muted = !AU.muted;
+  $('muteBtn').textContent = AU.muted ? '🔇' : '🔊';
+  if (AU.ctx && !AU.muted) AU.ctx.resume();
+});
+
+/* ================================================================
+   TWEEN MINI-ENGINE
+   ================================================================ */
+const tweens = [];
+function tween(dur, fn, done){ tweens.push({ t: 0, dur, fn, done }); }
+function clearTweens(){ tweens.length = 0; }
+const easeInOut = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+const qBez = (a, c, b, t) => { const u = 1 - t; return u * u * a + 2 * u * t * c + t * t * b; };
+
+/* ================================================================
+   UI HELPERS
+   ================================================================ */
+function showMsg(text){
+  const m = $('msg');
+  m.classList.remove('show'); void m.offsetWidth;
+  m.textContent = text; m.classList.add('show');
+}
+function floatText(wx, wy, text, size){
+  const d = document.createElement('div');
+  d.className = 'floatText';
+  d.style.left = wx + 'px'; d.style.top = wy + 'px';
+  if (size) d.style.fontSize = size + 'px';
+  d.textContent = text;
+  mainL.appendChild(d);
+  d.addEventListener('animationend', () => d.remove());
+}
+function starsForTries(tries, gaps){
+  if (tries <= gaps + 2) return 3;         // few tries
+  if (tries <= gaps * 2 + 4) return 2;     // moderate
+  return 1;                                 // completed — still a hero!
+}
+function updateTryBadge(){
+  const b = $('tryBadge');
+  b.textContent = '🕸️ Level ' + S.level + ' · Tries: ' + S.tries;
+  b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
+  const f = S.tries === 0 ? 3 : starsForTries(S.tries, LV.g);
+  for (let i = 0; i < 3; i++) $('st' + i).classList.toggle('earned', i < f);
+}
+function praiseText(n){
+  const specials = {
+    1: "Try #1 — here we go! 🕷️", 2: "Try #2 — you've got this! 😊",
+    3: "Try #3 — heroes keep trying! 💪", 7: "Try #7 — WOW, so brave! 🦸",
+    12: "Try #12 — never give up! 🌟" };
+  if (specials[n]) return specials[n];
+  const pool = ["heroes keep trying! 💪", "so brave! 🦸", "never give up! 🌟",
+                "super swinger! ⚡", "big hero heart! ❤️"];
+  return "Try #" + n + " — " + pool[n % pool.length];
+}
+const missMsgs = ["Boing! ☁️ Let's try again!", "Almost! You're SO close! 💛",
+                  "Great swing! One more time! 🕸️", "Wheee! Clouds are fun! ☁️"];
+const winMsgs = ["YAY! Great swing! 🌟", "Super jump! 🎉", "You made it! 💚", "Amazing! ⭐"];
+const pick = a => a[Math.floor(Math.random() * a.length)];
+
+function braveSparkle(){
+  sndSparkle();
+  floatText(hero.x, hero.y - 180, '⭐ So brave! ⭐', 44);
+}
+function setIdle(on){
+  heroInner.classList.toggle('idle', on);
+  $('hint').style.display = (on && S.level <= 2 && S.tries === 0) ? '' : 'none';
+  $('tutHand').style.display = (on && S.level === 1 && save.stars[0] === 0 && S.tries < 2) ? '' : 'none';
+}
+
+/* ================================================================
+   GAP / SWING MATH — timing window + silent rubber-band assist
+   ================================================================ */
+function gapInfo(){
+  const i = S.roof;
+  const a = roofs[i], b = roofs[i + 1], m = gapsMeta[i];
+  const startX = heroHomeX(i);
+  const gap = b.x - (a.x + a.w);
+  const maxDist = gap + 320;
+  return { a, b, m, startX, gap, maxDist };
+}
+function anchorNow(m){
+  const drift = m.moving ? m.amp * Math.sin(2 * Math.PI * 0.2 * S.time) : 0;
+  return { x: m.baseAx + drift, y: m.ay };
+}
+function balloonNow(m){
+  const drift = m.moving ? m.amp * Math.sin(2 * Math.PI * 0.2 * S.time) : 0;
+  return { x: m.balX + drift, y: m.balY };
+}
+function predictedLandX(g){ return g.startX + 60 + S.power * g.maxDist; }
+function effectiveWindow(){
+  /* rubber-band: every 3 misses on same gap → window +0.05, gap −0.02 (silent) */
+  const assist = Math.floor(S.missesOnGap / 3) * 0.05;
+  return Math.min(0.95, LV.win + assist);
+}
+
+/* ================================================================
+   INPUT — press-hold anywhere to charge, release to swing
+   ================================================================ */
+stage.addEventListener('pointerdown', e => {
+  if (S.phase !== 'idle' && S.phase !== 'charging') return;
+  e.preventDefault();
+  if (S.phase === 'idle') beginCharge();
+});
+['pointerup', 'pointercancel'].forEach(ev =>
+  stage.addEventListener(ev, e => { if (S.phase === 'charging'){ e.preventDefault(); releaseCharge(); } }));
+document.addEventListener('contextmenu', e => e.preventDefault());
+document.addEventListener('gesturestart', e => e.preventDefault());
+document.addEventListener('dblclick', e => e.preventDefault());
+
+function beginCharge(){
+  S.phase = 'charging';
+  S.power = 0; S.chargeDir = 1;
+  setIdle(false);
+  $('tutHand').style.display = 'none';
+  heroInner.classList.add('crouch');
+  const g = gapInfo();
+  const an = anchorNow(g.m);
+  splatEl.style.display = '';
+  splatEl.classList.add('pulse');
+  splatEl.setAttribute('transform', `translate(${an.x},${an.y})`);
+  previewEl.style.display = '';
+  chargeLineEl.style.display = '';
+}
+function releaseCharge(){
+  heroInner.classList.remove('crouch');
+  previewEl.style.display = 'none';
+  chargeLineEl.style.display = 'none';
+  splatEl.classList.remove('pulse');
+
+  /* count the try + escalating praise + sparkle every 5 tries */
+  S.tries++; updateTryBadge();
+  showMsg(praiseText(S.tries));
+  if (S.tries % 5 === 0) braveSparkle();
+
+  const g = gapInfo();
+  let landX = predictedLandX(g);
+
+  /* timing window: fraction of the sweep that succeeds, centred on the
+     power that lands mid-roof. Tutorial: auto-success on 2nd try. */
+  const w = effectiveWindow();
+  const pMid = Math.min(0.85, Math.max(0.15,
+    (g.b.x + g.b.w / 2 - g.startX - 60) / g.maxDist));
+  let success = Math.abs(S.power - pMid) <= w / 2;
+  if (S.level === 1 && S.missesOnGap >= 1) success = true;     // tutorial kindness
+
+  let endX, endY;
+  if (success){
+    endX = Math.min(Math.max(landX, g.b.x + 45), g.b.x + g.b.w - 70);
+    endY = g.b.y;
+  } else {
+    /* every miss lands softly in the gap — onto the bouncy cloud */
+    endX = Math.min(Math.max(landX, g.a.x + g.a.w + 30), g.b.x - 40);
+    endY = BASE_ROOF_Y + 40;
+  }
+  S.fallX = endX;
+  cloudEl.style.left = (endX - 165) + 'px';
+  cloudEl.style.top = (CLOUD_TOP - 15) + 'px';
+
+  sndThwip();
+  S.phase = 'swinging';
+  const p0x = hero.x, p0y = hero.y;
+
+  if (g.m.chain && success){
+    /* -------- TWO-SWING CHAIN: latch the balloon mid-air -------- */
+    const bal = balloonNow(g.m);
+    const latchX = bal.x, latchY = bal.y + 150;
+    const d1 = 0.5 + 0.18 * S.power, d2 = 0.55;
+    whistleStart(d1 + d2);
+    webLineEl.style.display = '';
+    const an1 = anchorNow(g.m);
+    const cp1x = (p0x + latchX) / 2, cp1y = Math.max(p0y, latchY) + 90;
+    tween(d1, k => {
+      const e = easeInOut(k);
+      hero.x = qBez(p0x, cp1x, latchX, e);
+      hero.y = qBez(p0y, cp1y, latchY, e);
+      hero.rot = (0.5 - e) * -26;
+      drawWebTo(an1.x, an1.y);
+    }, () => {
+      /* latch! (auto-latch — the balloon ring pulls the web in) */
+      sndPop(); sndThwip();
+      floatText(latchX, latchY - 120, '🎈 Got it!', 48);
+      if (g.m.ringEl) g.m.ringEl.style.borderColor = 'rgba(255,220,80,.95)';
+      splatEl.style.display = 'none';
+      const b2 = balloonNow(g.m);
+      const cp2x = (latchX + endX) / 2, cp2y = Math.max(latchY, endY) + 95;
+      tween(d2, k => {
+        const e = easeInOut(k);
+        hero.x = qBez(latchX, cp2x, endX, e);
+        hero.y = qBez(latchY, cp2y, endY, e);
+        hero.rot = (0.5 - e) * -26;
+        const bn = balloonNow(g.m);
+        drawWebTo(bn.x, bn.y + 30);
+      }, () => {
+        webLineEl.style.display = 'none';
+        if (g.m.ringEl) g.m.ringEl.style.borderColor = '';
+        doLand(endX, g);
+      });
+    });
+  } else {
+    /* -------- single swing -------- */
+    const dur = 0.72 + 0.3 * S.power;
+    whistleStart(dur);
+    webLineEl.style.display = '';
+    const cpx = (p0x + endX) / 2, cpy = Math.max(p0y, endY) + 105;
+    tween(dur, k => {
+      const e = easeInOut(k);
+      hero.x = qBez(p0x, cpx, endX, e);
+      hero.y = qBez(p0y, cpy, endY, e);
+      hero.rot = (0.5 - e) * -26;
+      const an = anchorNow(g.m);
+      drawWebTo(an.x, an.y);
+    }, () => {
+      webLineEl.style.display = 'none';
+      splatEl.style.display = 'none';
+      if (success) doLand(endX, g); else startFall();
+    });
+  }
+}
+function drawWebTo(ax, ay){
+  webLineEl.setAttribute('x1', hero.x + 4); webLineEl.setAttribute('y1', hero.y - 92);
+  webLineEl.setAttribute('x2', ax);         webLineEl.setAttribute('y2', ay);
+}
+
+/* ================================================================
+   LANDING / FALLING / BOUNCING
+   ================================================================ */
+function doLand(lx, g){
+  whistleStop();
+  hero.x = lx; hero.y = g.b.y; hero.rot = 0;
+  sndYay();
+  floatText(lx, g.b.y - 160, pick(['🌟','🎉','💚','⭐']), 60);
+  tween(0.3, k => {                                  // squash & stretch landing
+    const s = Math.sin(k * Math.PI);
+    hero.sy = 1 - 0.28 * s; hero.sx = 1 + 0.28 * s;
+  }, () => {
+    hero.sx = hero.sy = 1;
+    S.roof++; S.missesOnGap = 0;
+    if (S.roof === roofs.length - 1) levelComplete();
+    else { S.phase = 'idle'; setIdle(true); showMsg(pick(winMsgs)); positionCloudHome(); }
+  });
+}
+function startFall(){
+  whistleStop(); sndOops();
+  S.missesOnGap++;
+  S.phase = 'falling';
+  S.vy = 60;
+}
+function doBounce(){
+  S.phase = 'bouncing';
+  sndBoing();
+  floatText(S.fallX, CLOUD_TOP - 120, 'Boing! ☁️', 56);
+  cloudEl.classList.add('squish');
+  setTimeout(() => cloudEl.classList.remove('squish'), 220);
+  tween(0.7, k => {                                  // happy giggle-wobble hop
+    const s = Math.sin(k * Math.PI);
+    hero.y = CLOUD_TOP - 150 * s;
+    hero.rot = Math.sin(k * Math.PI * 3) * 12;
+    hero.sy = 1 + 0.18 * s; hero.sx = 1 - 0.12 * s;
+  }, () => {
+    hero.rot = 0; hero.sx = hero.sy = 1;
+    doReturn();
+  });
+}
+function doReturn(){                                  // cloud boosts hero home
+  S.phase = 'returning';
+  const sx0 = hero.x, sy0 = hero.y;
+  const tx = heroHomeX(S.roof), ty = roofYof(S.roof);
+  tween(0.75, k => {
+    const e = easeInOut(k);
+    hero.x = sx0 + (tx - sx0) * e;
+    hero.y = sy0 + (ty - sy0) * e - 180 * Math.sin(Math.PI * k);
+  }, () => {
+    hero.x = tx; hero.y = ty;
+    S.phase = 'idle'; setIdle(true);
+    showMsg(pick(missMsgs));
+  });
+}
+function positionCloudHome(){
+  if (S.roof < roofs.length - 1){
+    const g = gapInfo();
+    cloudEl.style.left = ((g.a.x + g.a.w + g.b.x) / 2 - 165) + 'px';
+    cloudEl.style.top = (CLOUD_TOP - 15) + 'px';
+  }
+}
+
+/* ================================================================
+   LEVEL COMPLETE → stars, save, finale or win overlay
+   ================================================================ */
+function levelComplete(){
+  const earned = starsForTries(S.tries, LV.g);
+  const idx = S.level - 1;
+  if (earned > save.stars[idx]) save.stars[idx] = earned;      // replays keep best
+  if (S.level < 20) save.unlocked = Math.max(save.unlocked, S.level + 1);
+  persist();
+
+  if (S.level === 20) walkToTruck(earned);
+  else {
+    S.phase = 'win';
+    heroEl.classList.add('celebrate');
+    sndFanfare();
+    confetti(35);
+    showMsg('🚩 Level ' + S.level + ' DONE! 🎉');
+    tween(0.9, k => {
+      hero.y = roofYof(roofs.length - 1) - 150 * Math.sin(Math.PI * k);
+      hero.rot = 360 * k;
+    }, () => { hero.rot = 0; });
+    setTimeout(() => showWinScreen(earned), 1300);
+  }
+}
+
+/* -------- GRAND FINALE — giant ice-cream truck party -------- */
+function walkToTruck(earned){
+  S.phase = 'walking';
+  showMsg('🍦 GIANT ICE CREAM TRUCK! 🎉');
+  const sx0 = hero.x, tx = truckX - 110, ry = roofYof(roofs.length - 1);
+  tween(1.1, k => {
+    hero.x = sx0 + (tx - sx0) * k;
+    hero.y = ry - Math.abs(Math.sin(k * Math.PI * 3)) * 24;
+  }, () => winParty(earned));
+}
+function winParty(earned){
+  S.phase = 'win';
+  const ry = roofYof(roofs.length - 1);
+  hero.y = ry;
+  heroEl.classList.add('celebrate');
+  sndFanfare();
+  confetti(90);
+  $('banner').textContent = '🍨 ALL 20 LEVELS! SUPER HERO! 🌟';
+  $('banner').classList.add('show');
+  floatText(truckX + 100, ry - 240, '🍨🍦🍧', 74);            // triple scoop!
+  tween(0.9, k => {                                  // hero jump + spin
+    hero.y = ry - 170 * Math.sin(Math.PI * k);
+    hero.rot = 360 * k;
+  }, () => { hero.rot = 0; });
+  setTimeout(() => sndFanfare(), 1000);
+  setTimeout(() => { confetti(60); showWinScreen(earned); }, 2200);
+}
+
+function showWinScreen(earned){
+  $('winTitle').textContent = S.level === 20
+    ? '🍨 TRIPLE SCOOP! YOU BEAT ALL 20! 🎉'
+    : '🎉 LEVEL ' + S.level + ' DONE! 🎉';
+  const ws = $('winStars');
+  ws.innerHTML = '';
+  for (let i = 0; i < 3; i++){
+    const s = document.createElement('span');
+    s.textContent = '⭐';
+    s.style.animationDelay = (i * 0.25) + 's';
+    if (i >= earned){ s.style.filter = 'grayscale(1) opacity(.35)'; }
+    ws.appendChild(s);
+  }
+  $('winTries').textContent = '💪 ' + S.tries + ' brave ' + (S.tries === 1 ? 'try' : 'tries') + ' — WOW!';
+  $('nextBtn').style.display = S.level < 20 ? '' : 'none';
+  $('winScreen').style.display = 'flex';
+  [0,1,2].forEach(i => { if (i < earned) setTimeout(sndSparkle, 300 + i * 300); });
+  confetti(30);
+}
+function confetti(n){
+  const box = $('confettiBox');
+  const colors = ['#E53935','#1E5AE8','#FFC93C','#4CAF50','#FF8AC5','#8ED0FF'];
+  for (let i = 0; i < n; i++){
+    const c = document.createElement('div');
+    c.className = 'conf';
+    const sz = 8 + Math.random() * 8;
+    c.style.cssText = `left:${Math.random() * 100}vw;width:${sz}px;height:${sz * 1.6}px;
+      background:${colors[i % colors.length]};animation-duration:${1.5 + Math.random() * 1.4}s;
+      animation-delay:${Math.random() * 0.6}s`;
+    box.appendChild(c);
+    setTimeout(() => c.remove(), 3600);
+  }
+}
+
+/* ================================================================
+   LEVEL MAP — vertical web-strand path, 20 nodes, stars, lock toasts
+   ================================================================ */
+const NODE_SPACING = 175, MAP_PAD_TOP = 150, MAP_PAD_BOT = 170;
+function nodePos(i, w, H){                     // i = 0..19, bottom → top zigzag
+  const xf = [0.28, 0.5, 0.72, 0.5][i % 4];
+  return { x: w * xf, y: H - MAP_PAD_BOT - i * NODE_SPACING };
+}
+function buildMap(){
+  const wrap = $('mapPath'), scroll = $('mapScroll');
+  const w = scroll.clientWidth || window.innerWidth;
+  const H = MAP_PAD_TOP + MAP_PAD_BOT + 19 * NODE_SPACING + 120;
+  wrap.style.height = H + 'px';
+
+  /* web-strand path through node centres */
+  const pts = [];
+  for (let i = 0; i < 20; i++){ const p = nodePos(i, w, H); pts.push(p.x + ',' + p.y); }
+  let html = `<svg id="mapSvg" width="${w}" height="${H}" xmlns="http://www.w3.org/2000/svg">
+    <polyline points="${pts.join(' ')}" fill="none" stroke="rgba(255,255,255,.9)"
+      stroke-width="7" stroke-dasharray="4 18" stroke-linecap="round"/>
+    <polyline points="${pts.join(' ')}" fill="none" stroke="rgba(30,90,232,.25)"
+      stroke-width="16" stroke-linecap="round"/>
+  </svg>`;
+
+  /* decorations: rooftops low, clouds high */
+  const decos = ['🏙️','🏢','🌆','☁️','⛅','☁️','🌤️','☁️','🕸️','☁️'];
+  for (let i = 0; i < 20; i += 2){
+    const p = nodePos(i, w, H);
+    const side = (i % 4 === 0) ? 0.9 : 0.08;
+    html += `<div class="mapDeco" style="left:${w * side - 30}px;top:${p.y - 90}px">${decos[(i / 2) % decos.length]}</div>`;
+  }
+
+  for (let i = 0; i < 20; i++){
+    const lvl = i + 1, p = nodePos(i, w, H);
+    const done = save.stars[i] > 0;
+    const unlocked = lvl <= save.unlocked;
+    const cls = !unlocked ? 'locked' : (done ? 'done' : 'play');
+    const inner = !unlocked ? '🔒' : lvl;
+    let starsHtml = '';
+    if (done){
+      starsHtml = '<div class="nodeStars">';
+      for (let s = 0; s < 3; s++)
+        starsHtml += `<span class="${s < save.stars[i] ? '' : 'off'}">⭐</span>`;
+      starsHtml += '</div>';
+    }
+    html += `<button class="mapNode ${cls}" id="node${lvl}" data-lvl="${lvl}"
+      style="left:${p.x}px;top:${p.y}px">${inner}${starsHtml}</button>`;
+  }
+  wrap.innerHTML = html;
+
+  wrap.querySelectorAll('.mapNode').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const lvl = parseInt(btn.dataset.lvl, 10);
+      if (lvl <= save.unlocked){ sndPop(); startLevel(lvl); }
+      else {
+        btn.classList.remove('wiggle'); void btn.offsetWidth; btn.classList.add('wiggle');
+        sndOops();
+        showToast('Finish level ' + (lvl - 1) + ' first! 🔒');
+      }
+    });
+  });
+
+  const next = nextUnbeaten();
+  $('continueBtn').textContent = '▶️ Continue — Level ' + next;
+}
+function nextUnbeaten(){
+  for (let i = 0; i < 20; i++)
+    if (i + 1 <= save.unlocked && save.stars[i] === 0) return i + 1;
+  return Math.min(20, save.unlocked);
+}
+function scrollToNode(lvl, smooth){
+  const el = $('node' + lvl);
+  if (el) el.scrollIntoView({ block: 'center', behavior: smooth ? 'smooth' : 'auto' });
+}
+let toastTimer = null;
+function showToast(text){
+  const t = $('toast');
+  t.textContent = text;
+  t.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+function openMap(){
+  clearTweens(); whistleStop(); clearWind();
+  S.phase = 'map';
+  document.body.classList.remove('sunset');
+  $('winScreen').style.display = 'none';
+  $('banner').classList.remove('show');
+  $('hud').style.display = 'none';
+  $('tutHand').style.display = 'none';
+  buildMap();
+  document.body.classList.add('mapOpen');
+  $('mapScreen').style.display = 'block';
+  requestAnimationFrame(() => scrollToNode(save.unlocked, false));   // furthest on open
+}
+$('continueBtn').addEventListener('pointerdown', e => {
+  e.stopPropagation(); e.preventDefault();
+  scrollToNode(nextUnbeaten(), true);
+});
+$('hudMapBtn').addEventListener('pointerdown', e => {
+  e.stopPropagation(); e.preventDefault();
+  if (S.phase === 'start' || S.phase === 'map') return;
+  openMap();
+});
+
+/* ================================================================
+   FLOW — start → map → level → win overlay → map/next
+   ================================================================ */
+function startLevel(n){
+  clearTweens(); whistleStop();
+  S.level = n; S.tries = 0; S.missesOnGap = 0; S.power = 0;
+  document.body.classList.remove('mapOpen');
+  $('mapScreen').style.display = 'none';
+  $('winScreen').style.display = 'none';
+  $('banner').classList.remove('show');
+  buildLevel(n);
+  /* clean any leftover charge visuals from an abandoned attempt */
+  heroInner.classList.remove('crouch');
+  previewEl.style.display = 'none'; chargeLineEl.style.display = 'none';
+  webLineEl.style.display = 'none'; splatEl.style.display = 'none';
+  splatEl.classList.remove('pulse');
+  $('hud').style.display = '';
+  updateTryBadge();
+  $('tryBadge').textContent = '🕸️ Level ' + n + ' · Tries: 0';
+  S.phase = 'idle';
+  setIdle(true);
+  showMsg(LEVEL_INTROS[n] || ('Level ' + n + ' — ' + LV.g + ' jump' + (LV.g > 1 ? 's' : '') + '! 💪'));
+}
+
+$('playBtn').addEventListener('pointerdown', e => { e.stopPropagation(); e.preventDefault(); startGame(); });
+$('startScreen').addEventListener('pointerdown', e => { e.stopPropagation(); e.preventDefault(); startGame(); });
+function startGame(){
+  if (S.phase !== 'start') return;
+  audioInit();
+  $('startScreen').style.display = 'none';
+  openMap();
+}
+$('nextBtn').addEventListener('pointerdown', e => {
+  e.stopPropagation(); e.preventDefault();
+  if (S.level < 20) startLevel(S.level + 1);
+  else openMap();
+});
+$('toMapBtn').addEventListener('pointerdown', e => {
+  e.stopPropagation(); e.preventDefault();
+  openMap();
+});
+
+/* ================================================================
+   MAIN LOOP — rAF, transform-based, 60fps friendly
+   ================================================================ */
+function resize(){
+  S.scale = window.innerHeight / WORLD_H;
+  S.viewW = window.innerWidth / S.scale;
+  scaler.style.transform = 'scale(' + S.scale + ')';
+}
+window.addEventListener('resize', resize);
+window.addEventListener('orientationchange', () => setTimeout(resize, 250));
+resize();
+
+const inLevel = () => ['idle','charging','swinging','falling','bouncing','returning','walking','win'].includes(S.phase);
+
+let lastT = performance.now();
+function loop(now){
+  const dt = Math.min(0.05, (now - lastT) / 1000);
+  lastT = now;
+  S.time += dt;
+
+  /* drifting anchors: keep balloons + latch rings synced */
+  if (inLevel()){
+    for (let i = 0; i < gapsMeta.length; i++){
+      const m = gapsMeta[i];
+      if (!m.moving) continue;
+      const drift = m.amp * Math.sin(2 * Math.PI * 0.2 * S.time);
+      if (m.balEl)  m.balEl.style.left  = (m.balX - 40 + drift) + 'px';
+      if (m.ringEl) m.ringEl.style.left = (m.balX - 75 + drift) + 'px';
+    }
+  }
+
+  /* charging: ping-pong power + live preview arc */
+  if (S.phase === 'charging'){
+    S.power += S.chargeDir * dt / 1.4;                // full sweep = 1.4s (wide timing)
+    if (S.power >= 1){ S.power = 1; S.chargeDir = -1; }
+    if (S.power <= 0){ S.power = 0; S.chargeDir = 1; }
+    const g = gapInfo();
+    const an = anchorNow(g.m);
+    splatEl.setAttribute('transform', `translate(${an.x},${an.y})`);
+    const lx = predictedLandX(g);
+    const cpx = (hero.x + lx) / 2;
+    previewEl.setAttribute('d',
+      `M ${hero.x + 4} ${hero.y - 92} Q ${cpx} ${BASE_ROOF_Y + 90} ${lx} ${g.b.y - 10}`);
+    /* white web line growing toward the anchor point */
+    const hx = hero.x + 4, hy = hero.y - 92;
+    chargeLineEl.setAttribute('x1', hx); chargeLineEl.setAttribute('y1', hy);
+    chargeLineEl.setAttribute('x2', hx + (an.x - hx) * S.power);
+    chargeLineEl.setAttribute('y2', hy + (an.y - hy) * S.power);
+  }
+
+  /* falling physics down to the trampoline cloud */
+  if (S.phase === 'falling'){
+    S.vy += 1500 * dt;
+    hero.y += S.vy * dt;
+    hero.rot += dt * 60;
+    if (hero.y >= CLOUD_TOP){ hero.y = CLOUD_TOP; doBounce(); }
+  }
+
+  /* tweens */
+  for (let i = tweens.length - 1; i >= 0; i--){
+    const tw = tweens[i];
+    tw.t += dt;
+    const k = Math.min(1, tw.t / tw.dur);
+    tw.fn(k);
+    if (k >= 1){ tweens.splice(i, 1); if (tw.done) tw.done(); }
+  }
+
+  /* camera: smooth follow + parallax layers */
+  if (inLevel()){
+    const target = Math.min(Math.max(hero.x - S.viewW * 0.35, 0), Math.max(0, WORLD_W - S.viewW));
+    S.camX += (target - S.camX) * Math.min(1, dt * 4);
+    mainL.style.transform = 'translate3d(' + (-S.camX) + 'px,0,0)';
+    midL.style.transform  = 'translate3d(' + (-S.camX * 0.5) + 'px,0,0)';
+    farL.style.transform  = 'translate3d(' + (-S.camX * 0.25) + 'px,0,0)';
+
+    /* hero transform (feet-anchored) */
+    heroEl.style.transform = 'translate(' + (hero.x - 45) + 'px,' + (hero.y - 110) + 'px)' +
+      ' rotate(' + hero.rot + 'deg) scale(' + hero.sx + ',' + hero.sy + ')';
+  }
+
+  requestAnimationFrame(loop);
+}
+/* build level 1 world behind the start screen so it looks alive */
+buildLevel(1);
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
