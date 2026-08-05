@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yuvaan — Finish the Story! (20 Levels)</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body { font-family:"Comic Sans MS","Chalkboard SE","Segoe UI",sans-serif; background:linear-gradient(160deg,#fff7ed 0%,#eef2ff 100%); min-height:100vh; color:#33272a; }
+  .wrap { max-width:940px; margin:0 auto; padding:16px; }
+  h1 { text-align:center; font-size:1.8rem; color:#c2410c; padding:8px 0 2px; }
+  .sub { text-align:center; color:#8a7f85; margin-bottom:14px; font-size:.9rem; }
+  .hidden { display:none !important; }
+  /* MAP */
+  .map { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:14px; margin-top:10px; }
+  .lvl { background:#fff; border-radius:18px; padding:14px 8px; text-align:center; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,.08); transition:.15s; border:3px solid transparent; }
+  .lvl:hover { transform:translateY(-3px); border-color:#fdba74; }
+  .lvl .le { font-size:2.4rem; }
+  .lvl .lt { font-size:.8rem; font-weight:bold; color:#334155; margin-top:4px; min-height:32px; }
+  .lvl .ln { font-size:.7rem; color:#94a3b8; }
+  .lvl .ls { font-size:1rem; letter-spacing:2px; min-height:20px; }
+  .lvl.locked { filter:grayscale(1); opacity:.55; cursor:not-allowed; }
+  .lvl.locked:hover { transform:none; border-color:transparent; }
+  .mapbar { display:flex; justify-content:space-between; align-items:center; background:#fff; border-radius:16px; padding:10px 16px; box-shadow:0 3px 8px rgba(0,0,0,.06); flex-wrap:wrap; gap:8px; }
+  .mapbar b { color:#ea580c; }
+  .warn { background:#fef9c3; border:2px dashed #eab308; border-radius:14px; padding:10px 14px; font-size:.85rem; margin:12px 0; line-height:1.45; }
+  /* GAME */
+  .topbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; gap:8px; flex-wrap:wrap; }
+  .homebtn, .replaybtn { border:none; border-radius:14px; padding:10px 16px; font-size:.95rem; font-weight:bold; font-family:inherit; cursor:pointer; box-shadow:0 3px 0 rgba(0,0,0,.2); }
+  .homebtn { background:#e2e8f0; }
+  .replaybtn { background:#fde68a; }
+  .homebtn:active,.replaybtn:active { transform:translateY(2px); box-shadow:none; }
+  .lvltitle { font-size:1.15rem; font-weight:bold; color:#ea580c; }
+  .stage { background:#fff; border-radius:24px; padding:22px; text-align:center; box-shadow:0 6px 18px rgba(0,0,0,.08); position:relative; overflow:hidden; min-height:380px; }
+  .panels { display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin:8px 0; }
+  .spanel { width:200px; background:#eff6ff; border:4px solid #bfdbfe; border-radius:16px; padding:12px; opacity:.22; transform:scale(.96); transition:.4s; position:relative; }
+  .spanel.on { opacity:1; transform:scale(1); }
+  .spanel.talking { border-color:#f59e0b; box-shadow:0 0 0 4px #fde68a; }
+  .spanel .pe { font-size:2.7rem; min-height:54px; line-height:1.15; }
+  .spanel .pc { font-size:.85rem; font-weight:bold; color:#334155; margin-top:6px; line-height:1.4; }
+  .qhint { font-size:1.05rem; font-weight:bold; color:#f59e0b; margin:8px 0 2px; min-height:26px; }
+  .sopts { display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-top:10px; }
+  .sopt { width:196px; background:#fdf4ff; border:4px solid #f5d0fe; border-radius:16px; padding:12px; cursor:pointer; transition:.15s; position:relative; }
+  .sopt:hover { transform:scale(1.05); border-color:#d946ef; }
+  .sopt .pe { font-size:2.3rem; line-height:1.15; }
+  .sopt .pc { font-size:.8rem; font-weight:bold; margin-top:5px; line-height:1.4; }
+  .mini { position:absolute; top:6px; right:6px; background:#fde68a; border:none; border-radius:50%; width:34px; height:34px; font-size:.95rem; cursor:pointer; box-shadow:0 2px 0 #d4a017; }
+  .kw { border-radius:5px; transition:background .08s; }
+  .kw.hl { background:#fde047; border-radius:5px; box-shadow:0 0 0 2px #fde047; color:#7c2d12; }
+  .sopt.correct { border-color:#22c55e; background:#dcfce7; animation:pop .6s; }
+  .sopt.nope { animation:wig .5s; border-color:#fca5a5; }
+  @keyframes pop { 0%{transform:scale(1);} 40%{transform:scale(1.3) rotate(5deg);} 100%{transform:scale(1);} }
+  @keyframes wig { 0%,100%{transform:translateX(0);} 25%{transform:translateX(-10px);} 75%{transform:translateX(10px);} }
+  .feedback { min-height:38px; font-size:1.05rem; font-weight:bold; color:#16a34a; margin-top:8px; line-height:1.4; }
+  .spark { position:absolute; font-size:1.8rem; pointer-events:none; animation:fly 1s ease-out forwards; }
+  @keyframes fly { to { transform:translate(var(--dx),var(--dy)) scale(.3) rotate(360deg); opacity:0; } }
+  /* CELEBRATE */
+  .celebrate { background:#fff; border:4px solid #fbbf24; border-radius:20px; margin-top:14px; padding:16px; text-align:center; box-shadow:0 6px 18px rgba(0,0,0,.08); animation:pop .6s; }
+  .celebrate .stars { font-size:2.6rem; letter-spacing:6px; }
+  .celebrate h2 { color:#ea580c; margin-bottom:2px; }
+  .celebrate p { color:#64748b; font-size:.95rem; margin:4px 0 10px; }
+  .bigbtn { background:#ea580c; color:#fff; border:none; border-radius:16px; padding:14px 28px; font-size:1.1rem; font-weight:bold; font-family:inherit; cursor:pointer; box-shadow:0 4px 0 #9a3412; margin:4px; }
+  .bigbtn:active { transform:translateY(3px); box-shadow:none; }
+  .bigbtn.gray { background:#94a3b8; box-shadow:0 4px 0 #475569; }
+  /* LIBRARY */
+  .library { background:#f5f3ff; border-radius:16px; margin-top:16px; padding:12px; }
+  .library .lbl { font-size:.8rem; color:#6d28d9; font-weight:bold; }
+  .libitem { background:#fff; border-radius:10px; padding:6px 10px; margin-top:6px; font-size:.92rem; box-shadow:0 2px 4px rgba(0,0,0,.06); text-align:left; }
+  @media (max-width:640px){ .spanel,.sopt{width:100%; max-width:320px;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ===== MAP SCREEN ===== -->
+  <div id="mapScreen">
+    <h1>📚 Finish the Story!</h1>
+    <div class="sub">20 stories, easiest to trickiest — finish them all, Author Yuvaan!</div>
+    <div class="mapbar">
+      <div>⭐ Total stars: <b id="totalStars">0</b> / 60</div>
+      <div>📖 Stories finished: <b id="totalDone">0</b> / 20</div>
+      <button class="homebtn" onclick="resetProgress()" title="Papa only!">↺ Reset</button>
+    </div>
+    <div class="warn" id="audioWarn">🎙️ <b>Papa note:</b> if the natural voice isn't playing, generate the audio first: open Terminal and run<br>
+      <code>cd "/Users/hemantpant/Documents/Claude/Projects/Yuvaan Learning/voice_kit" && python3 make_audio.py</code><br>
+      Until then the game falls back to the robot voice.</div>
+    <div class="map" id="map"></div>
+    <div class="library"><div class="lbl">📚 YUVAAN'S LIBRARY — every story he has finished</div><div id="libBox"></div></div>
+  </div>
+
+  <!-- ===== GAME SCREEN ===== -->
+  <div id="gameScreen" class="hidden">
+    <div class="topbar">
+      <button class="homebtn" onclick="goHome()">🏠 Map</button>
+      <div class="lvltitle" id="lvlTitle"></div>
+      <button class="replaybtn" onclick="replayStory()">🔊 Hear again</button>
+      <button class="replaybtn hidden" id="playFullBtn" onclick="playFullStory()">▶ Play my story</button>
+    </div>
+    <div class="stage">
+      <div class="panels" id="gPanels"></div>
+      <div class="qhint" id="gQ"></div>
+      <div class="sopts" id="gOpts"></div>
+      <div class="feedback" id="gFb"></div>
+    </div>
+    <div class="celebrate hidden" id="celebrateBar"></div>
+  </div>
+
+</div>
+
+<script src="story_audio/timings.js"></script>
+<script>
+const TIMINGS = window.STORY_TIMINGS || {};
+/* ================= DATA (matches voice_kit/story_levels.json) ================= */
+const COMMON = {
+  q_end:"How does the story end?",
+  cheer1:"Wonderful! You did it, Yuvaan!",
+  cheer2:"Hooray! That is exactly right!",
+  cheer3:"Brilliant! What a clever storyteller you are!",
+  cheer4:"Yes! High five, Yuvaan!",
+  try1:"Hmm, would that really happen? Listen again and try once more!",
+  try2:"Almost! Close your eyes and make the picture in your head. You can do it!",
+  try3:"Not quite. But you never give up, right? Try again!",
+  levelup:"Level complete! A new story is waiting for you!",
+  trophy:"Twenty stories! You finished them all! You are the champion storyteller, Yuvaan! You never, ever quit!"
+};
+const LEVELS = [
+ {n:1,title:"Milo and the Ball",emoji:"⚽",panels:[{e:"🐶👀⚽",t:"Milo saw a big red ball."},{e:"🐶💨",t:"He ran fast to get it."}],opts:[{e:"🐶⚽😄",t:"He got the ball! Yay, Milo!",ok:true},{e:"🐶👞",t:"He ate an old shoe.",ok:false},{e:"🐶🚀",t:"He flew off on a jet.",ok:false}]},
+ {n:2,title:"Thirsty Kiki",emoji:"🥛",panels:[{e:"🐱🥵",t:"Kiki the cat was so hot."},{e:"🐱👀🥛",t:"She saw a bowl of milk."}],opts:[{e:"🐱🎩",t:"She wore it as a hat.",ok:false},{e:"🐱🥛😋",t:"She drank it all up. Yum!",ok:true},{e:"🐱🛏️",t:"She took the bowl to bed.",ok:false}]},
+ {n:3,title:"The Hungry Tummy",emoji:"🍌",panels:[{e:"🧒😮",t:"Yuvaan's tummy went grr, grr! He was so hungry!"},{e:"👩🍌",t:"Mama gave him a big banana."}],opts:[{e:"🍌🛏️",t:"He put the banana to bed.",ok:false},{e:"🍌🎨",t:"He used it like a pen.",ok:false},{e:"🧒🍌😋",t:"He ate it all up. Yum!",ok:true}]},
+ {n:4,title:"The Cold Little Bird",emoji:"🐦",panels:[{e:"🐦🌬️",t:"The wind blew. The bird was so cold. Brr!"},{e:"🐦🍂",t:"She got soft hay and grass."}],opts:[{e:"🐦🪹😊",t:"She made a warm, soft nest. So cosy!",ok:true},{e:"🐦🌊",t:"She swam in the icy sea.",ok:false},{e:"🐦🚕",t:"She got in a cab. Bye bye!",ok:false}]},
+ {n:5,title:"The Wobbly Tower",emoji:"🧱",panels:[{e:"🧒🧱🧱",t:"Yuvaan made a tall, tall tower."},{e:"🧱💥",t:"Bang! It fell down. Oh no!"}],opts:[{e:"🧒😢",t:"He got sad and quit.",ok:false},{e:"🧒🧱😤💪",t:"He made it all over again!",ok:true},{e:"🦋🦋",t:"The toys grew wings and flew.",ok:false}]},
+ {n:6,title:"Muddy Milo",emoji:"🛁",panels:[{e:"🐶🟤",t:"Milo got mud all over. Yuck!"},{e:"🛁🫧",t:"Papa made a nice warm bath."}],opts:[{e:"🐶🛏️🟤",t:"Milo hid the mud in bed.",ok:false},{e:"🐶🌙",t:"Milo flew up to the moon.",ok:false},{e:"🐶🛁✨",t:"Splash! Milo had a bath. All clean now!",ok:true}]},
+ {n:7,title:"Rainy Day Plan",emoji:"🌧️",panels:[{e:"🌧️🪟",t:"Plip, plop! Rain began to fall on the window."},{e:"🧒🚪",t:"Yuvaan really wanted to go outside and play."}],opts:[{e:"🧒🥾🧥",t:"He put on his boots and raincoat first. Smart thinking!",ok:true},{e:"🧒🩳💦",t:"He ran out in his pyjamas and got soaked.",ok:false},{e:"🧒🍦",t:"He melted like an ice cream.",ok:false}]},
+ {n:8,title:"Kiki and the Wool",emoji:"🧶",panels:[{e:"🐱👀🧶",t:"Kiki found Grandma's big ball of wool."},{e:"🐱🧶💨",t:"She rolled it and rolled it all around the room."}],opts:[{e:"🍝",t:"The wool turned into spaghetti.",ok:false},{e:"🧶🪢😹",t:"The wool made a big tangly mess all over the chairs. Oops!",ok:true},{e:"🐱🎈",t:"Kiki floated away holding the wool.",ok:false}]},
+ {n:9,title:"The Last Cookie",emoji:"🍪",panels:[{e:"🍪🫙",t:"One yummy cookie was left in the jar. Mama said, not before dinner, Yuvaan."},{e:"🧒👀🍪",t:"Yuvaan looked at the cookie. His tummy really, really wanted it."}],opts:[{e:"🧒🍽️😌",t:"He waited until after dinner, just like Mama said. What a strong choice!",ok:true},{e:"🧒🍪🤫",t:"He gobbled it up and hid the empty jar.",ok:false},{e:"🍪🏃",t:"The cookie ran away on little legs.",ok:false}]},
+ {n:10,title:"The Big Race",emoji:"🏁",panels:[{e:"🐶🐿️🏁",t:"Milo and the squirrel had a race to the big oak tree."},{e:"🐿️💤",t:"The squirrel zoomed far ahead — but soon stopped for a nap."}],opts:[{e:"🐶💤",t:"Milo lay down and napped too.",ok:false},{e:"🌳🏃",t:"The tree ran away before anyone arrived.",ok:false},{e:"🐶🏆",t:"Milo kept going, step by step, and reached the tree first!",ok:true}]},
+ {n:11,title:"The Blue Blob",emoji:"🎨",panels:[{e:"🧒🎨",t:"Yuvaan painted a beautiful picture of his family."},{e:"💧🔵",t:"But drip! A big blob of blue paint fell right in the middle."}],opts:[{e:"🧒😡📄",t:"He tore the painting into tiny pieces.",ok:false},{e:"🔵🐦✨",t:"He turned the blob into a funny blue bird. How clever!",ok:true},{e:"🔵🎤",t:"The blob started singing a song.",ok:false}]},
+ {n:12,title:"One Worm, Three Chicks",emoji:"🐛",panels:[{e:"🐦🐛",t:"Mama bird found one wiggly, wriggly worm."},{e:"🐣🐣🐣",t:"Back at the nest, THREE hungry chicks opened their beaks wide."}],opts:[{e:"🐦😋",t:"She gobbled it all up herself.",ok:false},{e:"🐛🥁",t:"The worm played the drums.",ok:false},{e:"🐣🐣🐣💕",t:"She shared the worm, so every chick got a little bite.",ok:true}]},
+ {n:13,title:"The Sandcastle",emoji:"🏰",panels:[{e:"🧒🏖️🏰",t:"At the beach, Yuvaan built a sandcastle with a tall, proud tower."},{e:"🌊👀",t:"A big wave came closer… and closer… and closer…"},{e:"🌊💥🏰",t:"WHOOSH! The wave washed the whole castle away."}],opts:[{e:"🧒😄🏰",t:"He laughed and built a new castle, further from the water. Smart!",ok:true},{e:"🧒😡🌊",t:"He shouted at the sea for the rest of the day.",ok:false},{e:"🏰🏊",t:"The castle swam away to another beach.",ok:false}]},
+ {n:14,title:"Kiki Up High",emoji:"🌳",panels:[{e:"🐱🦋🌳",t:"Kiki chased a butterfly all the way up the tall tree."},{e:"🐱😨",t:"At the very top, she looked down. Oh no — it was SO high!"},{e:"🐱🆘",t:"She was too scared to climb down. Meow! Meow!"}],opts:[{e:"🐱🪽",t:"Kiki grew wings and flew home.",ok:false},{e:"🧒📣👨",t:"Yuvaan heard her cry and quickly called Papa to help. Teamwork!",ok:true},{e:"🍽️🚶",t:"Everyone just went inside for dinner.",ok:false}]},
+ {n:15,title:"The Tricky Shoelaces",emoji:"👟",panels:[{e:"🧒👟",t:"Yuvaan was learning to tie his shoelaces all by himself."},{e:"🪢😖",t:"First try — a knot! Second try — a tangle! Third try — oh dear."},{e:"🧒😤💨",t:"His fingers wanted to give up. But he took a big, brave breath."}],opts:[{e:"👟🗑️",t:"He threw his shoes into the bin.",ok:false},{e:"🪢✨",t:"The laces magically tied themselves.",ok:false},{e:"🧒👟🎀🏅",t:"He tried again and again — and on the twentieth try, a perfect bow!",ok:true}]},
+ {n:16,title:"The Missing Bone",emoji:"🦴",panels:[{e:"🐶🦴🌹",t:"Milo buried his favourite bone next to the rose bush."},{e:"🐶😱",t:"Next morning, he dug it up — but the bone was GONE!"},{e:"🐾🐾🐾",t:"Then he spotted tiny paw prints, leading straight to Kiki's basket…"}],opts:[{e:"🐶🔍🐱🦴",t:"He followed the prints and found Kiki playing with his bone! Case solved!",ok:true},{e:"🦴🚌",t:"The bone came home by bus.",ok:false},{e:"🐶🌷🛒",t:"He went shopping for a brand new garden.",ok:false}]},
+ {n:17,title:"The Toy Car",emoji:"🚗",panels:[{e:"🏪🚗👜",t:"At the shop, a little toy car fell into Yuvaan's bag by accident."},{e:"🤫👀",t:"Nobody saw it happen. Not even Mama."},{e:"🧒😟",t:"But Yuvaan felt a funny wobble in his tummy. Something was not right."}],opts:[{e:"🧒🏠🤫",t:"He kept quiet and hid the car at home.",ok:false},{e:"🧒👩🏪😊",t:"He told Mama, and they gave it back. The shopkeeper smiled so big! Honesty feels good.",ok:true},{e:"🚗💨",t:"The car started its engine and drove away.",ok:false}]},
+ {n:18,title:"The Hurt Wing",emoji:"❄️",panels:[{e:"🌬️❄️",t:"Winter was coming, and the wind grew icy cold."},{e:"🐦🐦✈️",t:"All of little bird's friends flew away to the warm, sunny south."},{e:"🐦🤕",t:"But little bird's wing was hurt. She could not fly that far. Not yet."}],opts:[{e:"🐦🚕",t:"She waited by the road for a taxi.",ok:false},{e:"🐦🧊",t:"She hid inside a fridge to practise being cold.",ok:false},{e:"🐦💪🌅",t:"She rested, ate well, and practised every day — until her strong wings carried her south!",ok:true}]},
+ {n:19,title:"The Hundred-Piece Puzzle",emoji:"🧩",panels:[{e:"🧒🧩",t:"The new puzzle had one hundred pieces! Yuvaan started right after breakfast."},{e:"🟦🟦🟦",t:"By lunchtime only the sky was left — and all the blue pieces looked exactly the same!"},{e:"🧒😪",t:"His eyes were tired. The very last pieces were the hardest of all."}],opts:[{e:"🧒👊🧩",t:"He squashed the pieces hard to make them fit.",ok:false},{e:"🧩😴🌙",t:"The puzzle finished itself while everyone slept.",ok:false},{e:"🧒🧩🖼️🎉",t:"Piece by piece he kept trying — and CLICK! The whole picture was complete!",ok:true}]},
+ {n:20,title:"The Storyteller",emoji:"🌟",panels:[{e:"🧒📖🌙",t:"Yuvaan read a story every single night, all by himself."},{e:"😪🔤",t:"Some words were tricky, and some nights he was very sleepy."},{e:"🧒📚📚",t:"But he never skipped a night. Twenty stories became a hundred stories!"}],opts:[{e:"🧒🛑📖",t:"So one day he stopped reading forever.",ok:false},{e:"🧒🌟📚🏆",t:"And that is how Yuvaan became the best storyteller in the whole town.",ok:true},{e:"📚🐱",t:"The books started reading themselves to Kiki.",ok:false}]}
+];
+
+/* ================= AUDIO ENGINE ================= */
+const AUDIO_DIR = "story_audio/";
+let currentAudio = null, hasNaturalAudio = null, playToken = 0;
+
+function stopAll(){
+  playToken++;
+  if(currentAudio){ currentAudio.pause(); currentAudio = null; }
+  try{ speechSynthesis.cancel(); }catch(e){}
+  if(karaokeStop) karaokeStop();
+}
+/* ================= KARAOKE ENGINE ================= */
+function karaokeHTML(text){
+  return text.split(/\s+/).filter(Boolean).map(w => '<span class="kw'+(/[A-Za-z0-9]/.test(w) ? '' : ' skip')+'">'+w+'</span>').join(' ');
+}
+let karaokeStop = null;
+function startKaraoke(audio, id, el){
+  if(!el) return ()=>{};
+  const times = TIMINGS[id] || [];
+  const spans = [...el.querySelectorAll('.kw:not(.skip)')];
+  if(!times.length || !spans.length) return ()=>{};
+  let raf=0, last=-1;
+  const clear=()=>{ cancelAnimationFrame(raf); spans.forEach(s=>s.classList.remove('hl')); if(karaokeStop===clear) karaokeStop=null; };
+  const tick=()=>{
+    const t=audio.currentTime;
+    let k=-1;
+    while(k+1<times.length && t>=times[k+1].t) k++;
+    k=Math.min(k, spans.length-1);
+    if(k!==last){
+      if(last>=0) spans[last].classList.remove('hl');
+      if(k>=0) spans[k].classList.add('hl');
+      last=k;
+    }
+    raf=requestAnimationFrame(tick);
+  };
+  raf=requestAnimationFrame(tick);
+  karaokeStop=clear;
+  return clear;
+}
+function playClip(id, text, hlEl){
+  const myToken = playToken;
+  /* audio known missing → go straight to fallback, skip 404 churn */
+  if(hasNaturalAudio === false){
+    return ttsFallback(text, myToken, hlEl);
+  }
+  return new Promise(resolve=>{
+    const a = new Audio(AUDIO_DIR + id + ".mp3");
+    let settled = false, fbStarted = false, guard = null;
+    let clear = ()=>{};
+    const done = ()=>{ if(!settled){ settled=true; clear(); if(guard) clearInterval(guard); if(currentAudio===a) currentAudio=null; resolve(); } };
+    const fallback = ()=>{     /* file missing → robot fallback (guard against double-fire) */
+      if(settled || fbStarted) return;
+      fbStarted = true;
+      hasNaturalAudio = false;
+      clear();
+      ttsFallback(text, myToken, hlEl).then(done);
+    };
+    a.onended = done;
+    a.onerror = fallback;
+    a.oncanplaythrough = ()=>{ hasNaturalAudio = true; hideWarnIfOk(); };
+    if(myToken !== playToken){ done(); return; }
+    currentAudio = a;
+    clear = startKaraoke(a, id, hlEl);
+    a.play().catch(fallback);
+    /* safety: if token invalidated mid-play, stop resolving chain */
+    guard = setInterval(()=>{ if(myToken!==playToken){ a.pause(); done(); } }, 200);
+  });
+}
+function ttsFallback(text, myToken, hlEl){
+  return new Promise(resolve=>{
+    if(myToken !== playToken){ resolve(); return; }
+    const spans = hlEl ? [...hlEl.querySelectorAll('.kw:not(.skip)')] : [];
+    /* map each token start charIndex → highlightable span index (skip tokens clamp to previous) */
+    const starts = [], spanIdx = [];
+    if(spans.length){
+      const re = /\S+/g; let m, si = 0;
+      while((m = re.exec(text))){
+        starts.push(m.index);
+        if(/[A-Za-z0-9]/.test(m[0])){ spanIdx.push(si); si++; }
+        else spanIdx.push(Math.max(0, si-1));
+      }
+    }
+    let lastSpan = -1, finished = false;
+    const clearHl = ()=>{ spans.forEach(s=>s.classList.remove('hl')); };
+    const finish = ()=>{ if(finished) return; finished = true; clearHl(); resolve(); };
+    try{
+      const u = new SpeechSynthesisUtterance(text);
+      u.rate = 0.8; u.pitch = 1.1;
+      u.onend = finish; u.onerror = finish;
+      if(spans.length){
+        u.onboundary = (e)=>{
+          let k = -1;
+          for(let i=0;i<starts.length;i++){ if(starts[i] <= e.charIndex) k = i; else break; }
+          if(k < 0) return;
+          const si = Math.min(spanIdx[k], spans.length-1);
+          if(si !== lastSpan){
+            if(lastSpan>=0) spans[lastSpan].classList.remove('hl');
+            spans[si].classList.add('hl');
+            lastSpan = si;
+          }
+        };
+      }
+      speechSynthesis.speak(u);
+      setTimeout(finish, Math.max(2500, text.length*90)); /* safety net */
+    }catch(e){ finish(); }
+  });
+}
+function hideWarnIfOk(){ if(hasNaturalAudio) document.getElementById("audioWarn").classList.add("hidden"); }
+
+/* ================= PROGRESS ================= */
+const KEY = "yuvaan_story_v1";
+function loadP(){ try{ const o = JSON.parse(localStorage.getItem(KEY)) || {}; return {stars:(o.stars&&typeof o.stars==="object")?o.stars:{}, lib:Array.isArray(o.lib)?o.lib:[]}; }catch(e){ return {stars:{},lib:[]}; } }
+function saveP(p){ localStorage.setItem(KEY, JSON.stringify(p)); }
+function unlockedUpTo(p){
+  let maxDone = 0;
+  LEVELS.forEach(l=>{ if(p.stars[l.n]) maxDone = Math.max(maxDone, l.n); });
+  return maxDone + 1;
+}
+function resetProgress(){
+  if(confirm("Papa, reset ALL of Yuvaan's stars and library?")){ localStorage.removeItem(KEY); renderMap(); }
+}
+
+/* ================= MAP ================= */
+function renderMap(){
+  const p = loadP(), unlocked = unlockedUpTo(p);
+  const map = document.getElementById("map"); map.innerHTML = "";
+  let total = 0, done = 0;
+  LEVELS.forEach(l=>{
+    const s = p.stars[l.n] || 0;
+    total += s; if(s) done++;
+    const d = document.createElement("div");
+    d.className = "lvl" + (l.n > unlocked ? " locked" : "");
+    d.innerHTML = '<div class="le">' + (l.n > unlocked ? "🔒" : l.emoji) + '</div>' +
+      '<div class="lt">' + l.title + '</div>' +
+      '<div class="ln">Story ' + l.n + '</div>' +
+      '<div class="ls">' + "⭐".repeat(s) + '</div>';
+    if(l.n <= unlocked) d.onclick = ()=>startLevel(l.n);
+    map.appendChild(d);
+  });
+  document.getElementById("totalStars").textContent = total;
+  document.getElementById("totalDone").textContent = done;
+  const lib = document.getElementById("libBox"); lib.innerHTML = "";
+  p.lib.forEach(item=>{
+    const li = document.createElement("div"); li.className = "libitem";
+    li.textContent = "📕 " + item.e + " " + item.title + " — finished by Author Yuvaan " + "⭐".repeat(item.s);
+    lib.appendChild(li);
+  });
+  if(!p.lib.length) lib.innerHTML = '<div class="libitem" style="color:#94a3b8;">No stories yet — tap Story 1 to begin!</div>';
+}
+
+/* ================= GAME ================= */
+let cur = null, attempts = 0, storyDone = false, won = false, winIdx = -1;
+
+function startLevel(n){
+  cur = LEVELS.find(l=>l.n===n);
+  attempts = 0; storyDone = false; won = false; winIdx = -1;
+  stopAll();
+  document.getElementById("mapScreen").classList.add("hidden");
+  document.getElementById("gameScreen").classList.remove("hidden");
+  document.getElementById("celebrateBar").classList.add("hidden");
+  document.getElementById("playFullBtn").classList.add("hidden");
+  document.getElementById("lvlTitle").textContent = "Story " + cur.n + ": " + cur.title + " " + cur.emoji;
+  document.getElementById("gFb").textContent = "";
+  document.getElementById("gQ").textContent = "👂 Listen to the story…";
+  const pb = document.getElementById("gPanels"); pb.innerHTML = "";
+  cur.panels.forEach((p,i)=>{
+    const d = document.createElement("div"); d.className = "spanel";
+    d.innerHTML = '<button class="mini" title="Hear again">🔊</button><div class="pe">' + p.e + '</div><div class="pc">' + karaokeHTML(p.t) + '</div>';
+    d.querySelector(".mini").onclick = (ev)=>{ ev.stopPropagation(); stopAll(); d.classList.add("on"); playClip("L"+cur.n+"_p"+(i+1), p.t, d.querySelector(".pc")); };
+    pb.appendChild(d);
+  });
+  document.getElementById("gOpts").innerHTML = "";
+  tellStory();
+}
+async function tellStory(){
+  const myToken = ++playToken; playToken = myToken; /* fresh token */
+  const panels = document.querySelectorAll("#gPanels .spanel");
+  for(let i=0;i<cur.panels.length;i++){
+    if(playToken !== myToken) return;
+    panels[i].classList.add("on","talking");
+    await playClip("L"+cur.n+"_p"+(i+1), cur.panels[i].t, panels[i].querySelector(".pc"));
+    panels[i].classList.remove("talking");
+  }
+  if(playToken !== myToken) return;
+  document.getElementById("gQ").innerHTML = '🤔 ' + karaokeHTML(COMMON.q_end);
+  await playClip("q_end", COMMON.q_end, document.getElementById("gQ"));
+  if(playToken !== myToken) return;
+  showOptions();
+}
+function replayStory(){
+  if(!cur) return;
+  stopAll();
+  document.querySelectorAll("#gPanels .spanel").forEach(p=>p.classList.remove("on","talking"));
+  document.getElementById("gOpts").innerHTML = "";
+  document.getElementById("gQ").textContent = "👂 Listen to the story…";
+  tellStory();
+}
+function showOptions(){
+  storyDone = true;
+  const box = document.getElementById("gOpts"); box.innerHTML = "";
+  cur.opts.forEach((o,idx)=>{
+    const d = document.createElement("div"); d.className = "sopt";
+    d.innerHTML = '<button class="mini" title="Hear this ending">🔊</button>' +
+      '<div class="pe">' + o.e + '</div><div class="pc">' + karaokeHTML(o.t) + '</div>';
+    d.querySelector(".mini").onclick = (ev)=>{ ev.stopPropagation(); stopAll(); playClip("L"+cur.n+"_o"+idx, o.t, d.querySelector(".pc")); };
+    d.onclick = ()=>pick(o, idx, d);
+    box.appendChild(d);
+  });
+}
+function pick(o, idx, el){
+  if(won) return;
+  if(!storyDone) return;
+  stopAll();
+  if(o.ok){
+    won = true; winIdx = idx;
+    el.classList.add("correct");
+    burst();
+    const stars = attempts===0 ? 3 : (attempts===1 ? 2 : 1);
+    const ck = "cheer"+(1+Math.floor(Math.random()*4));
+    document.getElementById("gFb").textContent = "📖 " + COMMON[ck];
+    const p = loadP();
+    if(!p.stars[cur.n] || p.stars[cur.n] < stars) p.stars[cur.n] = stars;
+    const libEntry = p.lib.find(x=>x.n===cur.n);
+    if(!libEntry) p.lib.push({n:cur.n, title:cur.title, e:cur.emoji, s:stars});
+    else if(libEntry.s < stars) libEntry.s = stars;
+    saveP(p);
+    (async ()=>{
+      const t = playToken;
+      await playClip("L"+cur.n+"_win", o.t + " ... The end!", el.querySelector(".pc"));
+      if(playToken !== t) return;
+      await playClip(ck, COMMON[ck], null);
+      if(playToken !== t) return;
+      showCelebrate(stars);
+    })();
+  } else {
+    attempts++;
+    el.classList.add("nope");
+    const tk = "try"+(1+Math.floor(Math.random()*3));
+    document.getElementById("gFb").textContent = "💪 " + COMMON[tk];
+    playClip(tk, COMMON[tk], null);
+    setTimeout(()=>el.classList.remove("nope"), 600);
+  }
+}
+function showCelebrate(stars){
+  const p = loadP();
+  const allDone = LEVELS.every(l=>p.stars[l.n]);
+  const bar = document.getElementById("celebrateBar");
+  bar.classList.remove("hidden");
+  document.getElementById("playFullBtn").classList.remove("hidden");
+  if(allDone && cur.n===20){
+    bar.innerHTML = '<h2>🏆 CHAMPION STORYTELLER! 🏆</h2>' +
+      '<div class="stars">🌟🌟🌟🌟🌟</div>' +
+      '<p>Twenty stories finished! Yuvaan never quit — not even once. The whole library is his!</p>' +
+      '<button class="bigbtn gray" onclick="goHome()">🏠 Back to Map</button>';
+    playClip("trophy", COMMON.trophy, null);
+  } else {
+    bar.innerHTML = '<h2>Story Complete!</h2>' +
+      '<div class="stars">' + "⭐".repeat(stars) + "☆".repeat(3-stars) + '</div>' +
+      '<p>' + (stars===3 ? "First try — amazing!" : "You never gave up — that is what matters most!") + '</p>' +
+      (cur.n<20 ? '<button class="bigbtn" onclick="startLevel('+(cur.n+1)+')">Next Story ▶</button>' : '') +
+      '<button class="bigbtn gray" onclick="goHome()">🏠 Map</button>';
+    playClip("levelup", COMMON.levelup, null);
+  }
+  bar.scrollIntoView({behavior:"smooth", block:"nearest"});
+}
+async function playFullStory(){
+  if(!cur || !won) return;
+  stopAll();
+  const myToken = ++playToken;
+  const panels = document.querySelectorAll("#gPanels .spanel");
+  for(let i=0;i<cur.panels.length;i++){
+    if(playToken !== myToken) return;
+    panels[i].classList.add("on","talking");
+    await playClip("L"+cur.n+"_p"+(i+1), cur.panels[i].t, panels[i].querySelector(".pc"));
+    panels[i].classList.remove("talking");
+  }
+  if(playToken !== myToken) return;
+  const winCard = document.querySelectorAll("#gOpts .sopt")[winIdx];
+  await playClip("L"+cur.n+"_win", cur.opts[winIdx].t + " ... The end!", winCard ? winCard.querySelector(".pc") : null);
+}
+function goHome(){
+  stopAll();
+  document.getElementById("gameScreen").classList.add("hidden");
+  document.getElementById("mapScreen").classList.remove("hidden");
+  renderMap();
+}
+function burst(){
+  const stage = document.querySelector("#gameScreen .stage");
+  const em = ["✨","⭐","🎉","💫","🌟"];
+  for(let i=0;i<14;i++){
+    const s = document.createElement("span"); s.className = "spark";
+    s.textContent = em[i%em.length];
+    s.style.left = "50%"; s.style.top = "40%";
+    s.style.setProperty("--dx",(Math.random()*400-200)+"px");
+    s.style.setProperty("--dy",(Math.random()*320-160)+"px");
+    stage.appendChild(s); setTimeout(()=>s.remove(),1000);
+  }
+}
+renderMap();
+</script>
+</body>
+</html>
