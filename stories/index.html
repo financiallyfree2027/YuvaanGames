@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Yuvaan Reads — Superheroes</title>
+<style>
+:root{
+  --bg:#fdfaf4; --ink:#241d15; --muted:#8b8175; --line:#e8ded0;
+  --green:#2fae7c; --blue:#3d8ddb; --mine:#12a99a;
+  --tint:#e0574f; --glow:#ff6b5e;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);overflow:hidden;
+  font-family:"Comic Sans MS","Chalkboard SE",-apple-system,"Segoe UI",sans-serif;
+  display:flex;flex-direction:column}
+.screen{display:none;flex:1 1 auto;flex-direction:column;min-height:0}
+.screen.on{display:flex}
+
+/* ---------------- top bar ---------------- */
+.bar{display:flex;align-items:center;gap:9px;padding:7px 14px;background:#fff;
+  border-bottom:2px solid var(--line);flex:0 0 auto;z-index:8}
+.title{font-size:13px;font-weight:700;color:var(--muted);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;max-width:26vw}
+.stars{display:flex;gap:3px;flex:1 1 auto;overflow:hidden}
+.star{width:13px;height:13px;flex:0 0 auto;opacity:.16;transition:.25s}
+.star.on{opacity:1;filter:drop-shadow(0 0 4px #ffb400)}
+.barbtn{border:2px solid var(--line);background:#fff;border-radius:11px;padding:4px 10px;
+  font:inherit;font-size:12px;cursor:pointer;color:var(--muted);white-space:nowrap}
+.barbtn:hover{color:var(--ink);border-color:var(--tint)}
+
+/* ---------------- progress dots ---------------- */
+.dots{display:flex;gap:4px;justify-content:center;flex-wrap:wrap;padding:6px 12px 0;flex:0 0 auto}
+.dot{width:6px;height:6px;border-radius:50%;background:#e4dacb;transition:.25s}
+.dot.done{background:var(--tint);opacity:.45}
+.dot.now{background:var(--tint);transform:scale(1.8)}
+
+/* ================ THE SPLIT ================ */
+.split{flex:1 1 auto;display:flex;min-height:0}
+.words{flex:1 1 56%;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:18px;padding:20px 30px;min-width:0;transition:background .45s}
+body.myturn .words{background:#effcfa}
+.pic{flex:0 0 44%;position:relative;background:#f1ebe0;overflow:hidden;
+  border-left:3px solid var(--line);min-width:0}
+.pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  animation:pop .7s ease both, drift 24s ease-in-out infinite alternate}
+@keyframes pop{from{opacity:0;transform:scale(1.09)}to{opacity:1;transform:scale(1)}}
+@keyframes drift{from{transform:scale(1)}to{transform:scale(1.07) translate(-1.5%,-1%)}}
+.picfall{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at 50% 40%,#fff,#ece3d5)}
+.picfall svg{width:82%;height:82%}
+.picnote{position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:11px;
+  color:#b3a795;letter-spacing:.4px}
+
+.turnlabel{font-size:13px;letter-spacing:3.4px;color:var(--muted);height:17px;font-weight:700;
+  transition:.3s}
+body.myturn .turnlabel{color:var(--mine)}
+#text{max-width:100%;text-align:center;line-height:1.5;font-weight:700;letter-spacing:.4px;
+  font-size:clamp(30px,4.3vw,66px)}
+.words.enter #text{animation:rise .5s cubic-bezier(.2,.8,.25,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+.w{display:inline-block;padding:1px 10px;margin:4px 0;border-radius:14px;cursor:pointer;
+  transition:color .1s,background .1s,transform .1s}
+.w:hover{background:#f2ece2}
+.w.done{color:#b6a793}
+.w.on{color:#fff;background:linear-gradient(180deg,var(--tint),color-mix(in srgb,var(--tint) 62%,#000));
+  transform:scale(1.06) translateY(-2px);box-shadow:0 8px 20px -8px var(--tint)}
+body.myturn .w.on{background:linear-gradient(180deg,var(--mine),#0b7f74);
+  box-shadow:0 8px 20px -8px var(--mine)}
+.tapnote{font-size:12px;color:#b3a795;height:15px}
+.readmark{display:flex;gap:7px;height:11px;align-items:center}
+.rm{width:26px;height:5px;border-radius:3px;background:#e7ddce;transition:.3s}
+.rm.on{background:var(--tint)}
+.rm.mine.on{background:var(--mine)}
+
+/* ---------------- controls ---------------- */
+.controls{flex:0 0 auto;display:flex;align-items:center;justify-content:center;gap:10px;
+  padding:10px 12px 14px;background:#fff;border-top:2px solid var(--line);flex-wrap:wrap}
+.btn{border:none;border-radius:18px;padding:13px 20px;font:inherit;font-size:16px;font-weight:700;
+  background:#f1eae0;color:var(--ink);cursor:pointer;border-bottom:3px solid #ddd2c2;transition:.12s}
+.btn:hover{background:#e9e0d3}
+.btn:active{transform:translateY(2px);border-bottom-width:1px}
+.btn:disabled{opacity:.3;pointer-events:none}
+.btn.hear{background:var(--tint);color:#fff;border-bottom-color:rgba(0,0,0,.25)}
+.btn.mine{background:var(--mine);color:#fff;border-bottom-color:rgba(0,0,0,.25)}
+.btn.next{background:var(--blue);color:#fff;border-bottom-color:rgba(0,0,0,.25)}
+.btn.next.pulse{animation:pl 1.5s ease-in-out infinite}
+@keyframes pl{0%,100%{box-shadow:0 0 0 0 rgba(61,141,219,.5)}50%{box-shadow:0 0 0 14px rgba(61,141,219,0)}}
+.meta{font-size:12px;color:var(--muted);min-width:42px;text-align:center}
+.speed{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted)}
+input[type=range]{width:74px;accent-color:var(--tint)}
+
+/* ---------------- home ---------------- */
+#home{align-items:center;justify-content:center;gap:18px;padding:26px;text-align:center;overflow-y:auto}
+#home h1{font-size:clamp(25px,4.6vw,42px);margin:0}
+#home .sub{color:var(--muted);font-size:13.5px;margin:0}
+.cards{display:flex;gap:20px;flex-wrap:wrap;justify-content:center}
+.card{width:250px;border-radius:20px;overflow:hidden;cursor:pointer;position:relative;
+  border:3px solid var(--line);background:#fff;transition:.2s;box-shadow:0 10px 26px -18px #000}
+.card:hover{transform:translateY(-6px);border-color:var(--ct)}
+.card .thumb{height:150px;background:#f1ebe0;position:relative;overflow:hidden}
+.card .thumb img{width:100%;height:100%;object-fit:cover}
+.card .thumb svg{width:100%;height:100%}
+.card .body{padding:11px 14px 15px;text-align:left}
+.card h2{margin:0 0 3px;font-size:17px}
+.card small{color:var(--muted);font-size:12px;display:block}
+.lw{position:absolute;top:9px;right:9px;font-size:9.5px;letter-spacing:1.6px;font-weight:700;
+  background:var(--ct);color:#fff;padding:3px 9px;border-radius:20px}
+
+/* ---------------- quiz ---------------- */
+#qwrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:15px;padding:20px;overflow-y:auto}
+.qnum{font-size:11.5px;color:var(--muted);letter-spacing:2px}
+#qtext{font-size:clamp(24px,3.7vw,42px);font-weight:700;text-align:center;max-width:880px;
+  line-height:1.4;animation:rise .45s ease both}
+#opts{display:flex;flex-direction:column;gap:11px;width:min(540px,94vw)}
+.opt{border:3px solid var(--line);background:#fff;border-radius:17px;padding:16px 22px;
+  font:inherit;font-size:clamp(22px,3.4vw,34px);font-weight:700;cursor:pointer;text-align:center;
+  color:var(--ink);border-bottom-width:4px;animation:rise .45s ease both}
+.opt:hover{border-color:var(--tint)}
+.opt.right{background:var(--green);border-color:var(--green);color:#fff}
+.opt.soft{opacity:.32}
+.opt.wrong{animation:shake .3s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+#score{font-size:clamp(24px,3.8vw,38px);font-weight:700;text-align:center}
+#quizEnd{display:none;gap:10px;flex-wrap:wrap;justify-content:center}
+
+/* ---------------- help ---------------- */
+#help{position:fixed;inset:0;background:rgba(30,22,14,.55);backdrop-filter:blur(4px);
+  display:none;align-items:center;justify-content:center;padding:22px;z-index:60}
+#help.on{display:flex}
+.helpbox{background:#fff;border-radius:20px;max-width:640px;padding:24px 26px;font-size:14.5px;
+  line-height:1.7;max-height:88vh;overflow:auto}
+.helpbox h3{margin:0 0 8px;font-size:19px}
+.helpbox code{background:#f4eee5;padding:2px 7px;border-radius:6px;font-size:12.5px;color:#b4482f}
+.ok{color:var(--green);font-weight:700}.no{color:var(--tint);font-weight:700}
+
+/* ---------------- portrait / narrow: stack, picture on top ---------------- */
+@media (max-aspect-ratio: 9/10), (max-width:760px){
+  .split{flex-direction:column}
+  .pic{flex:0 0 36%;border-left:none;border-bottom:3px solid var(--line)}
+  .words{flex:1 1 auto;padding:14px 18px;gap:12px}
+  #text{font-size:clamp(28px,7vw,52px)}
+  .title{display:none}
+  .btn{padding:11px 15px;font-size:15px}
+}
+</style>
+</head>
+<body>
+
+<div class="screen on" id="home">
+  <h1>Pick a story</h1>
+  <p class="sub">Listen twice · then you read it · then answer</p>
+  <div class="cards" id="cards"></div>
+  <button class="barbtn" id="statusBtn">setup</button>
+  <a class="barbtn" href="../index.html" style="text-decoration:none">← all games</a>
+</div>
+
+<div class="screen" id="reader">
+  <div class="bar">
+    <button class="barbtn" id="home1">🏠</button>
+    <div class="title" id="storyName"></div>
+    <div class="stars" id="stars"></div>
+    <button class="barbtn" id="helpBtn2">⚙︎</button>
+  </div>
+  <div class="dots" id="dots"></div>
+
+  <div class="split">
+    <div class="words" id="words">
+      <div class="turnlabel" id="turnlabel"></div>
+      <div id="text"></div>
+      <div class="readmark" id="readmark">
+        <div class="rm" id="rm1"></div><div class="rm" id="rm2"></div><div class="rm mine" id="rm3"></div>
+      </div>
+      <div class="tapnote">tap any word to hear it on its own</div>
+    </div>
+    <div class="pic" id="pic"></div>
+  </div>
+
+  <div class="controls">
+    <button class="btn" id="prev">◀</button>
+    <button class="btn hear" id="hear">🔊 Read it</button>
+    <button class="btn mine" id="mine">🙋 My turn</button>
+    <button class="btn next" id="next">Next ▶</button>
+    <div class="meta" id="pageNo"></div>
+    <div class="speed"><span>🐢</span><input type="range" id="rate" min="0.55" max="1.15" step="0.05" value="0.9"><span>🐇</span></div>
+  </div>
+</div>
+
+<div class="screen" id="quiz">
+  <div class="bar">
+    <button class="barbtn" id="home2">🏠</button>
+    <div class="title">Questions</div>
+    <div class="stars" id="stars2"></div>
+    <button class="barbtn" id="repeatQ">🔁 again</button>
+  </div>
+  <div id="qwrap">
+    <div class="qnum" id="qnum"></div>
+    <div id="qtext"></div>
+    <div id="opts"></div>
+    <div id="score"></div>
+    <div id="quizEnd">
+      <button class="btn next" id="again">Read it again</button>
+      <button class="btn" id="home3">🏠 Other story</button>
+    </div>
+  </div>
+</div>
+
+<div id="help"><div class="helpbox" id="helpBody"></div></div>
+
+<script src="stories.js"></script>
+<script src="timings.js"></script>
+<script src="voice.js"></script>
+<script>
+/* ================= placeholder picture ================= */
+function ph(k){
+  const c={focus:["#d94a42","#3f5fb0"],persist:["#d44038","#f0b429"],work:["#2f5fa8","#e8ecf2"]}[k]||["#888","#555"];
+  return `<svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="72" fill="${c[0]}" opacity=".13"/>
+   <g transform="translate(70,52) scale(1)">
+   <rect x="8" y="86" width="17" height="34" rx="8" fill="${c[1]}"/><rect x="35" y="86" width="17" height="34" rx="8" fill="${c[1]}"/>
+   <rect x="-13" y="34" width="14" height="38" rx="7" fill="${c[0]}"/><rect x="59" y="34" width="14" height="38" rx="7" fill="${c[0]}"/>
+   <rect x="4" y="34" width="52" height="58" rx="18" fill="${c[0]}"/>
+   ${k==="focus"?`<path d="M30 44 l-9 12 h18 z" fill="#1b1b1b"/>`:
+     k==="persist"?`<circle cx="30" cy="58" r="12" fill="#bfefff"/><circle cx="30" cy="58" r="15" fill="none" stroke="#f0b429" stroke-width="3"/>`:
+     `<path d="M30 46 l3.4 7 7.6.9-5.7 5.2 1.6 7.5L30 63l-6.9 3.6 1.6-7.5-5.7-5.2 7.6-.9z" fill="#fff"/>`}
+   <circle cx="30" cy="16" r="24" fill="${c[0]}"/>
+   ${k==="focus"?`<path d="M14 12 q9 -9 15 -1 q-3 12 -13 10 z" fill="#fff" stroke="#1b1b1b" stroke-width="2"/><path d="M46 12 q-9 -9 -15 -1 q3 12 13 10 z" fill="#fff" stroke="#1b1b1b" stroke-width="2"/>`:
+     k==="persist"?`<path d="M14 6 h32 v16 q0 11 -16 15 q-16 -4 -16 -15 z" fill="#f0b429"/><rect x="19" y="12" width="10" height="4.5" rx="2" fill="#bfefff"/><rect x="33" y="12" width="10" height="4.5" rx="2" fill="#bfefff"/>`:
+     `<path d="M30 -8 v10 M8 16 h44" stroke="#e8ecf2" stroke-width="3"/><circle cx="22" cy="16" r="3" fill="#1b1b1b"/><circle cx="38" cy="16" r="3" fill="#1b1b1b"/>`}
+   </g></svg>`;
+}
+
+/* ================= state ================= */
+const $=id=>document.getElementById(id);
+const IB="assets/img/", GB="assets/audio/", VB="assets/voice/";
+const VOICE=window.VOICE||{};            /* your own recordings, word-aligned */
+const GEN=new Set(window.HAVE_AUDIO||[]);/* edge-tts fallback clips           */
+const GT=window.TIMINGS||{};
+const PICS=window.PICS||{};
+let key="focus",S=null,n=0,tokens=[],spans=[],mode="idle",raf=null,pace=null,pass=0;
+let rate=.9,qi=0,correct=0,tries=0,bvoice=null;
+const player=new Audio(); player.preload="auto";
+try{player.preservesPitch=true;player.mozPreservesPitch=true;player.webkitPreservesPitch=true}catch(e){}
+
+const sid=(k,i)=>k+"_s"+String(i+1).padStart(2,"0");
+
+/* ---------- browser voice, last resort only ---------- */
+function loadV(){const v=speechSynthesis.getVoices().filter(x=>/^en/i.test(x.lang));if(!v.length)return;
+  const sc=x=>(/premium|enhanced|neural|natural/i.test(x.name)?10:0)+(/google (uk|us) english/i.test(x.name)?5:0)
+   +(/ava|zoe|evan|samantha|allison/i.test(x.name)?4:0)
+   -(/albert|bahh|bells|boing|bubbles|cellos|deranged|jester|junior|organ|superstar|trinoids|whisper|wobble|zarvox|fred|kathy|ralph|princess|news/i.test(x.name)?20:0);
+  bvoice=v.slice().sort((a,b)=>sc(b)-sc(a))[0];}
+speechSynthesis.onvoiceschanged=loadV; loadV();
+function speak(t,done){const u=new SpeechSynthesisUtterance(t);u.rate=Math.min(rate,.95);
+  if(bvoice){u.voice=bvoice;u.lang=bvoice.lang}
+  let f=false;const fin=()=>{if(f)return;f=true;done&&done()};
+  u.onend=fin;u.onerror=fin;setTimeout(fin,1100+t.length*200);
+  speechSynthesis.cancel();speechSynthesis.speak(u);}
+
+/* play a short named clip (praise, question, single word) */
+function clip(id,text,done){
+  if(VOICE[id]){ return playSeg(VOICE[id],done); }
+  if(GEN.has(id)){
+    player.pause();player.src=GB+id+".mp3";player.playbackRate=rate;player.onended=()=>done&&done();
+    player.onerror=()=>speak(text,done);
+    player.play().catch(()=>speak(text,done)); return;
+  }
+  speak(text,done);
+}
+/* play a slice of a longer file */
+function playSeg(v,done,onTick){
+  player.pause(); player.onended=null;
+  const go=()=>{ player.currentTime=v.a||0; player.playbackRate=rate;
+    player.play().then(()=>{
+      cancelAnimationFrame(raf);
+      (function w(){
+        if(player.paused){return}
+        if(onTick) onTick(player.currentTime);
+        if(v.b!==undefined && player.currentTime>=v.b-0.02){ player.pause(); done&&done(); return; }
+        raf=requestAnimationFrame(w);
+      })();
+    }).catch(()=>done&&done());
+  };
+  const src=VB+v.f;
+  if(!player.src.endsWith(v.f)){ player.src=src; player.onloadedmetadata=go; player.onerror=()=>done&&done(); }
+  else go();
+}
+
+/* ================= highlight ================= */
+function mark(i){spans.forEach((s,j)=>{s.classList.toggle("on",j===i);s.classList.toggle("done",j<i)})}
+function clearMarks(){spans.forEach(s=>s.classList.remove("on","done"))}
+function marks(a,b,c){$("rm1").classList.toggle("on",a);$("rm2").classList.toggle("on",b);$("rm3").classList.toggle("on",c)}
+
+function timesFor(id){
+  if(VOICE[id]&&VOICE[id].t&&VOICE[id].t.length===tokens.length) return VOICE[id].t;
+  if(GT[id]&&GT[id].length===tokens.length) return GT[id];
+  return null;
+}
+
+/* ================= BEAT 1 & 2 — read it twice ================= */
+function beatHear(which){
+  stopAll(); pass=which||1; mode="hear";
+  document.body.classList.remove("myturn");
+  $("turnlabel").textContent = pass===1 ? "LISTEN" : "LISTEN ONCE MORE";
+  marks(pass>=1,pass>=2,false);
+  const id=sid(key,n), t=timesFor(id);
+  const after=()=>{ if(mode!=="hear")return;
+    if(pass===1) setTimeout(()=>beatHear(2),620); else setTimeout(beatMine,700); };
+
+  if(VOICE[id]){
+    const v=VOICE[id];
+    playSeg(v,after,cur=>{ if(!t)return; let i=-1;
+      for(let j=0;j<t.length;j++){ if(t[j]<=cur+.015) i=j; else break } if(i>=0)mark(i); });
+    return;
+  }
+  if(GEN.has(id)){
+    player.pause();player.src=GB+id+".mp3";player.playbackRate=rate;
+    player.onended=after; player.onerror=()=>wordByWord(after);
+    player.play().then(()=>{ cancelAnimationFrame(raf);
+      (function w(){ if(mode!=="hear")return;
+        const cur=player.currentTime, d=player.duration;
+        const tt=t||(d&&isFinite(d)?tokens.map((_,i)=>d*i/tokens.length):null);
+        if(tt){let i=-1;for(let j=0;j<tt.length;j++){if(tt[j]<=cur+.015)i=j;else break}if(i>=0)mark(i)}
+        raf=requestAnimationFrame(w); })();
+    }).catch(()=>wordByWord(after));
+    return;
+  }
+  wordByWord(after);
+}
+function wordByWord(after){
+  let i=0;(function go(){
+    if(mode!=="hear")return;
+    if(i>=tokens.length){after();return}
+    mark(i); const w=tokens[i];
+    speak(w.replace(/[^A-Za-z' ]/g,"")||w,()=>{ if(mode!=="hear")return;
+      i++; setTimeout(go,/[.!?]$/.test(w)?400:100); });
+  })();
+}
+
+/* ================= BEAT 3 — your turn, no voice ================= */
+function beatMine(){
+  stopAll(); mode="mine"; document.body.classList.add("myturn");
+  $("turnlabel").textContent="YOUR TURN";
+  marks(true,true,true);
+  clip("yourturn",(window.COMMON&&window.COMMON.yourturn)||"Now it is your turn. You read it.",()=>{
+    if(mode!=="mine")return;
+    const t=timesFor(sid(key,n));
+    const dur = t ? tokens.map((_,i)=>Math.max(.45,((i<t.length-1?t[i+1]:t[i]+.75)-t[i])*1.6))
+                  : tokens.map(w=>.46+w.length*.08);
+    let i=0;
+    (function stepP(){
+      if(mode!=="mine")return;
+      if(i>=tokens.length){
+        mark(tokens.length-1);
+        setTimeout(()=>{ if(mode!=="mine")return; clearMarks();
+          $("turnlabel").textContent="WELL READ!"; $("next").classList.add("pulse"); mode="done"; },750);
+        return;
+      }
+      mark(i); pace=setTimeout(()=>{i++;stepP()}, dur[i]*1000/Math.max(rate,.55));
+    })();
+  });
+}
+
+function stopAll(){
+  cancelAnimationFrame(raf); clearTimeout(pace);
+  player.pause(); player.onended=null; player.onloadedmetadata=null;
+  speechSynthesis.cancel(); clearMarks(); $("next").classList.remove("pulse");
+}
+
+/* ================= title card — shown while the story name is spoken ========= */
+function titleCard(k){
+  stopAll(); mode="title";
+  const first = PICS[k+"_"+S.screens[0].art];
+  $("pic").innerHTML = first ? `<img src="${IB}${first}" alt="">`
+                             : `<div class="picfall">${ph(k)}</div>`;
+  $("dots").innerHTML = "";
+  $("turnlabel").textContent = S.lesson_word || "";
+  const t=$("text"); t.innerHTML="";
+  spans = [];
+  const words = S.name.split(/\s+/);
+  words.forEach((w,i)=>{
+    const s=document.createElement("span"); s.className="w"; s.textContent=w;
+    t.appendChild(s); t.appendChild(document.createTextNode(" ")); spans.push(s);
+  });
+  tokens = words;
+  marks(false,false,false);
+  const wd=$("words"); wd.classList.remove("enter"); void wd.offsetWidth; wd.classList.add("enter");
+  $("pageNo").textContent=""; $("prev").disabled=true; $("next").textContent="Start ▶";
+  const go=()=>{ if(mode==="title"){ n=0; render(); } };
+  const v = VOICE[k+"_title"];
+  if(v){
+    const tt = v.t && v.t.length===tokens.length ? v.t : null;
+    playSeg(v, go, cur=>{ if(!tt)return; let i=-1;
+      for(let j=0;j<tt.length;j++){ if(tt[j]<=cur+.015) i=j; else break } if(i>=0)mark(i); });
+  } else {
+    clip("__none__", S.name, go);
+  }
+}
+
+/* ================= render one screen ================= */
+function render(){
+  stopAll(); mode="idle"; pass=0; document.body.classList.remove("myturn");
+  const sc=S.screens[n];
+  const pname=key+"_"+sc.art, file=PICS[pname];
+  $("pic").innerHTML = file
+    ? `<img src="${IB}${file}" alt="">`
+    : `<div class="picfall">${ph(key)}<div class="picnote">picture: ${pname}.png</div></div>`;
+
+  tokens=sc.text.split(/\s+/).filter(Boolean);
+  const t=$("text"); t.innerHTML="";
+  spans=tokens.map((w,i)=>{
+    const s=document.createElement("span"); s.className="w"; s.textContent=w;
+    s.onclick=()=>{ const was=mode; stopAll(); mode="tap"; mark(i);
+      const c=w.replace(/[^A-Za-z']/g,"");
+      clip("w_"+c.toLowerCase().replace(/[^a-z0-9]/g,""),c,()=>{
+        clearMarks(); if(was==="mine"){ beatMine(); } else { mode=was; } });
+    };
+    t.appendChild(s); t.appendChild(document.createTextNode(" ")); return s;
+  });
+  const wd=$("words"); wd.classList.remove("enter"); void wd.offsetWidth; wd.classList.add("enter");
+  marks(false,false,false);
+  $("pageNo").textContent=(n+1)+"/"+S.screens.length;
+  $("prev").disabled=n===0;
+  $("next").textContent = n===S.screens.length-1 ? "Questions ▶" : "Next ▶";
+  $("dots").innerHTML=S.screens.map((_,i)=>`<div class="dot ${i<n?"done":i===n?"now":""}"></div>`).join("");
+  setTimeout(()=>beatHear(1),450);
+}
+
+/* ================= quiz ================= */
+function startQuiz(){stopAll();qi=0;correct=0;show("quiz");$("quizEnd").style.display="none";
+  $("score").textContent="";drawStars();askQ()}
+function askQ(){
+  if(qi>=S.questions.length)return finishQuiz();
+  tries=0; const q=S.questions[qi];
+  $("qnum").textContent="QUESTION "+(qi+1)+" OF "+S.questions.length;
+  $("qtext").textContent=q.q;
+  const box=$("opts"); box.innerHTML="";
+  const order=q.o.map((o,i)=>({o,i})).sort(()=>Math.random()-.5);
+  order.forEach(({o,i},pos)=>{
+    const b=document.createElement("button"); b.className="opt"; b.textContent=o;
+    b.style.animationDelay=(pos*.07)+"s";
+    b.onclick=()=>{
+      if(i===q.a){
+        b.classList.add("right");
+        [...box.children].forEach(c=>{c.disabled=true;if(c!==b)c.classList.add("soft")});
+        if(tries===0)correct++;
+        clip("right",window.COMMON.right,()=>{qi++;askQ()});
+      } else {
+        tries++; b.classList.add("wrong"); setTimeout(()=>b.classList.remove("wrong"),340);
+        if(tries>=2) [...box.children].forEach((c,ci)=>{ if(order[ci].i===q.a) c.classList.add("right") });
+        clip("wrong",window.COMMON.wrong);
+      }
+    };
+    box.appendChild(b);
+  });
+  setTimeout(()=>{
+    clip(key+"_q"+(qi+1),q.q,()=>{
+      let p=0;(function so(){ if(p>=order.length)return;
+        clip(key+"_q"+(qi+1)+"_o"+order[p].i, order[p].o, ()=>{p++;setTimeout(so,240)}); })();
+    });
+  },300);
+}
+function finishQuiz(){
+  $("qnum").textContent="";$("qtext").textContent="";$("opts").innerHTML="";
+  const extra = key==="work"
+    ? "<br><span style='font-size:.5em;color:#8b8175'>Cap took one more step. So can you.</span>" : "";
+  $("score").innerHTML="⭐ "+correct+" out of "+S.questions.length+
+    "<br><span style='font-size:.55em;color:#8b8175'>"+S.lesson+"</span>"+extra;
+  $("quizEnd").style.display="flex"; addStar(); clip(key+"_lesson",S.lesson);
+}
+
+/* ================= stars ================= */
+const GOAL=20,mem={};
+const ck=()=>"yuvaan_"+key+"_reads";
+const getC=()=>{try{return +(localStorage.getItem(ck())||0)}catch(e){return mem[key]||0}};
+const setC=v=>{try{localStorage.setItem(ck(),v)}catch(e){mem[key]=v}};
+function drawStars(){[$("stars"),$("stars2")].forEach(b=>{if(!b)return;const v=getC();b.innerHTML="";
+  for(let i=0;i<GOAL;i++){const s=document.createElementNS("http://www.w3.org/2000/svg","svg");
+    s.setAttribute("viewBox","0 0 24 24");s.setAttribute("class","star"+(i<v?" on":""));
+    s.innerHTML='<path d="M12 2l3 6.6 7.2 .8-5.4 4.9 1.5 7.1L12 17.8 5.7 21.4l1.5-7.1L1.8 9.4 9 8.6z" fill="#ffb400"/>';
+    b.appendChild(s)}})}
+function addStar(){const v=Math.min(getC()+1,GOAL);setC(v);drawStars();
+  if(v>=GOAL)setTimeout(()=>clip("goal",window.COMMON.goal),3400)}
+
+/* ================= nav ================= */
+function show(id){document.querySelectorAll("body > .screen").forEach(s=>s.classList.remove("on"));$(id).classList.add("on")}
+function openStory(k){
+  key=k;S=window.STORIES[k];n=0;
+  document.documentElement.style.setProperty("--tint",S.tint);
+  document.documentElement.style.setProperty("--glow",S.glow);
+  $("storyName").textContent=S.name; show("reader"); drawStars();
+  titleCard(k);
+}
+function buildHome(){
+  $("cards").innerHTML=Object.entries(window.STORIES).map(([k,s])=>{
+    const f=PICS[k+"_"+s.screens[0].art];
+    return `<div class="card" data-k="${k}" style="--ct:${s.glow}">
+      <div class="thumb">${f?`<img src="${IB}${f}" alt="">`:ph(k)}<div class="lw">${s.lesson_word}</div></div>
+      <div class="body"><h2>${s.name}</h2><small>${s.lesson}</small></div></div>`}).join("");
+}
+$("cards").onclick=e=>{const c=e.target.closest(".card");if(c)openStory(c.dataset.k)};
+$("hear").onclick=()=>beatHear(1);
+$("mine").onclick=beatMine;
+$("prev").onclick=()=>{if(mode==="title")return; if(n>0){n--;render()}else{titleCard(key)}};
+$("next").onclick=()=>{
+  if(mode==="title"){ stopAll(); n=0; render(); return; }
+  if(n<S.screens.length-1){n++;render()} else startQuiz();
+};
+$("rate").oninput=e=>{rate=+e.target.value;player.playbackRate=rate};
+$("repeatQ").onclick=()=>{const q=S.questions[qi];if(q)clip(key+"_q"+(qi+1),q.q)};
+$("again").onclick=()=>{n=0;show("reader");render()};
+["home1","home2","home3"].forEach(id=>$(id).onclick=()=>{stopAll();mode="idle";show("home")});
+$("help").onclick=e=>{if(e.target.id==="help")$("help").classList.remove("on")};
+document.addEventListener("keydown",e=>{
+  if(!$("reader").classList.contains("on"))return;
+  if(e.key==="ArrowRight")$("next").click();
+  if(e.key==="ArrowLeft")$("prev").click();
+  if(e.code==="Space"){e.preventDefault();beatHear(1)}
+});
+
+/* ================= setup panel ================= */
+(function(){
+  const wantPics=Object.values(window.STORIES).reduce((a,s)=>a+Object.keys(s.art).length,0);
+  const gotPics=Object.keys(PICS).length;
+  const wantV=Object.entries(window.STORIES).reduce((a,[k,s])=>a+s.screens.length,0);
+  const gotV=Object.keys(VOICE).filter(x=>/_s\d\d$/.test(x)).length;
+  $("statusBtn").textContent = (gotV>=wantV && gotPics>=wantPics) ? "✓ everything ready" : "⚙︎ setup";
+  $("helpBody").innerHTML=`<h3>Setup</h3>
+  <span class="${gotV>=wantV?"ok":"no"}">${gotV>=wantV?"✓":"✗"} your own voice: ${gotV} of ${wantV} lines aligned</span><br>
+  <span class="${gotPics>=wantPics?"ok":"no"}">${gotPics>=wantPics?"✓":"✗"} pictures: ${gotPics} of ${wantPics}</span>
+  <h3 style="margin-top:16px">Your voice from Van</h3>
+  <ol>
+   <li>Record or export <b>one audio file per story</b>, reading the lines in order, top to bottom.
+       Normal pace, small pause between lines.</li>
+   <li>Save them in <code>assets/voice/</code> as <code>focus.mp3</code>,
+       <code>persist.mp3</code>, <code>work.mp3</code>. (.wav and .m4a work too.)</li>
+   <li>Double-click <code>Align-My-Voice.command</code>.</li>
+  </ol>
+  It listens to your recording, finds the exact second each word is spoken, splits it into the
+  62 lines automatically, and writes <code>timings.js</code>. The highlight then lands on the word in
+  <i>your</i> voice. Re-run it any time you re-record.
+  <br><br>The script prints the text of any line it could not find, so a mis-read line is easy to spot.
+  <h3 style="margin-top:16px">Pictures</h3>
+  Drop images into <code>assets/img/</code> using the names in
+  <code>assets/img/README-PICTURES.txt</code> — yours always beat generated ones.
+  Or run <code>Build-Superheroes.command</code> to generate them.
+  <h3 style="margin-top:16px">How a screen works</h3>
+  <ol><li><b>Listen</b> — read aloud, each word lights up.</li>
+  <li><b>Listen once more</b> — the same line again.</li>
+  <li><b>Your turn</b> — the panel turns green and the highlight moves with <i>no voice</i>. He reads out loud.</li>
+  <li>Stuck? He taps the word and hears just that word.</li>
+  <li>He taps Next. It never moves on by itself.</li></ol>
+  <button class="btn next" onclick="document.getElementById('help').classList.remove('on')">Close</button>`;
+})();
+["statusBtn","helpBtn2"].forEach(id=>$(id).onclick=()=>$("help").classList.add("on"));
+buildHome();
+</script>
+</body>
+</html>
