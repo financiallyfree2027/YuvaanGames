@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+<defs><radialGradient id="blood_cell_g1" cx="0.5" cy="0.45" r="0.62"><stop offset="0" stop-color="#FF8AC5"/><stop offset="0.55" stop-color="#E85D4A"/><stop offset="1" stop-color="#E85D4A"/></radialGradient></defs>
+<circle cx="100" cy="100" r="72" fill="url(#blood_cell_g1)"/>
+<circle cx="100" cy="100" r="72" fill="none" stroke="#E85D4A" stroke-width="3"/>
+<circle cx="100" cy="100" r="34" fill="#FF8AC5" fill-opacity="0.45"/>
+<ellipse cx="70" cy="70" rx="16" ry="10" fill="#FDFAF4" fill-opacity="0.5" transform="rotate(-38 70 70)"/>
+<ellipse cx="86" cy="94" rx="7" ry="8" fill="#FDFAF4" stroke="#241D15" stroke-width="2"/>
+<ellipse cx="114" cy="94" rx="7" ry="8" fill="#FDFAF4" stroke="#241D15" stroke-width="2"/>
+<circle cx="86" cy="96" r="4" fill="#241D15"/>
+<circle cx="114" cy="96" r="4" fill="#241D15"/>
+<path d="M 88,116 Q 100,126 112,116" fill="none" stroke="#241D15" stroke-width="3.5" stroke-linecap="round"/>
+</svg>

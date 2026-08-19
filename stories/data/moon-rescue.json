@@ -1,0 +1,1078 @@
+{
+ "id": "moon-rescue",
+ "title": "Moon Rescue",
+ "emoji": "🌙",
+ "seq": 1,
+ "lesson_word": "THE MOON",
+ "lesson": "Milo and Robo help a stuck Moon Rover.",
+ "tint": "#3D8DDB",
+ "glow": "#7fb6ff",
+ "facts": [
+  "The Moon goes around Earth.",
+  "The Moon has less gravity than Earth.",
+  "There is no air to breathe on the Moon."
+ ],
+ "pages": [
+  {
+   "text": "Milo put on his space suit.",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 90,
+      "y": 10,
+      "w": 16,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 14,
+      "w": 20,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "milo_spacesuit",
+      "x": 34,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "robo_standing",
+      "x": 66,
+      "y": 82,
+      "w": 27,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "“Are you ready, Robo?” he asked.",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 90,
+      "y": 10,
+      "w": 16,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 14,
+      "w": 20,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "milo_spacesuit",
+      "x": 32,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "robo_talking",
+      "x": 65,
+      "y": 82,
+      "w": 27,
+      "z": 6,
+      "anim": "bob"
+     }
+    ]
+   }
+  },
+  {
+   "text": "“Ready!” said Robo.",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 90,
+      "y": 10,
+      "w": 16,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 14,
+      "w": 20,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "milo_spacesuit",
+      "x": 32,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "robo_happy",
+      "x": 65,
+      "y": 82,
+      "w": 27,
+      "z": 6,
+      "anim": "bob"
+     }
+    ]
+   }
+  },
+  {
+   "text": "Their rocket flew up into the sky.",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "rocket_flying",
+      "x": 52,
+      "y": 50,
+      "w": 34,
+      "z": 7,
+      "anim": "float",
+      "anchor": "center"
+     },
+     {
+      "asset": "cloud",
+      "x": 20,
+      "y": 26,
+      "w": 26,
+      "z": 3,
+      "anim": "drift",
+      "anchor": "center"
+     },
+     {
+      "asset": "cloud",
+      "x": 80,
+      "y": 20,
+      "w": 22,
+      "z": 3,
+      "anim": "drift",
+      "delay": 2,
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "Soon, they landed on the Moon.",
+   "scene": {
+    "bg": "bg_moon_surface",
+    "elements": [
+     {
+      "asset": "stars",
+      "x": 22,
+      "y": 12,
+      "w": 14,
+      "z": 1,
+      "anchor": "center",
+      "anim": "blink"
+     },
+     {
+      "asset": "rock",
+      "x": 8,
+      "y": 86,
+      "w": 13,
+      "z": 1
+     },
+     {
+      "asset": "earth",
+      "x": 88,
+      "y": 16,
+      "w": 15,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "rocket",
+      "x": 74,
+      "y": 86,
+      "w": 32,
+      "z": 5
+     },
+     {
+      "asset": "milo_spacesuit",
+      "x": 32,
+      "y": 86,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "robo_standing",
+      "x": 50,
+      "y": 86,
+      "w": 27,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "Milo jumped.",
+   "scene": {
+    "bg": "bg_moon_surface",
+    "elements": [
+     {
+      "asset": "stars",
+      "x": 22,
+      "y": 12,
+      "w": 14,
+      "z": 1,
+      "anchor": "center",
+      "anim": "blink"
+     },
+     {
+      "asset": "rock",
+      "x": 8,
+      "y": 86,
+      "w": 13,
+      "z": 1
+     },
+     {
+      "asset": "earth",
+      "x": 88,
+      "y": 16,
+      "w": 15,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "milo_spacesuit",
+      "x": 42,
+      "y": 86,
+      "w": 36,
+      "z": 6,
+      "anim": "float"
+     },
+     {
+      "asset": "robo_happy",
+      "x": 68,
+      "y": 86,
+      "w": 27,
+      "z": 6
+     },
+     {
+      "asset": "dust_puff",
+      "x": 42,
+      "y": 80,
+      "w": 22,
+      "z": 3,
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "“Wow! I can jump so high!”",
+   "scene": {
+    "bg": "bg_moon_surface",
+    "elements": [
+     {
+      "asset": "stars",
+      "x": 22,
+      "y": 12,
+      "w": 14,
+      "z": 1,
+      "anchor": "center",
+      "anim": "blink"
+     },
+     {
+      "asset": "rock",
+      "x": 8,
+      "y": 86,
+      "w": 13,
+      "z": 1
+     },
+     {
+      "asset": "earth",
+      "x": 88,
+      "y": 16,
+      "w": 15,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "milo_spacesuit",
+      "x": 44,
+      "y": 86,
+      "w": 36,
+      "z": 6,
+      "anim": "float"
+     },
+     {
+      "asset": "sparkle",
+      "x": 66,
+      "y": 34,
+      "w": 18,
+      "z": 7,
+      "anchor": "center"
+     },
+     {
+      "asset": "robo_happy",
+      "x": 70,
+      "y": 86,
+      "w": 27,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "Robo said, “The Moon has less gravity than Earth.”",
+   "scene": {
+    "bg": "bg_moon_surface",
+    "elements": [
+     {
+      "asset": "stars",
+      "x": 22,
+      "y": 12,
+      "w": 14,
+      "z": 1,
+      "anchor": "center",
+      "anim": "blink"
+     },
+     {
+      "asset": "rock",
+      "x": 8,
+      "y": 86,
+      "w": 13,
+      "z": 1
+     },
+     {
+      "asset": "milo_spacesuit",
+      "x": 30,
+      "y": 86,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "robo_talking",
+      "x": 62,
+      "y": 86,
+      "w": 27,
+      "z": 6,
+      "anim": "bob"
+     },
+     {
+      "asset": "earth",
+      "x": 84,
+      "y": 24,
+      "w": 17,
+      "z": 4,
+      "anim": "float",
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "Milo looked around.",
+   "scene": {
+    "bg": "bg_moon_surface",
+    "elements": [
+     {
+      "asset": "stars",
+      "x": 22,
+      "y": 12,
+      "w": 14,
+      "z": 1,
+      "anchor": "center",
+      "anim": "blink"
+     },
+     {
+      "asset": "earth",
+      "x": 88,
+      "y": 16,
+      "w": 15,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "milo_spacesuit",
+      "x": 44,
+      "y": 86,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "rock",
+      "x": 76,
+      "y": 86,
+      "w": 18,
+      "z": 4
+     },
+     {
+      "asset": "rock",
+      "x": 18,
+      "y": 86,
+      "w": 14,
+      "z": 4
+     }
+    ]
+   }
+  },
+  {
+   "text": "He saw rocks and big holes on the ground.",
+   "scene": {
+    "bg": "bg_moon_surface",
+    "elements": [
+     {
+      "asset": "stars",
+      "x": 22,
+      "y": 12,
+      "w": 14,
+      "z": 1,
+      "anchor": "center",
+      "anim": "blink"
+     },
+     {
+      "asset": "earth",
+      "x": 88,
+      "y": 16,
+      "w": 15,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "crater",
+      "x": 64,
+      "y": 86,
+      "w": 40,
+      "z": 3,
+      "anchor": "center"
+     },
+     {
+      "asset": "rock",
+      "x": 22,
+      "y": 86,
+      "w": 18,
+      "z": 4
+     },
+     {
+      "asset": "milo_spacesuit",
+      "x": 40,
+      "y": 86,
+      "w": 36,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "Then Robo pointed ahead.",
+   "scene": {
+    "bg": "bg_moon_surface",
+    "elements": [
+     {
+      "asset": "stars",
+      "x": 22,
+      "y": 12,
+      "w": 14,
+      "z": 1,
+      "anchor": "center",
+      "anim": "blink"
+     },
+     {
+      "asset": "rock",
+      "x": 8,
+      "y": 86,
+      "w": 13,
+      "z": 1
+     },
+     {
+      "asset": "earth",
+      "x": 88,
+      "y": 16,
+      "w": 15,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "milo_spacesuit",
+      "x": 28,
+      "y": 86,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "robo_pointing",
+      "x": 56,
+      "y": 86,
+      "w": 27,
+      "z": 6,
+      "anim": "bob"
+     }
+    ]
+   }
+  },
+  {
+   "text": "“There is the Moon Rover!”",
+   "scene": {
+    "bg": "bg_moon_surface",
+    "elements": [
+     {
+      "asset": "stars",
+      "x": 22,
+      "y": 12,
+      "w": 14,
+      "z": 1,
+      "anchor": "center",
+      "anim": "blink"
+     },
+     {
+      "asset": "rock",
+      "x": 8,
+      "y": 86,
+      "w": 13,
+      "z": 1
+     },
+     {
+      "asset": "earth",
+      "x": 88,
+      "y": 16,
+      "w": 15,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "robo_pointing",
+      "x": 26,
+      "y": 86,
+      "w": 27,
+      "z": 6
+     },
+     {
+      "asset": "moon_rover",
+      "x": 70,
+      "y": 86,
+      "w": 32,
+      "z": 6,
+      "anim": "pop"
+     }
+    ]
+   }
+  },
+  {
+   "text": "The rover was stuck inside a deep hole.",
+   "scene": {
+    "bg": "bg_moon_surface",
+    "elements": [
+     {
+      "asset": "stars",
+      "x": 22,
+      "y": 12,
+      "w": 14,
+      "z": 1,
+      "anchor": "center",
+      "anim": "blink"
+     },
+     {
+      "asset": "rock",
+      "x": 8,
+      "y": 86,
+      "w": 13,
+      "z": 1
+     },
+     {
+      "asset": "earth",
+      "x": 88,
+      "y": 16,
+      "w": 15,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "crater",
+      "x": 60,
+      "y": 86,
+      "w": 48,
+      "z": 3,
+      "anchor": "center"
+     },
+     {
+      "asset": "moon_rover",
+      "x": 60,
+      "y": 86,
+      "w": 32,
+      "z": 5
+     },
+     {
+      "asset": "milo_spacesuit",
+      "x": 22,
+      "y": 86,
+      "w": 36,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "“We have to help it,” said Milo.",
+   "scene": {
+    "bg": "bg_moon_surface",
+    "elements": [
+     {
+      "asset": "stars",
+      "x": 22,
+      "y": 12,
+      "w": 14,
+      "z": 1,
+      "anchor": "center",
+      "anim": "blink"
+     },
+     {
+      "asset": "rock",
+      "x": 8,
+      "y": 86,
+      "w": 13,
+      "z": 1
+     },
+     {
+      "asset": "earth",
+      "x": 88,
+      "y": 16,
+      "w": 15,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "milo_spacesuit",
+      "x": 30,
+      "y": 86,
+      "w": 36,
+      "z": 6,
+      "anim": "bob"
+     },
+     {
+      "asset": "robo_standing",
+      "x": 60,
+      "y": 86,
+      "w": 27,
+      "z": 6
+     },
+     {
+      "asset": "moon_rover",
+      "x": 82,
+      "y": 86,
+      "w": 32,
+      "z": 4
+     }
+    ]
+   }
+  },
+  {
+   "text": "Milo tied a rope to the rover.",
+   "scene": {
+    "bg": "bg_moon_surface",
+    "elements": [
+     {
+      "asset": "stars",
+      "x": 22,
+      "y": 12,
+      "w": 14,
+      "z": 1,
+      "anchor": "center",
+      "anim": "blink"
+     },
+     {
+      "asset": "rock",
+      "x": 8,
+      "y": 86,
+      "w": 13,
+      "z": 1
+     },
+     {
+      "asset": "earth",
+      "x": 88,
+      "y": 16,
+      "w": 15,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "milo_spacesuit",
+      "x": 26,
+      "y": 86,
+      "w": 36,
+      "z": 6,
+      "anim": "bob"
+     },
+     {
+      "asset": "rope",
+      "x": 50,
+      "y": 86,
+      "w": 20,
+      "z": 7
+     },
+     {
+      "asset": "moon_rover",
+      "x": 76,
+      "y": 86,
+      "w": 32,
+      "z": 5
+     }
+    ]
+   }
+  },
+  {
+   "text": "“One, two, three… pull!”",
+   "scene": {
+    "bg": "bg_moon_surface",
+    "elements": [
+     {
+      "asset": "stars",
+      "x": 22,
+      "y": 12,
+      "w": 14,
+      "z": 1,
+      "anchor": "center",
+      "anim": "blink"
+     },
+     {
+      "asset": "rock",
+      "x": 8,
+      "y": 86,
+      "w": 13,
+      "z": 1
+     },
+     {
+      "asset": "earth",
+      "x": 88,
+      "y": 16,
+      "w": 15,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "milo_spacesuit",
+      "x": 28,
+      "y": 86,
+      "w": 36,
+      "z": 6,
+      "anim": "shake"
+     },
+     {
+      "asset": "rope",
+      "x": 50,
+      "y": 86,
+      "w": 20,
+      "z": 7
+     },
+     {
+      "asset": "moon_rover",
+      "x": 76,
+      "y": 86,
+      "w": 32,
+      "z": 5,
+      "anim": "shake"
+     }
+    ]
+   }
+  },
+  {
+   "text": "They pulled it out.",
+   "scene": {
+    "bg": "bg_moon_surface",
+    "elements": [
+     {
+      "asset": "stars",
+      "x": 22,
+      "y": 12,
+      "w": 14,
+      "z": 1,
+      "anchor": "center",
+      "anim": "blink"
+     },
+     {
+      "asset": "rock",
+      "x": 8,
+      "y": 86,
+      "w": 13,
+      "z": 1
+     },
+     {
+      "asset": "earth",
+      "x": 88,
+      "y": 16,
+      "w": 15,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "milo_spacesuit",
+      "x": 28,
+      "y": 86,
+      "w": 36,
+      "z": 6,
+      "anim": "bob"
+     },
+     {
+      "asset": "robo_happy",
+      "x": 50,
+      "y": 86,
+      "w": 27,
+      "z": 6
+     },
+     {
+      "asset": "moon_rover",
+      "x": 76,
+      "y": 86,
+      "w": 32,
+      "z": 5,
+      "anim": "pop"
+     }
+    ]
+   }
+  },
+  {
+   "text": "“We did it!” shouted Milo.",
+   "scene": {
+    "bg": "bg_moon_surface",
+    "elements": [
+     {
+      "asset": "stars",
+      "x": 22,
+      "y": 12,
+      "w": 14,
+      "z": 1,
+      "anchor": "center",
+      "anim": "blink"
+     },
+     {
+      "asset": "rock",
+      "x": 8,
+      "y": 86,
+      "w": 13,
+      "z": 1
+     },
+     {
+      "asset": "earth",
+      "x": 88,
+      "y": 16,
+      "w": 15,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "milo_spacesuit",
+      "x": 36,
+      "y": 86,
+      "w": 36,
+      "z": 6,
+      "anim": "bob"
+     },
+     {
+      "asset": "sparkle",
+      "x": 62,
+      "y": 40,
+      "w": 20,
+      "z": 7,
+      "anchor": "center"
+     },
+     {
+      "asset": "robo_happy",
+      "x": 68,
+      "y": 86,
+      "w": 27,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "Before going home, Milo looked at Earth.",
+   "scene": {
+    "bg": "bg_moon_surface",
+    "elements": [
+     {
+      "asset": "stars",
+      "x": 22,
+      "y": 12,
+      "w": 14,
+      "z": 1,
+      "anchor": "center",
+      "anim": "blink"
+     },
+     {
+      "asset": "rock",
+      "x": 8,
+      "y": 86,
+      "w": 13,
+      "z": 1
+     },
+     {
+      "asset": "milo_spacesuit",
+      "x": 30,
+      "y": 86,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "earth",
+      "x": 74,
+      "y": 30,
+      "w": 26,
+      "z": 4,
+      "anim": "float",
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "“It looks so beautiful from here.”",
+   "scene": {
+    "bg": "bg_moon_surface",
+    "elements": [
+     {
+      "asset": "stars",
+      "x": 22,
+      "y": 12,
+      "w": 14,
+      "z": 1,
+      "anchor": "center",
+      "anim": "blink"
+     },
+     {
+      "asset": "rock",
+      "x": 8,
+      "y": 86,
+      "w": 13,
+      "z": 1
+     },
+     {
+      "asset": "milo_spacesuit",
+      "x": 28,
+      "y": 86,
+      "w": 36,
+      "z": 6,
+      "anim": "bob"
+     },
+     {
+      "asset": "earth",
+      "x": 70,
+      "y": 32,
+      "w": 30,
+      "z": 4,
+      "anim": "float",
+      "anchor": "center"
+     },
+     {
+      "asset": "sparkle",
+      "x": 88,
+      "y": 18,
+      "w": 14,
+      "z": 7,
+      "anchor": "center"
+     }
+    ]
+   }
+  }
+ ],
+ "questions": [
+  {
+   "q": "Where did Milo and Robo go?",
+   "o": [
+    "The Moon",
+    "The shop",
+    "A cave"
+   ],
+   "a": 0
+  },
+  {
+   "q": "Why could Milo jump so high?",
+   "o": [
+    "Less gravity",
+    "He was strong",
+    "He had wings"
+   ],
+   "a": 0
+  },
+  {
+   "q": "What was stuck in the hole?",
+   "o": [
+    "The Moon Rover",
+    "A whale",
+    "A car"
+   ],
+   "a": 0
+  },
+  {
+   "q": "What did Milo use to pull it out?",
+   "o": [
+    "A rope",
+    "A net",
+    "A spoon"
+   ],
+   "a": 0
+  },
+  {
+   "q": "Can you breathe air on the Moon?",
+   "o": [
+    "No",
+    "Yes",
+    "Only at night"
+   ],
+   "a": 0
+  }
+ ],
+ "created": "2026-08-18"
+}

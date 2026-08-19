@@ -1,0 +1,993 @@
+{
+ "id": "inside-the-body",
+ "title": "Journey Inside the Body",
+ "emoji": "❤️",
+ "seq": 2,
+ "lesson_word": "MY BODY",
+ "lesson": "Milo shrinks and meets his heart, lungs and brain.",
+ "tint": "#E85D4A",
+ "glow": "#ff8f7f",
+ "facts": [
+  "The heart pumps blood.",
+  "The lungs help us breathe.",
+  "The brain helps us think."
+ ],
+ "pages": [
+  {
+   "text": "One morning, Robo pressed a strange button.",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 90,
+      "y": 10,
+      "w": 16,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 14,
+      "w": 20,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "milo_standing",
+      "x": 30,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "robo_pointing",
+      "x": 60,
+      "y": 82,
+      "w": 27,
+      "z": 6
+     },
+     {
+      "asset": "body_button",
+      "x": 82,
+      "y": 64,
+      "w": 16,
+      "z": 7,
+      "anim": "bob",
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "ZAP!",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 90,
+      "y": 10,
+      "w": 16,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 14,
+      "w": 20,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "zap",
+      "x": 50,
+      "y": 50,
+      "w": 46,
+      "z": 8,
+      "anim": "pop",
+      "anchor": "center"
+     },
+     {
+      "asset": "robo_standing",
+      "x": 64,
+      "y": 82,
+      "w": 27,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "Robo became very small.",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 90,
+      "y": 10,
+      "w": 16,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 14,
+      "w": 20,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "milo_surprised",
+      "x": 34,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "robo_tiny",
+      "x": 64,
+      "y": 82,
+      "w": 27,
+      "z": 6,
+      "anim": "bob"
+     }
+    ]
+   }
+  },
+  {
+   "text": "Then Milo became small too.",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 90,
+      "y": 10,
+      "w": 16,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 14,
+      "w": 20,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "milo_tiny",
+      "x": 40,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "robo_tiny",
+      "x": 60,
+      "y": 82,
+      "w": 27,
+      "z": 6,
+      "anim": "bob"
+     },
+     {
+      "asset": "sparkle",
+      "x": 50,
+      "y": 50,
+      "w": 22,
+      "z": 7,
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "“Where are we going?” asked Milo.",
+   "scene": {
+    "bg": "bg_inside_body",
+    "elements": [
+     {
+      "asset": "blood_cell",
+      "x": 94,
+      "y": 68,
+      "w": 9,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "blood_cell",
+      "x": 7,
+      "y": 26,
+      "w": 10,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "milo_thinking",
+      "x": 34,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "robo_talking",
+      "x": 64,
+      "y": 82,
+      "w": 27,
+      "z": 6,
+      "anim": "bob"
+     }
+    ]
+   }
+  },
+  {
+   "text": "“Inside your body!” said Robo.",
+   "scene": {
+    "bg": "bg_inside_body",
+    "elements": [
+     {
+      "asset": "blood_cell",
+      "x": 94,
+      "y": 68,
+      "w": 9,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "blood_cell",
+      "x": 7,
+      "y": 26,
+      "w": 10,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "milo_surprised",
+      "x": 32,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "robo_pointing",
+      "x": 64,
+      "y": 82,
+      "w": 27,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "WHOOSH!",
+   "scene": {
+    "bg": "bg_inside_body",
+    "elements": [
+     {
+      "asset": "blood_cell",
+      "x": 94,
+      "y": 68,
+      "w": 9,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "blood_cell",
+      "x": 7,
+      "y": 26,
+      "w": 10,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "sparkle",
+      "x": 50,
+      "y": 48,
+      "w": 40,
+      "z": 7,
+      "anim": "pop",
+      "anchor": "center"
+     },
+     {
+      "asset": "milo_tiny",
+      "x": 36,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "robo_tiny",
+      "x": 60,
+      "y": 82,
+      "w": 27,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "Soon they heard a loud sound.",
+   "scene": {
+    "bg": "bg_inside_body",
+    "elements": [
+     {
+      "asset": "blood_cell",
+      "x": 94,
+      "y": 68,
+      "w": 9,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "blood_cell",
+      "x": 7,
+      "y": 26,
+      "w": 10,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "milo_surprised",
+      "x": 32,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "sound_arcs",
+      "x": 72,
+      "y": 48,
+      "w": 26,
+      "z": 7,
+      "anim": "bob",
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "BOOM-BOOM. BOOM-BOOM.",
+   "scene": {
+    "bg": "bg_inside_body",
+    "elements": [
+     {
+      "asset": "blood_cell",
+      "x": 94,
+      "y": 68,
+      "w": 9,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "blood_cell",
+      "x": 7,
+      "y": 26,
+      "w": 10,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "heart",
+      "x": 56,
+      "y": 48,
+      "w": 40,
+      "z": 6,
+      "anim": "bob",
+      "anchor": "center"
+     },
+     {
+      "asset": "sound_arcs",
+      "x": 22,
+      "y": 46,
+      "w": 24,
+      "z": 7,
+      "anim": "bob",
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "“What is that?” asked Milo.",
+   "scene": {
+    "bg": "bg_inside_body",
+    "elements": [
+     {
+      "asset": "blood_cell",
+      "x": 94,
+      "y": 68,
+      "w": 9,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "blood_cell",
+      "x": 7,
+      "y": 26,
+      "w": 10,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "milo_thinking",
+      "x": 30,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "heart",
+      "x": 70,
+      "y": 44,
+      "w": 30,
+      "z": 5,
+      "anim": "bob",
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "“Your heart,” said Robo.",
+   "scene": {
+    "bg": "bg_inside_body",
+    "elements": [
+     {
+      "asset": "blood_cell",
+      "x": 94,
+      "y": 68,
+      "w": 9,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "blood_cell",
+      "x": 7,
+      "y": 26,
+      "w": 10,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "robo_pointing",
+      "x": 28,
+      "y": 82,
+      "w": 27,
+      "z": 6
+     },
+     {
+      "asset": "heart",
+      "x": 66,
+      "y": 46,
+      "w": 36,
+      "z": 6,
+      "anim": "bob",
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "“The heart pumps blood around your body.”",
+   "scene": {
+    "bg": "bg_inside_body",
+    "elements": [
+     {
+      "asset": "blood_cell",
+      "x": 94,
+      "y": 68,
+      "w": 9,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "blood_cell",
+      "x": 7,
+      "y": 26,
+      "w": 10,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "heart",
+      "x": 40,
+      "y": 46,
+      "w": 34,
+      "z": 6,
+      "anim": "bob",
+      "anchor": "center"
+     },
+     {
+      "asset": "blood_stream",
+      "x": 72,
+      "y": 66,
+      "w": 34,
+      "z": 5,
+      "anim": "drift",
+      "anchor": "center"
+     },
+     {
+      "asset": "robo_talking",
+      "x": 20,
+      "y": 82,
+      "w": 27,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "Next, they saw two big pink parts.",
+   "scene": {
+    "bg": "bg_inside_body",
+    "elements": [
+     {
+      "asset": "blood_cell",
+      "x": 94,
+      "y": 68,
+      "w": 9,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "blood_cell",
+      "x": 7,
+      "y": 26,
+      "w": 10,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "milo_surprised",
+      "x": 26,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "lungs",
+      "x": 66,
+      "y": 46,
+      "w": 40,
+      "z": 6,
+      "anim": "float",
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "“What are those?”",
+   "scene": {
+    "bg": "bg_inside_body",
+    "elements": [
+     {
+      "asset": "blood_cell",
+      "x": 94,
+      "y": 68,
+      "w": 9,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "blood_cell",
+      "x": 7,
+      "y": 26,
+      "w": 10,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "milo_thinking",
+      "x": 28,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "lungs",
+      "x": 68,
+      "y": 46,
+      "w": 36,
+      "z": 6,
+      "anim": "float",
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "“Your lungs. They help you breathe.”",
+   "scene": {
+    "bg": "bg_inside_body",
+    "elements": [
+     {
+      "asset": "blood_cell",
+      "x": 94,
+      "y": 68,
+      "w": 9,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "blood_cell",
+      "x": 7,
+      "y": 26,
+      "w": 10,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "robo_pointing",
+      "x": 26,
+      "y": 82,
+      "w": 27,
+      "z": 6
+     },
+     {
+      "asset": "lungs",
+      "x": 64,
+      "y": 46,
+      "w": 40,
+      "z": 6,
+      "anim": "float",
+      "anchor": "center"
+     },
+     {
+      "asset": "bubbles",
+      "x": 88,
+      "y": 64,
+      "w": 16,
+      "z": 4,
+      "anim": "rise",
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "Then they travelled up to the brain.",
+   "scene": {
+    "bg": "bg_inside_body",
+    "elements": [
+     {
+      "asset": "blood_cell",
+      "x": 94,
+      "y": 68,
+      "w": 9,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "blood_cell",
+      "x": 7,
+      "y": 26,
+      "w": 10,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "milo_tiny",
+      "x": 34,
+      "y": 82,
+      "w": 36,
+      "z": 6,
+      "anim": "float"
+     },
+     {
+      "asset": "robo_tiny",
+      "x": 50,
+      "y": 82,
+      "w": 27,
+      "z": 6
+     },
+     {
+      "asset": "brain",
+      "x": 74,
+      "y": 38,
+      "w": 30,
+      "z": 5,
+      "anim": "float",
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "“This is your brain,” said Robo.",
+   "scene": {
+    "bg": "bg_inside_body",
+    "elements": [
+     {
+      "asset": "blood_cell",
+      "x": 94,
+      "y": 68,
+      "w": 9,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "blood_cell",
+      "x": 7,
+      "y": 26,
+      "w": 10,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "robo_pointing",
+      "x": 26,
+      "y": 82,
+      "w": 27,
+      "z": 6
+     },
+     {
+      "asset": "brain",
+      "x": 66,
+      "y": 44,
+      "w": 38,
+      "z": 6,
+      "anim": "float",
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "“It helps you think, learn, and remember.”",
+   "scene": {
+    "bg": "bg_inside_body",
+    "elements": [
+     {
+      "asset": "blood_cell",
+      "x": 94,
+      "y": 68,
+      "w": 9,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "blood_cell",
+      "x": 7,
+      "y": 26,
+      "w": 10,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "brain",
+      "x": 44,
+      "y": 44,
+      "w": 34,
+      "z": 6,
+      "anim": "float",
+      "anchor": "center"
+     },
+     {
+      "asset": "sparkle",
+      "x": 74,
+      "y": 32,
+      "w": 22,
+      "z": 7,
+      "anchor": "center"
+     },
+     {
+      "asset": "robo_talking",
+      "x": 22,
+      "y": 82,
+      "w": 27,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "Milo smiled.",
+   "scene": {
+    "bg": "bg_inside_body",
+    "elements": [
+     {
+      "asset": "blood_cell",
+      "x": 94,
+      "y": 68,
+      "w": 9,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "blood_cell",
+      "x": 7,
+      "y": 26,
+      "w": 10,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "milo_happy",
+      "x": 42,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "robo_happy",
+      "x": 70,
+      "y": 82,
+      "w": 27,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "“My body is amazing!”",
+   "scene": {
+    "bg": "bg_inside_body",
+    "elements": [
+     {
+      "asset": "blood_cell",
+      "x": 94,
+      "y": 68,
+      "w": 9,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "blood_cell",
+      "x": 7,
+      "y": 26,
+      "w": 10,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "milo_jumping",
+      "x": 40,
+      "y": 82,
+      "w": 36,
+      "z": 6,
+      "anim": "bob"
+     },
+     {
+      "asset": "heart",
+      "x": 72,
+      "y": 40,
+      "w": 22,
+      "z": 5,
+      "anim": "bob",
+      "anchor": "center"
+     },
+     {
+      "asset": "sparkle",
+      "x": 22,
+      "y": 44,
+      "w": 18,
+      "z": 7,
+      "anchor": "center"
+     }
+    ]
+   }
+  }
+ ],
+ "questions": [
+  {
+   "q": "What does the heart do?",
+   "o": [
+    "Pumps blood",
+    "Helps you jump",
+    "Makes food"
+   ],
+   "a": 0
+  },
+  {
+   "q": "What do the lungs help you do?",
+   "o": [
+    "Breathe",
+    "Run",
+    "See"
+   ],
+   "a": 0
+  },
+  {
+   "q": "What helps you think and remember?",
+   "o": [
+    "The brain",
+    "The heart",
+    "The lungs"
+   ],
+   "a": 0
+  },
+  {
+   "q": "What sound did the heart make?",
+   "o": [
+    "BOOM-BOOM",
+    "BEEP",
+    "MOO"
+   ],
+   "a": 0
+  },
+  {
+   "q": "How did they get inside the body?",
+   "o": [
+    "They became small",
+    "They flew",
+    "They dug"
+   ],
+   "a": 0
+  }
+ ],
+ "created": "2026-08-18"
+}

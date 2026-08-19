@@ -1,0 +1,873 @@
+{
+ "ant": {
+  "file": "story-assets/animals/ant.svg",
+  "category": "animals",
+  "tags": [
+   "ant",
+   "insect",
+   "small",
+   "animal"
+  ]
+ },
+ "ant_baby": {
+  "file": "story-assets/animals/ant_baby.svg",
+  "category": "animals",
+  "tags": [
+   "ant",
+   "baby",
+   "animal"
+  ]
+ },
+ "ant_carrying": {
+  "file": "story-assets/animals/ant_carrying.svg",
+  "category": "animals",
+  "tags": [
+   "ant",
+   "carry",
+   "food",
+   "work",
+   "animal"
+  ]
+ },
+ "ant_queen": {
+  "file": "story-assets/animals/ant_queen.svg",
+  "category": "animals",
+  "tags": [
+   "ant",
+   "queen",
+   "big",
+   "animal"
+  ]
+ },
+ "dino_meat_eater": {
+  "file": "story-assets/animals/dino_meat_eater.svg",
+  "category": "animals",
+  "tags": [
+   "dinosaur",
+   "meat",
+   "teeth",
+   "animal"
+  ]
+ },
+ "dino_plant_eater": {
+  "file": "story-assets/animals/dino_plant_eater.svg",
+  "category": "animals",
+  "tags": [
+   "dinosaur",
+   "plant",
+   "leaves",
+   "gentle",
+   "animal"
+  ]
+ },
+ "fish": {
+  "file": "story-assets/animals/fish.svg",
+  "category": "animals",
+  "tags": [
+   "fish",
+   "sea",
+   "animal"
+  ]
+ },
+ "fish_group": {
+  "file": "story-assets/animals/fish_group.svg",
+  "category": "animals",
+  "tags": [
+   "fish",
+   "sea",
+   "many",
+   "colourful",
+   "animal"
+  ]
+ },
+ "starfish": {
+  "file": "story-assets/animals/starfish.svg",
+  "category": "animals",
+  "tags": [
+   "starfish",
+   "sea",
+   "animal"
+  ]
+ },
+ "turtle": {
+  "file": "story-assets/animals/turtle.svg",
+  "category": "animals",
+  "tags": [
+   "turtle",
+   "sea",
+   "animal",
+   "slow"
+  ]
+ },
+ "whale": {
+  "file": "story-assets/animals/whale.svg",
+  "category": "animals",
+  "tags": [
+   "whale",
+   "sea",
+   "big",
+   "animal"
+  ]
+ },
+ "whale_baby": {
+  "file": "story-assets/animals/whale_baby.svg",
+  "category": "animals",
+  "tags": [
+   "whale",
+   "baby",
+   "sea",
+   "animal"
+  ]
+ },
+ "whale_spout": {
+  "file": "story-assets/animals/whale_spout.svg",
+  "category": "animals",
+  "tags": [
+   "whale",
+   "spout",
+   "breathe",
+   "water",
+   "air"
+  ]
+ },
+ "bg_ant_tunnel": {
+  "file": "story-assets/backgrounds/bg_ant_tunnel.svg",
+  "category": "backgrounds",
+  "tags": [
+   "ant",
+   "tunnel",
+   "underground",
+   "city",
+   "background"
+  ]
+ },
+ "bg_garden": {
+  "file": "story-assets/backgrounds/bg_garden.svg",
+  "category": "backgrounds",
+  "tags": [
+   "garden",
+   "grass",
+   "outside",
+   "ant",
+   "background"
+  ]
+ },
+ "bg_inside_body": {
+  "file": "story-assets/backgrounds/bg_inside_body.svg",
+  "category": "backgrounds",
+  "tags": [
+   "body",
+   "inside",
+   "background"
+  ]
+ },
+ "bg_jungle_island": {
+  "file": "story-assets/backgrounds/bg_jungle_island.svg",
+  "category": "backgrounds",
+  "tags": [
+   "jungle",
+   "island",
+   "dinosaur",
+   "background"
+  ]
+ },
+ "bg_moon_surface": {
+  "file": "story-assets/backgrounds/bg_moon_surface.svg",
+  "category": "backgrounds",
+  "tags": [
+   "moon",
+   "space",
+   "ground",
+   "background"
+  ]
+ },
+ "bg_ocean_surface": {
+  "file": "story-assets/backgrounds/bg_ocean_surface.svg",
+  "category": "backgrounds",
+  "tags": [
+   "ocean",
+   "sea",
+   "top",
+   "surface",
+   "background"
+  ]
+ },
+ "bg_ocean_underwater": {
+  "file": "story-assets/backgrounds/bg_ocean_underwater.svg",
+  "category": "backgrounds",
+  "tags": [
+   "ocean",
+   "sea",
+   "under",
+   "water",
+   "background"
+  ]
+ },
+ "bg_sky_day": {
+  "file": "story-assets/backgrounds/bg_sky_day.svg",
+  "category": "backgrounds",
+  "tags": [
+   "sky",
+   "day",
+   "sunny",
+   "outside",
+   "background"
+  ]
+ },
+ "bg_sky_rain": {
+  "file": "story-assets/backgrounds/bg_sky_rain.svg",
+  "category": "backgrounds",
+  "tags": [
+   "sky",
+   "rain",
+   "grey",
+   "wet",
+   "background"
+  ]
+ },
+ "bg_space": {
+  "file": "story-assets/backgrounds/bg_space.svg",
+  "category": "backgrounds",
+  "tags": [
+   "space",
+   "stars",
+   "sky",
+   "background"
+  ]
+ },
+ "bg_toy_shop": {
+  "file": "story-assets/backgrounds/bg_toy_shop.svg",
+  "category": "backgrounds",
+  "tags": [
+   "shop",
+   "toy",
+   "store",
+   "background"
+  ]
+ },
+ "blood_cell": {
+  "file": "story-assets/body/blood_cell.svg",
+  "category": "body",
+  "tags": [
+   "blood",
+   "body",
+   "cell"
+  ]
+ },
+ "blood_stream": {
+  "file": "story-assets/body/blood_stream.svg",
+  "category": "body",
+  "tags": [
+   "blood",
+   "body",
+   "flow",
+   "stream"
+  ]
+ },
+ "body_button": {
+  "file": "story-assets/body/body_button.svg",
+  "category": "body",
+  "tags": [
+   "button",
+   "press",
+   "machine",
+   "shrink"
+  ]
+ },
+ "brain": {
+  "file": "story-assets/body/brain.svg",
+  "category": "body",
+  "tags": [
+   "brain",
+   "body",
+   "think",
+   "learn",
+   "remember"
+  ]
+ },
+ "heart": {
+  "file": "story-assets/body/heart.svg",
+  "category": "body",
+  "tags": [
+   "heart",
+   "body",
+   "blood",
+   "pump"
+  ]
+ },
+ "lungs": {
+  "file": "story-assets/body/lungs.svg",
+  "category": "body",
+  "tags": [
+   "lungs",
+   "body",
+   "breathe",
+   "air"
+  ]
+ },
+ "milo_happy": {
+  "file": "story-assets/characters/milo_happy.svg",
+  "category": "characters",
+  "tags": [
+   "milo",
+   "boy",
+   "happy",
+   "smile"
+  ]
+ },
+ "milo_hiding": {
+  "file": "story-assets/characters/milo_hiding.svg",
+  "category": "characters",
+  "tags": [
+   "milo",
+   "boy",
+   "hide",
+   "scared",
+   "peek"
+  ]
+ },
+ "milo_jumping": {
+  "file": "story-assets/characters/milo_jumping.svg",
+  "category": "characters",
+  "tags": [
+   "milo",
+   "boy",
+   "jump",
+   "high"
+  ]
+ },
+ "milo_pointing": {
+  "file": "story-assets/characters/milo_pointing.svg",
+  "category": "characters",
+  "tags": [
+   "milo",
+   "boy",
+   "point",
+   "look"
+  ]
+ },
+ "milo_running": {
+  "file": "story-assets/characters/milo_running.svg",
+  "category": "characters",
+  "tags": [
+   "milo",
+   "boy",
+   "run",
+   "fast"
+  ]
+ },
+ "milo_sad": {
+  "file": "story-assets/characters/milo_sad.svg",
+  "category": "characters",
+  "tags": [
+   "milo",
+   "boy",
+   "sad",
+   "worried"
+  ]
+ },
+ "milo_spacesuit": {
+  "file": "story-assets/characters/milo_spacesuit.svg",
+  "category": "characters",
+  "tags": [
+   "milo",
+   "boy",
+   "space",
+   "astronaut",
+   "suit",
+   "moon"
+  ]
+ },
+ "milo_standing": {
+  "file": "story-assets/characters/milo_standing.svg",
+  "category": "characters",
+  "tags": [
+   "milo",
+   "boy",
+   "character",
+   "stand"
+  ]
+ },
+ "milo_surprised": {
+  "file": "story-assets/characters/milo_surprised.svg",
+  "category": "characters",
+  "tags": [
+   "milo",
+   "boy",
+   "surprised",
+   "wow",
+   "shock"
+  ]
+ },
+ "milo_thinking": {
+  "file": "story-assets/characters/milo_thinking.svg",
+  "category": "characters",
+  "tags": [
+   "milo",
+   "boy",
+   "think",
+   "idea",
+   "wonder"
+  ]
+ },
+ "milo_tiny": {
+  "file": "story-assets/characters/milo_tiny.svg",
+  "category": "characters",
+  "tags": [
+   "milo",
+   "boy",
+   "tiny",
+   "small",
+   "shrunk"
+  ]
+ },
+ "milo_waving": {
+  "file": "story-assets/characters/milo_waving.svg",
+  "category": "characters",
+  "tags": [
+   "milo",
+   "boy",
+   "wave",
+   "goodbye",
+   "hello"
+  ]
+ },
+ "robo_happy": {
+  "file": "story-assets/characters/robo_happy.svg",
+  "category": "characters",
+  "tags": [
+   "robo",
+   "robot",
+   "happy"
+  ]
+ },
+ "robo_pointing": {
+  "file": "story-assets/characters/robo_pointing.svg",
+  "category": "characters",
+  "tags": [
+   "robo",
+   "robot",
+   "point",
+   "look"
+  ]
+ },
+ "robo_standing": {
+  "file": "story-assets/characters/robo_standing.svg",
+  "category": "characters",
+  "tags": [
+   "robo",
+   "robot",
+   "friend"
+  ]
+ },
+ "robo_talking": {
+  "file": "story-assets/characters/robo_talking.svg",
+  "category": "characters",
+  "tags": [
+   "robo",
+   "robot",
+   "talk",
+   "say",
+   "explain"
+  ]
+ },
+ "robo_tiny": {
+  "file": "story-assets/characters/robo_tiny.svg",
+  "category": "characters",
+  "tags": [
+   "robo",
+   "robot",
+   "tiny",
+   "small",
+   "shrunk"
+  ]
+ },
+ "bubbles": {
+  "file": "story-assets/effects/bubbles.svg",
+  "category": "effects",
+  "tags": [
+   "bubbles",
+   "water",
+   "sea",
+   "air"
+  ]
+ },
+ "dust_puff": {
+  "file": "story-assets/effects/dust_puff.svg",
+  "category": "effects",
+  "tags": [
+   "dust",
+   "thump",
+   "step",
+   "puff"
+  ]
+ },
+ "footprint_big": {
+  "file": "story-assets/effects/footprint_big.svg",
+  "category": "effects",
+  "tags": [
+   "footprint",
+   "dinosaur",
+   "step",
+   "big"
+  ]
+ },
+ "sound_arcs": {
+  "file": "story-assets/effects/sound_arcs.svg",
+  "category": "effects",
+  "tags": [
+   "sound",
+   "noise",
+   "hear",
+   "loud"
+  ]
+ },
+ "sparkle": {
+  "file": "story-assets/effects/sparkle.svg",
+  "category": "effects",
+  "tags": [
+   "sparkle",
+   "magic",
+   "shine",
+   "wow"
+  ]
+ },
+ "splash": {
+  "file": "story-assets/effects/splash.svg",
+  "category": "effects",
+  "tags": [
+   "splash",
+   "water",
+   "sea"
+  ]
+ },
+ "zap": {
+  "file": "story-assets/effects/zap.svg",
+  "category": "effects",
+  "tags": [
+   "zap",
+   "shrink",
+   "magic",
+   "flash",
+   "machine"
+  ]
+ },
+ "cloud": {
+  "file": "story-assets/nature/cloud.svg",
+  "category": "nature",
+  "tags": [
+   "cloud",
+   "sky",
+   "white"
+  ]
+ },
+ "flower": {
+  "file": "story-assets/nature/flower.svg",
+  "category": "nature",
+  "tags": [
+   "flower",
+   "plant",
+   "garden",
+   "pretty"
+  ]
+ },
+ "grass_tuft": {
+  "file": "story-assets/nature/grass_tuft.svg",
+  "category": "nature",
+  "tags": [
+   "grass",
+   "green",
+   "ground",
+   "nature"
+  ]
+ },
+ "leaves": {
+  "file": "story-assets/nature/leaves.svg",
+  "category": "nature",
+  "tags": [
+   "leaves",
+   "plant",
+   "green",
+   "eat",
+   "food"
+  ]
+ },
+ "mountain": {
+  "file": "story-assets/nature/mountain.svg",
+  "category": "nature",
+  "tags": [
+   "mountain",
+   "big",
+   "nature",
+   "far"
+  ]
+ },
+ "puddle": {
+  "file": "story-assets/nature/puddle.svg",
+  "category": "nature",
+  "tags": [
+   "puddle",
+   "water",
+   "rain",
+   "wet"
+  ]
+ },
+ "rain_cloud": {
+  "file": "story-assets/nature/rain_cloud.svg",
+  "category": "nature",
+  "tags": [
+   "rain",
+   "cloud",
+   "water",
+   "sky",
+   "wet"
+  ]
+ },
+ "rainbow": {
+  "file": "story-assets/nature/rainbow.svg",
+  "category": "nature",
+  "tags": [
+   "rainbow",
+   "colours",
+   "sky",
+   "light"
+  ]
+ },
+ "sun": {
+  "file": "story-assets/nature/sun.svg",
+  "category": "nature",
+  "tags": [
+   "sun",
+   "sunlight",
+   "bright",
+   "day",
+   "sky"
+  ]
+ },
+ "tree": {
+  "file": "story-assets/nature/tree.svg",
+  "category": "nature",
+  "tags": [
+   "tree",
+   "plant",
+   "green",
+   "nature"
+  ]
+ },
+ "ball": {
+  "file": "story-assets/objects/ball.svg",
+  "category": "objects",
+  "tags": [
+   "ball",
+   "toy",
+   "blue",
+   "buy"
+  ]
+ },
+ "book": {
+  "file": "story-assets/objects/book.svg",
+  "category": "objects",
+  "tags": [
+   "book",
+   "read",
+   "story"
+  ]
+ },
+ "bread_crumb": {
+  "file": "story-assets/objects/bread_crumb.svg",
+  "category": "objects",
+  "tags": [
+   "bread",
+   "food",
+   "crumb",
+   "carry",
+   "ant"
+  ]
+ },
+ "coin": {
+  "file": "story-assets/objects/coin.svg",
+  "category": "objects",
+  "tags": [
+   "coin",
+   "money",
+   "gold",
+   "buy",
+   "save"
+  ]
+ },
+ "coin_stack": {
+  "file": "story-assets/objects/coin_stack.svg",
+  "category": "objects",
+  "tags": [
+   "coin",
+   "money",
+   "gold",
+   "save",
+   "count"
+  ]
+ },
+ "fossil": {
+  "file": "story-assets/objects/fossil.svg",
+  "category": "objects",
+  "tags": [
+   "fossil",
+   "dinosaur",
+   "bone",
+   "old"
+  ]
+ },
+ "money_box": {
+  "file": "story-assets/objects/money_box.svg",
+  "category": "objects",
+  "tags": [
+   "money",
+   "save",
+   "box",
+   "piggy",
+   "bank"
+  ]
+ },
+ "net": {
+  "file": "story-assets/objects/net.svg",
+  "category": "objects",
+  "tags": [
+   "net",
+   "stuck",
+   "trap",
+   "rescue",
+   "sea"
+  ]
+ },
+ "rock": {
+  "file": "story-assets/objects/rock.svg",
+  "category": "objects",
+  "tags": [
+   "rock",
+   "stone",
+   "boulder",
+   "hide"
+  ]
+ },
+ "rock_with_fossil": {
+  "file": "story-assets/objects/rock_with_fossil.svg",
+  "category": "objects",
+  "tags": [
+   "rock",
+   "fossil",
+   "dinosaur",
+   "old"
+  ]
+ },
+ "rope": {
+  "file": "story-assets/objects/rope.svg",
+  "category": "objects",
+  "tags": [
+   "rope",
+   "pull",
+   "tie",
+   "rescue"
+  ]
+ },
+ "shop_shelf": {
+  "file": "story-assets/objects/shop_shelf.svg",
+  "category": "objects",
+  "tags": [
+   "shelf",
+   "shop",
+   "toy",
+   "store"
+  ]
+ },
+ "submarine": {
+  "file": "story-assets/objects/submarine.svg",
+  "category": "objects",
+  "tags": [
+   "submarine",
+   "sea",
+   "under",
+   "travel",
+   "boat"
+  ]
+ },
+ "toy_car": {
+  "file": "story-assets/objects/toy_car.svg",
+  "category": "objects",
+  "tags": [
+   "car",
+   "toy",
+   "red",
+   "buy",
+   "shop"
+  ]
+ },
+ "crater": {
+  "file": "story-assets/space/crater.svg",
+  "category": "space",
+  "tags": [
+   "crater",
+   "hole",
+   "moon",
+   "deep"
+  ]
+ },
+ "earth": {
+  "file": "story-assets/space/earth.svg",
+  "category": "space",
+  "tags": [
+   "earth",
+   "world",
+   "space",
+   "home"
+  ]
+ },
+ "moon": {
+  "file": "story-assets/space/moon.svg",
+  "category": "space",
+  "tags": [
+   "moon",
+   "space",
+   "night"
+  ]
+ },
+ "moon_rover": {
+  "file": "story-assets/space/moon_rover.svg",
+  "category": "space",
+  "tags": [
+   "rover",
+   "moon",
+   "space",
+   "machine"
+  ]
+ },
+ "rocket": {
+  "file": "story-assets/space/rocket.svg",
+  "category": "space",
+  "tags": [
+   "rocket",
+   "space",
+   "fly",
+   "travel"
+  ]
+ },
+ "rocket_flying": {
+  "file": "story-assets/space/rocket_flying.svg",
+  "category": "space",
+  "tags": [
+   "rocket",
+   "space",
+   "fly",
+   "launch",
+   "travel"
+  ]
+ },
+ "stars": {
+  "file": "story-assets/space/stars.svg",
+  "category": "space",
+  "tags": [
+   "stars",
+   "space",
+   "night",
+   "sky"
+  ]
+ }
+}

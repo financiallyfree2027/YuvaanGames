@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice">
+<defs><linearGradient id="bg_space_g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#151A3D"/><stop offset="0.5" stop-color="#26306B"/><stop offset="1" stop-color="#141A3A"/></linearGradient></defs>
+<rect x="0" y="0" width="800" height="500" fill="url(#bg_space_g1)"/>
+<ellipse cx="70" cy="60" rx="230" ry="130" fill="#7B47C9" fill-opacity="0.26"/>
+<ellipse cx="750" cy="450" rx="230" ry="140" fill="#7B47C9" fill-opacity="0.22"/>
+<ellipse cx="720" cy="50" rx="150" ry="90" fill="#3D8DDB" fill-opacity="0.16"/>
+<ellipse cx="60" cy="440" rx="160" ry="90" fill="#3D8DDB" fill-opacity="0.14"/>
+<circle cx="40" cy="40" r="3.2" fill="#FFC93C" fill-opacity="1.0"/>
+<circle cx="120" cy="90" r="2.2" fill="#FFC93C" fill-opacity="1.0"/>
+<circle cx="78" cy="180" r="2.6" fill="#FFC93C" fill-opacity="1.0"/>
+<circle cx="30" cy="300" r="2.0" fill="#FFC93C" fill-opacity="1.0"/>
+<circle cx="96" cy="392" r="2.8" fill="#FFC93C" fill-opacity="1.0"/>
+<circle cx="150" cy="455" r="2.2" fill="#FFC93C" fill-opacity="1.0"/>
+<circle cx="200" cy="140" r="2.0" fill="#FFC93C" fill-opacity="1.0"/>
+<circle cx="210" cy="40" r="2.6" fill="#FFC93C" fill-opacity="1.0"/>
+<circle cx="300" cy="60" r="2.2" fill="#FFC93C" fill-opacity="1.0"/>
+<circle cx="400" cy="34" r="2.4" fill="#FFC93C" fill-opacity="1.0"/>
+<circle cx="500" cy="70" r="2.0" fill="#FFC93C" fill-opacity="1.0"/>
+<circle cx="600" cy="44" r="2.8" fill="#FFC93C" fill-opacity="1.0"/>
+<circle cx="690" cy="120" r="2.2" fill="#FFC93C" fill-opacity="1.0"/>
+<circle cx="760" cy="60" r="3.0" fill="#FFC93C" fill-opacity="1.0"/>
+<circle cx="770" cy="200" r="2.4" fill="#FFC93C" fill-opacity="1.0"/>
+<circle cx="720" cy="320" r="2.0" fill="#FFC93C" fill-opacity="1.0"/>
+<circle cx="780" cy="410" r="2.6" fill="#FFC93C" fill-opacity="1.0"/>
+<circle cx="660" cy="470" r="2.2" fill="#FFC93C" fill-opacity="1.0"/>
+<circle cx="520" cy="470" r="2.0" fill="#FFC93C" fill-opacity="1.0"/>
+<circle cx="360" cy="480" r="2.4" fill="#FFC93C" fill-opacity="1.0"/>
+<circle cx="250" cy="440" r="2.0" fill="#FFC93C" fill-opacity="1.0"/>
+<circle cx="452" cy="120" r="1.8" fill="#FFC93C" fill-opacity="1.0"/>
+<circle cx="300" cy="180" r="1.8" fill="#FFC93C" fill-opacity="1.0"/>
+<circle cx="560" cy="200" r="1.8" fill="#FFC93C" fill-opacity="1.0"/>
+<polygon points="46,101 48.34,107.66 55,110 48.34,112.34 46,119 43.66,112.34 37,110 43.66,107.66" fill="#FDFAF4" fill-opacity="0.9"/>
+<polygon points="742,130 744.6,137.4 752,140 744.6,142.6 742,150 739.4,142.6 732,140 739.4,137.4" fill="#FDFAF4" fill-opacity="0.9"/>
+<polygon points="120,462 122.08,467.92 128,470 122.08,472.08 120,478 117.92,472.08 112,470 117.92,467.92" fill="#FDFAF4" fill-opacity="0.9"/>
+<polygon points="690,53 691.82,58.18 697,60 691.82,61.82 690,67 688.18,61.82 683,60 688.18,58.18" fill="#FDFAF4" fill-opacity="0.9"/>
+<polygon points="300,463 301.82,468.18 307,470 301.82,471.82 300,477 298.18,471.82 293,470 298.18,468.18" fill="#FDFAF4" fill-opacity="0.9"/>
+</svg>

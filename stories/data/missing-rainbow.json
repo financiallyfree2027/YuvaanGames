@@ -1,0 +1,1287 @@
+{
+ "id": "missing-rainbow",
+ "title": "The Missing Rainbow",
+ "emoji": "🌈",
+ "seq": 6,
+ "lesson_word": "RAINBOWS",
+ "lesson": "Milo finds out what a rainbow really needs.",
+ "tint": "#7B47C9",
+ "glow": "#b98cf0",
+ "facts": [
+  "A rainbow needs sunlight and water.",
+  "Sunlight has many colours.",
+  "A rainbow has seven main colours."
+ ],
+ "pages": [
+  {
+   "text": "It rained all morning.",
+   "scene": {
+    "bg": "bg_sky_rain",
+    "elements": [
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 13,
+      "w": 21,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "rain_cloud",
+      "x": 50,
+      "y": 30,
+      "w": 40,
+      "z": 4,
+      "anim": "drift",
+      "anchor": "center"
+     },
+     {
+      "asset": "puddle",
+      "x": 64,
+      "y": 82,
+      "w": 26,
+      "z": 3,
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "Then the rain stopped.",
+   "scene": {
+    "bg": "bg_sky_rain",
+    "elements": [
+     {
+      "asset": "cloud",
+      "x": 56,
+      "y": 28,
+      "w": 34,
+      "z": 4,
+      "anim": "drift",
+      "anchor": "center"
+     },
+     {
+      "asset": "puddle",
+      "x": 68,
+      "y": 82,
+      "w": 24,
+      "z": 3,
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "Milo ran outside.",
+   "scene": {
+    "bg": "bg_sky_rain",
+    "elements": [
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 13,
+      "w": 21,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "milo_running",
+      "x": 40,
+      "y": 82,
+      "w": 36,
+      "z": 6,
+      "anim": "walk"
+     },
+     {
+      "asset": "puddle",
+      "x": 74,
+      "y": 82,
+      "w": 22,
+      "z": 3,
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "“I want to see a rainbow!”",
+   "scene": {
+    "bg": "bg_sky_rain",
+    "elements": [
+     {
+      "asset": "puddle",
+      "x": 8,
+      "y": 82,
+      "w": 16,
+      "z": 1
+     },
+     {
+      "asset": "milo_happy",
+      "x": 36,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "cloud",
+      "x": 74,
+      "y": 26,
+      "w": 28,
+      "z": 4,
+      "anim": "drift",
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "But there was no rainbow.",
+   "scene": {
+    "bg": "bg_sky_rain",
+    "elements": [
+     {
+      "asset": "puddle",
+      "x": 8,
+      "y": 82,
+      "w": 16,
+      "z": 1
+     },
+     {
+      "asset": "milo_sad",
+      "x": 38,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "cloud",
+      "x": 70,
+      "y": 26,
+      "w": 30,
+      "z": 4,
+      "anim": "drift",
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "“Where is it?” he asked.",
+   "scene": {
+    "bg": "bg_sky_rain",
+    "elements": [
+     {
+      "asset": "puddle",
+      "x": 8,
+      "y": 82,
+      "w": 16,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 13,
+      "w": 21,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "milo_thinking",
+      "x": 36,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "robo_standing",
+      "x": 66,
+      "y": 82,
+      "w": 27,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "Robo looked at the sky.",
+   "scene": {
+    "bg": "bg_sky_rain",
+    "elements": [
+     {
+      "asset": "puddle",
+      "x": 8,
+      "y": 82,
+      "w": 16,
+      "z": 1
+     },
+     {
+      "asset": "robo_pointing",
+      "x": 40,
+      "y": 82,
+      "w": 27,
+      "z": 6
+     },
+     {
+      "asset": "cloud",
+      "x": 72,
+      "y": 24,
+      "w": 30,
+      "z": 4,
+      "anim": "drift",
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "“We need something else.”",
+   "scene": {
+    "bg": "bg_sky_rain",
+    "elements": [
+     {
+      "asset": "puddle",
+      "x": 8,
+      "y": 82,
+      "w": 16,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 13,
+      "w": 21,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "robo_talking",
+      "x": 34,
+      "y": 82,
+      "w": 27,
+      "z": 6
+     },
+     {
+      "asset": "milo_thinking",
+      "x": 64,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "“What?”",
+   "scene": {
+    "bg": "bg_sky_rain",
+    "elements": [
+     {
+      "asset": "puddle",
+      "x": 8,
+      "y": 82,
+      "w": 16,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 13,
+      "w": 21,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "milo_thinking",
+      "x": 42,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "“Sunlight!”",
+   "scene": {
+    "bg": "bg_sky_rain",
+    "elements": [
+     {
+      "asset": "puddle",
+      "x": 8,
+      "y": 82,
+      "w": 16,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 13,
+      "w": 21,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "robo_pointing",
+      "x": 30,
+      "y": 82,
+      "w": 27,
+      "z": 6
+     },
+     {
+      "asset": "sun",
+      "x": 74,
+      "y": 26,
+      "w": 26,
+      "z": 4,
+      "anim": "bob",
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "Just then, the clouds moved away.",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 22,
+      "y": 24,
+      "w": 26,
+      "z": 4,
+      "anim": "drift",
+      "anchor": "center"
+     },
+     {
+      "asset": "cloud",
+      "x": 84,
+      "y": 20,
+      "w": 24,
+      "z": 4,
+      "anim": "drift",
+      "delay": 2,
+      "anchor": "center"
+     },
+     {
+      "asset": "milo_standing",
+      "x": 46,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "The Sun came out.",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 90,
+      "y": 10,
+      "w": 16,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 14,
+      "w": 20,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "sun",
+      "x": 66,
+      "y": 26,
+      "w": 32,
+      "z": 4,
+      "anim": "bob",
+      "anchor": "center"
+     },
+     {
+      "asset": "milo_happy",
+      "x": 30,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "sparkle",
+      "x": 84,
+      "y": 44,
+      "w": 16,
+      "z": 6,
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "Suddenly, a beautiful rainbow appeared.",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 90,
+      "y": 10,
+      "w": 16,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 14,
+      "w": 20,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "rainbow",
+      "x": 52,
+      "y": 40,
+      "w": 68,
+      "z": 3,
+      "anim": "pop",
+      "anchor": "center"
+     },
+     {
+      "asset": "sun",
+      "x": 84,
+      "y": 20,
+      "w": 20,
+      "z": 2,
+      "anchor": "center"
+     },
+     {
+      "asset": "milo_surprised",
+      "x": 26,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "“Wow!” shouted Milo.",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 90,
+      "y": 10,
+      "w": 16,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 14,
+      "w": 20,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "rainbow",
+      "x": 54,
+      "y": 38,
+      "w": 66,
+      "z": 3,
+      "anchor": "center"
+     },
+     {
+      "asset": "milo_jumping",
+      "x": 28,
+      "y": 82,
+      "w": 36,
+      "z": 6,
+      "anim": "bob"
+     },
+     {
+      "asset": "sparkle",
+      "x": 78,
+      "y": 54,
+      "w": 16,
+      "z": 6,
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "He saw red.",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 90,
+      "y": 10,
+      "w": 16,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 14,
+      "w": 20,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "rainbow",
+      "x": 52,
+      "y": 40,
+      "w": 66,
+      "z": 3,
+      "anchor": "center"
+     },
+     {
+      "asset": "milo_pointing",
+      "x": 24,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "Orange.",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 90,
+      "y": 10,
+      "w": 16,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 14,
+      "w": 20,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "rainbow",
+      "x": 52,
+      "y": 40,
+      "w": 66,
+      "z": 3,
+      "anchor": "center"
+     },
+     {
+      "asset": "milo_pointing",
+      "x": 24,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "Yellow.",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 90,
+      "y": 10,
+      "w": 16,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 14,
+      "w": 20,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "rainbow",
+      "x": 52,
+      "y": 40,
+      "w": 66,
+      "z": 3,
+      "anchor": "center"
+     },
+     {
+      "asset": "milo_pointing",
+      "x": 24,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "Green.",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 90,
+      "y": 10,
+      "w": 16,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 14,
+      "w": 20,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "rainbow",
+      "x": 52,
+      "y": 40,
+      "w": 66,
+      "z": 3,
+      "anchor": "center"
+     },
+     {
+      "asset": "milo_pointing",
+      "x": 24,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "Blue.",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 90,
+      "y": 10,
+      "w": 16,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 14,
+      "w": 20,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "rainbow",
+      "x": 52,
+      "y": 40,
+      "w": 66,
+      "z": 3,
+      "anchor": "center"
+     },
+     {
+      "asset": "milo_pointing",
+      "x": 24,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "Indigo.",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 90,
+      "y": 10,
+      "w": 16,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 14,
+      "w": 20,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "rainbow",
+      "x": 52,
+      "y": 40,
+      "w": 66,
+      "z": 3,
+      "anchor": "center"
+     },
+     {
+      "asset": "milo_pointing",
+      "x": 24,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "And violet.",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 90,
+      "y": 10,
+      "w": 16,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 14,
+      "w": 20,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "rainbow",
+      "x": 52,
+      "y": 40,
+      "w": 66,
+      "z": 3,
+      "anchor": "center"
+     },
+     {
+      "asset": "milo_happy",
+      "x": 24,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "sparkle",
+      "x": 80,
+      "y": 56,
+      "w": 14,
+      "z": 6,
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "“How did all these colours appear?” asked Milo.",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 90,
+      "y": 10,
+      "w": 16,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 14,
+      "w": 20,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "milo_thinking",
+      "x": 30,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "rainbow",
+      "x": 70,
+      "y": 38,
+      "w": 50,
+      "z": 3,
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "Robo said, “Sunlight goes through tiny drops of water.",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 90,
+      "y": 10,
+      "w": 16,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 14,
+      "w": 20,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "robo_talking",
+      "x": 28,
+      "y": 82,
+      "w": 27,
+      "z": 6
+     },
+     {
+      "asset": "sun",
+      "x": 56,
+      "y": 24,
+      "w": 22,
+      "z": 4,
+      "anchor": "center"
+     },
+     {
+      "asset": "puddle",
+      "x": 76,
+      "y": 82,
+      "w": 22,
+      "z": 3,
+      "anchor": "center"
+     },
+     {
+      "asset": "rainbow",
+      "x": 76,
+      "y": 44,
+      "w": 40,
+      "z": 2,
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "The light then shows many colours.”",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 90,
+      "y": 10,
+      "w": 16,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 14,
+      "w": 20,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "rainbow",
+      "x": 56,
+      "y": 40,
+      "w": 64,
+      "z": 3,
+      "anchor": "center"
+     },
+     {
+      "asset": "sun",
+      "x": 86,
+      "y": 20,
+      "w": 18,
+      "z": 2,
+      "anchor": "center"
+     },
+     {
+      "asset": "robo_pointing",
+      "x": 22,
+      "y": 82,
+      "w": 27,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "A cloud covered the Sun.",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 64,
+      "y": 26,
+      "w": 34,
+      "z": 5,
+      "anim": "drift",
+      "anchor": "center"
+     },
+     {
+      "asset": "milo_sad",
+      "x": 30,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "The rainbow disappeared.",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 62,
+      "y": 26,
+      "w": 34,
+      "z": 5,
+      "anchor": "center"
+     },
+     {
+      "asset": "milo_thinking",
+      "x": 32,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "Milo laughed.",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 90,
+      "y": 10,
+      "w": 16,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 14,
+      "w": 20,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "milo_happy",
+      "x": 42,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "robo_happy",
+      "x": 70,
+      "y": 82,
+      "w": 27,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "“Now I know the rainbow's secret!”",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 90,
+      "y": 10,
+      "w": 16,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 14,
+      "w": 20,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "milo_jumping",
+      "x": 34,
+      "y": 82,
+      "w": 36,
+      "z": 6,
+      "anim": "bob"
+     },
+     {
+      "asset": "rainbow",
+      "x": 72,
+      "y": 40,
+      "w": 48,
+      "z": 3,
+      "anim": "pop",
+      "anchor": "center"
+     },
+     {
+      "asset": "sparkle",
+      "x": 20,
+      "y": 48,
+      "w": 16,
+      "z": 6,
+      "anchor": "center"
+     }
+    ]
+   }
+  }
+ ],
+ "questions": [
+  {
+   "q": "What two things make a rainbow?",
+   "o": [
+    "Sunlight and water",
+    "Wind and sand",
+    "Fire and smoke"
+   ],
+   "a": 0
+  },
+  {
+   "q": "How many main colours does a rainbow have?",
+   "o": [
+    "Seven",
+    "Three",
+    "Ten"
+   ],
+   "a": 0
+  },
+  {
+   "q": "What happened when a cloud covered the Sun?",
+   "o": [
+    "The rainbow went away",
+    "It rained",
+    "It got hot"
+   ],
+   "a": 0
+  },
+  {
+   "q": "What colour did Milo see first?",
+   "o": [
+    "Red",
+    "Blue",
+    "Green"
+   ],
+   "a": 0
+  },
+  {
+   "q": "What is inside sunlight?",
+   "o": [
+    "Many colours",
+    "Only white",
+    "Water"
+   ],
+   "a": 0
+  }
+ ],
+ "created": "2026-08-18"
+}

@@ -1,0 +1,1069 @@
+{
+ "id": "ocean-rescue",
+ "title": "Ocean Rescue",
+ "emoji": "🐋",
+ "seq": 5,
+ "lesson_word": "WHALES",
+ "lesson": "Milo frees a baby whale caught in a net.",
+ "tint": "#12A99A",
+ "glow": "#5fe3d5",
+ "facts": [
+  "Whales are not fish.",
+  "Whales breathe air.",
+  "Whales must come to the top of the water to breathe."
+ ],
+ "pages": [
+  {
+   "text": "Milo and Robo went under the sea in a little submarine.",
+   "scene": {
+    "bg": "bg_ocean_underwater",
+    "elements": [
+     {
+      "asset": "fish",
+      "x": 93,
+      "y": 26,
+      "w": 14,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "submarine",
+      "x": 54,
+      "y": 58,
+      "w": 40,
+      "z": 6,
+      "anim": "float",
+      "anchor": "center"
+     },
+     {
+      "asset": "bubbles",
+      "x": 84,
+      "y": 64,
+      "w": 16,
+      "z": 4,
+      "anim": "rise",
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "They saw colourful fish.",
+   "scene": {
+    "bg": "bg_ocean_underwater",
+    "elements": [
+     {
+      "asset": "fish",
+      "x": 93,
+      "y": 26,
+      "w": 14,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "bubbles",
+      "x": 7,
+      "y": 58,
+      "w": 13,
+      "z": 1,
+      "anchor": "center",
+      "anim": "rise"
+     },
+     {
+      "asset": "fish_group",
+      "x": 58,
+      "y": 54,
+      "w": 38,
+      "z": 5,
+      "anim": "float",
+      "anchor": "center"
+     },
+     {
+      "asset": "submarine",
+      "x": 22,
+      "y": 70,
+      "w": 32,
+      "z": 6,
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "They saw a turtle.",
+   "scene": {
+    "bg": "bg_ocean_underwater",
+    "elements": [
+     {
+      "asset": "fish",
+      "x": 93,
+      "y": 26,
+      "w": 14,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "bubbles",
+      "x": 7,
+      "y": 58,
+      "w": 13,
+      "z": 1,
+      "anchor": "center",
+      "anim": "rise"
+     },
+     {
+      "asset": "turtle",
+      "x": 58,
+      "y": 58,
+      "w": 32,
+      "z": 5,
+      "anim": "float",
+      "anchor": "center"
+     },
+     {
+      "asset": "submarine",
+      "x": 22,
+      "y": 72,
+      "w": 32,
+      "z": 6,
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "They even saw a starfish.",
+   "scene": {
+    "bg": "bg_ocean_underwater",
+    "elements": [
+     {
+      "asset": "fish",
+      "x": 93,
+      "y": 26,
+      "w": 14,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "bubbles",
+      "x": 7,
+      "y": 58,
+      "w": 13,
+      "z": 1,
+      "anchor": "center",
+      "anim": "rise"
+     },
+     {
+      "asset": "starfish",
+      "x": 60,
+      "y": 76,
+      "w": 22,
+      "z": 5,
+      "anim": "bob",
+      "anchor": "center"
+     },
+     {
+      "asset": "submarine",
+      "x": 26,
+      "y": 58,
+      "w": 32,
+      "z": 6,
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "Then they heard a strange sound.",
+   "scene": {
+    "bg": "bg_ocean_underwater",
+    "elements": [
+     {
+      "asset": "fish",
+      "x": 93,
+      "y": 26,
+      "w": 14,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "bubbles",
+      "x": 7,
+      "y": 58,
+      "w": 13,
+      "z": 1,
+      "anchor": "center",
+      "anim": "rise"
+     },
+     {
+      "asset": "submarine",
+      "x": 40,
+      "y": 60,
+      "w": 32,
+      "z": 6,
+      "anchor": "center"
+     },
+     {
+      "asset": "sound_arcs",
+      "x": 78,
+      "y": 50,
+      "w": 26,
+      "z": 7,
+      "anim": "bob",
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "“Ooooooo!”",
+   "scene": {
+    "bg": "bg_ocean_underwater",
+    "elements": [
+     {
+      "asset": "fish",
+      "x": 93,
+      "y": 26,
+      "w": 14,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "bubbles",
+      "x": 7,
+      "y": 58,
+      "w": 13,
+      "z": 1,
+      "anchor": "center",
+      "anim": "rise"
+     },
+     {
+      "asset": "sound_arcs",
+      "x": 56,
+      "y": 50,
+      "w": 36,
+      "z": 7,
+      "anim": "pop",
+      "anchor": "center"
+     },
+     {
+      "asset": "submarine",
+      "x": 24,
+      "y": 70,
+      "w": 32,
+      "z": 6,
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "“What was that?” asked Milo.",
+   "scene": {
+    "bg": "bg_ocean_underwater",
+    "elements": [
+     {
+      "asset": "fish",
+      "x": 93,
+      "y": 26,
+      "w": 14,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "bubbles",
+      "x": 7,
+      "y": 58,
+      "w": 13,
+      "z": 1,
+      "anchor": "center",
+      "anim": "rise"
+     },
+     {
+      "asset": "milo_spacesuit",
+      "x": 34,
+      "y": 58,
+      "w": 36,
+      "z": 6,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "robo_standing",
+      "x": 64,
+      "y": 64,
+      "w": 27,
+      "z": 6,
+      "anchor": "center",
+      "anim": "float"
+     }
+    ]
+   }
+  },
+  {
+   "text": "“A whale!” said Robo.",
+   "scene": {
+    "bg": "bg_ocean_underwater",
+    "elements": [
+     {
+      "asset": "fish",
+      "x": 93,
+      "y": 26,
+      "w": 14,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "bubbles",
+      "x": 7,
+      "y": 58,
+      "w": 13,
+      "z": 1,
+      "anchor": "center",
+      "anim": "rise"
+     },
+     {
+      "asset": "robo_pointing",
+      "x": 26,
+      "y": 64,
+      "w": 27,
+      "z": 6,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "whale",
+      "x": 68,
+      "y": 52,
+      "w": 44,
+      "z": 5,
+      "anim": "float",
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "They followed the sound.",
+   "scene": {
+    "bg": "bg_ocean_underwater",
+    "elements": [
+     {
+      "asset": "fish",
+      "x": 93,
+      "y": 26,
+      "w": 14,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "submarine",
+      "x": 40,
+      "y": 58,
+      "w": 32,
+      "z": 6,
+      "anim": "float",
+      "anchor": "center"
+     },
+     {
+      "asset": "bubbles",
+      "x": 20,
+      "y": 68,
+      "w": 14,
+      "z": 4,
+      "anim": "rise",
+      "anchor": "center"
+     },
+     {
+      "asset": "sound_arcs",
+      "x": 82,
+      "y": 48,
+      "w": 22,
+      "z": 7,
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "A baby whale was stuck in a net.",
+   "scene": {
+    "bg": "bg_ocean_underwater",
+    "elements": [
+     {
+      "asset": "fish",
+      "x": 93,
+      "y": 26,
+      "w": 14,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "bubbles",
+      "x": 7,
+      "y": 58,
+      "w": 13,
+      "z": 1,
+      "anchor": "center",
+      "anim": "rise"
+     },
+     {
+      "asset": "whale_baby",
+      "x": 54,
+      "y": 56,
+      "w": 36,
+      "z": 5,
+      "anchor": "center"
+     },
+     {
+      "asset": "net",
+      "x": 54,
+      "y": 56,
+      "w": 42,
+      "z": 7,
+      "anim": "sway",
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "“Oh no!” said Milo.",
+   "scene": {
+    "bg": "bg_ocean_underwater",
+    "elements": [
+     {
+      "asset": "fish",
+      "x": 93,
+      "y": 26,
+      "w": 14,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "bubbles",
+      "x": 7,
+      "y": 58,
+      "w": 13,
+      "z": 1,
+      "anchor": "center",
+      "anim": "rise"
+     },
+     {
+      "asset": "milo_spacesuit",
+      "x": 30,
+      "y": 58,
+      "w": 36,
+      "z": 6,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "whale_baby",
+      "x": 72,
+      "y": 58,
+      "w": 30,
+      "z": 5,
+      "anchor": "center"
+     },
+     {
+      "asset": "net",
+      "x": 72,
+      "y": 58,
+      "w": 34,
+      "z": 7,
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "“We have to help.”",
+   "scene": {
+    "bg": "bg_ocean_underwater",
+    "elements": [
+     {
+      "asset": "fish",
+      "x": 93,
+      "y": 26,
+      "w": 14,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "bubbles",
+      "x": 7,
+      "y": 58,
+      "w": 13,
+      "z": 1,
+      "anchor": "center",
+      "anim": "rise"
+     },
+     {
+      "asset": "milo_spacesuit",
+      "x": 28,
+      "y": 58,
+      "w": 36,
+      "z": 6,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "robo_standing",
+      "x": 56,
+      "y": 64,
+      "w": 27,
+      "z": 6,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "whale_baby",
+      "x": 82,
+      "y": 60,
+      "w": 26,
+      "z": 5,
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "Milo carefully cut the net.",
+   "scene": {
+    "bg": "bg_ocean_underwater",
+    "elements": [
+     {
+      "asset": "fish",
+      "x": 93,
+      "y": 26,
+      "w": 14,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "bubbles",
+      "x": 7,
+      "y": 58,
+      "w": 13,
+      "z": 1,
+      "anchor": "center",
+      "anim": "rise"
+     },
+     {
+      "asset": "milo_spacesuit",
+      "x": 30,
+      "y": 58,
+      "w": 36,
+      "z": 6,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "net",
+      "x": 62,
+      "y": 56,
+      "w": 34,
+      "z": 7,
+      "anchor": "center"
+     },
+     {
+      "asset": "whale_baby",
+      "x": 62,
+      "y": 56,
+      "w": 32,
+      "z": 5,
+      "anchor": "center"
+     },
+     {
+      "asset": "sparkle",
+      "x": 78,
+      "y": 44,
+      "w": 14,
+      "z": 8,
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "The baby whale was free.",
+   "scene": {
+    "bg": "bg_ocean_underwater",
+    "elements": [
+     {
+      "asset": "fish",
+      "x": 93,
+      "y": 26,
+      "w": 14,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "bubbles",
+      "x": 7,
+      "y": 58,
+      "w": 13,
+      "z": 1,
+      "anchor": "center",
+      "anim": "rise"
+     },
+     {
+      "asset": "whale_baby",
+      "x": 58,
+      "y": 54,
+      "w": 38,
+      "z": 5,
+      "anim": "float",
+      "anchor": "center"
+     },
+     {
+      "asset": "sparkle",
+      "x": 30,
+      "y": 44,
+      "w": 20,
+      "z": 7,
+      "anchor": "center"
+     },
+     {
+      "asset": "milo_spacesuit",
+      "x": 18,
+      "y": 58,
+      "w": 36,
+      "z": 6,
+      "anchor": "center",
+      "anim": "float"
+     }
+    ]
+   }
+  },
+  {
+   "text": "It quickly started swimming up.",
+   "scene": {
+    "bg": "bg_ocean_underwater",
+    "elements": [
+     {
+      "asset": "fish",
+      "x": 93,
+      "y": 26,
+      "w": 14,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "whale_baby",
+      "x": 56,
+      "y": 40,
+      "w": 34,
+      "z": 5,
+      "anim": "float",
+      "anchor": "center"
+     },
+     {
+      "asset": "bubbles",
+      "x": 56,
+      "y": 72,
+      "w": 20,
+      "z": 4,
+      "anim": "rise",
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "“Where is it going?” asked Milo.",
+   "scene": {
+    "bg": "bg_ocean_underwater",
+    "elements": [
+     {
+      "asset": "fish",
+      "x": 93,
+      "y": 26,
+      "w": 14,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "bubbles",
+      "x": 7,
+      "y": 58,
+      "w": 13,
+      "z": 1,
+      "anchor": "center",
+      "anim": "rise"
+     },
+     {
+      "asset": "milo_spacesuit",
+      "x": 30,
+      "y": 58,
+      "w": 36,
+      "z": 6,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "whale_baby",
+      "x": 72,
+      "y": 38,
+      "w": 26,
+      "z": 5,
+      "anim": "float",
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "“To breathe,” said Robo.",
+   "scene": {
+    "bg": "bg_ocean_underwater",
+    "elements": [
+     {
+      "asset": "fish",
+      "x": 93,
+      "y": 26,
+      "w": 14,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "robo_pointing",
+      "x": 28,
+      "y": 64,
+      "w": 27,
+      "z": 6,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "whale_baby",
+      "x": 70,
+      "y": 40,
+      "w": 28,
+      "z": 5,
+      "anim": "float",
+      "anchor": "center"
+     },
+     {
+      "asset": "bubbles",
+      "x": 88,
+      "y": 62,
+      "w": 14,
+      "z": 4,
+      "anim": "rise",
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "“Whales need air, just like us.”",
+   "scene": {
+    "bg": "bg_ocean_underwater",
+    "elements": [
+     {
+      "asset": "fish",
+      "x": 93,
+      "y": 26,
+      "w": 14,
+      "z": 1,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "robo_talking",
+      "x": 26,
+      "y": 64,
+      "w": 27,
+      "z": 6,
+      "anchor": "center",
+      "anim": "float"
+     },
+     {
+      "asset": "whale_baby",
+      "x": 66,
+      "y": 44,
+      "w": 30,
+      "z": 5,
+      "anim": "float",
+      "anchor": "center"
+     },
+     {
+      "asset": "bubbles",
+      "x": 84,
+      "y": 66,
+      "w": 15,
+      "z": 4,
+      "anim": "rise",
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "The whale reached the top of the water.",
+   "scene": {
+    "bg": "bg_ocean_surface",
+    "elements": [
+     {
+      "asset": "cloud",
+      "x": 12,
+      "y": 13,
+      "w": 18,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "whale_baby",
+      "x": 56,
+      "y": 62,
+      "w": 38,
+      "z": 5,
+      "anim": "bob",
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "WHOOSH!",
+   "scene": {
+    "bg": "bg_ocean_surface",
+    "elements": [
+     {
+      "asset": "cloud",
+      "x": 12,
+      "y": 13,
+      "w": 18,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "whale_baby",
+      "x": 52,
+      "y": 64,
+      "w": 36,
+      "z": 5,
+      "anchor": "center"
+     },
+     {
+      "asset": "whale_spout",
+      "x": 52,
+      "y": 34,
+      "w": 26,
+      "z": 7,
+      "anim": "pop",
+      "anchor": "center"
+     },
+     {
+      "asset": "splash",
+      "x": 52,
+      "y": 58,
+      "w": 30,
+      "z": 6,
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "It took a big breath.",
+   "scene": {
+    "bg": "bg_ocean_surface",
+    "elements": [
+     {
+      "asset": "cloud",
+      "x": 12,
+      "y": 13,
+      "w": 18,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "whale_baby",
+      "x": 54,
+      "y": 62,
+      "w": 36,
+      "z": 5,
+      "anim": "bob",
+      "anchor": "center"
+     },
+     {
+      "asset": "whale_spout",
+      "x": 54,
+      "y": 32,
+      "w": 24,
+      "z": 7,
+      "anim": "float",
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "Milo waved.",
+   "scene": {
+    "bg": "bg_ocean_surface",
+    "elements": [
+     {
+      "asset": "submarine",
+      "x": 26,
+      "y": 68,
+      "w": 30,
+      "z": 2,
+      "anchor": "center",
+      "anim": "bob"
+     },
+     {
+      "asset": "cloud",
+      "x": 12,
+      "y": 13,
+      "w": 18,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "milo_waving",
+      "x": 26,
+      "y": 56,
+      "w": 36,
+      "z": 6,
+      "anchor": "center",
+      "anim": "bob"
+     },
+     {
+      "asset": "whale_baby",
+      "x": 70,
+      "y": 64,
+      "w": 32,
+      "z": 5,
+      "anim": "bob",
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "“Goodbye, little whale!”",
+   "scene": {
+    "bg": "bg_ocean_surface",
+    "elements": [
+     {
+      "asset": "submarine",
+      "x": 26,
+      "y": 68,
+      "w": 30,
+      "z": 2,
+      "anchor": "center",
+      "anim": "bob"
+     },
+     {
+      "asset": "cloud",
+      "x": 12,
+      "y": 13,
+      "w": 18,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "milo_waving",
+      "x": 26,
+      "y": 56,
+      "w": 36,
+      "z": 6,
+      "anchor": "center",
+      "anim": "bob"
+     },
+     {
+      "asset": "whale_baby",
+      "x": 72,
+      "y": 64,
+      "w": 32,
+      "z": 5,
+      "anim": "bob",
+      "anchor": "center"
+     },
+     {
+      "asset": "sparkle",
+      "x": 50,
+      "y": 38,
+      "w": 18,
+      "z": 7,
+      "anchor": "center"
+     }
+    ]
+   }
+  }
+ ],
+ "questions": [
+  {
+   "q": "Are whales fish?",
+   "o": [
+    "No",
+    "Yes",
+    "Sometimes"
+   ],
+   "a": 0
+  },
+  {
+   "q": "Why did the whale swim up?",
+   "o": [
+    "To breathe",
+    "To eat",
+    "To sleep"
+   ],
+   "a": 0
+  },
+  {
+   "q": "What was the baby whale stuck in?",
+   "o": [
+    "A net",
+    "A rock",
+    "A box"
+   ],
+   "a": 0
+  },
+  {
+   "q": "How did Milo travel under the sea?",
+   "o": [
+    "A submarine",
+    "A rocket",
+    "A boat"
+   ],
+   "a": 0
+  },
+  {
+   "q": "What do whales need, just like us?",
+   "o": [
+    "Air",
+    "Milk",
+    "Fire"
+   ],
+   "a": 0
+  }
+ ],
+ "created": "2026-08-18"
+}

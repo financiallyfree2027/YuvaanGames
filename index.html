@@ -226,10 +226,63 @@
         <path d="M84 66 Q94 58 99 70 Z" fill="#fff" stroke="#111" stroke-width="2"/>
         <path d="M116 66 Q106 58 101 70 Z" fill="#fff" stroke="#111" stroke-width="2"/>
         <text x="100" y="24" fill="#fff" font-size="15" font-weight="bold" text-anchor="middle" font-family="sans-serif">SPIDEY GAMES</text>
-        <text x="100" y="138" fill="#ffe9a0" font-size="12" font-weight="bold" text-anchor="middle" font-family="sans-serif">4 hero adventures! 🕸️</text>
+        <text x="100" y="138" fill="#ffe9a0" font-size="12" font-weight="bold" text-anchor="middle" font-family="sans-serif">5 hero adventures! 🕸️</text>
       </svg>
       <div class="name">Spidey Games</div>
-      <div class="desc">Never quit, self control, logic &amp; honesty — 4 hero games!</div>
+      <div class="desc">Never quit, self control, logic &amp; honesty — 5 hero games!</div>
+    </div>
+    <div class="card" id="cardWebBall">
+      <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="gwb" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#87CEEB"/><stop offset="1" stop-color="#FFD9A0"/></linearGradient></defs>
+        <rect width="200" height="150" fill="url(#gwb)"/>
+        <circle cx="26" cy="30" r="13" fill="#FFE9A8" opacity=".95"/>
+        <!-- rooftops -->
+        <rect x="0" y="96" width="48" height="54" rx="5" fill="#3E6B8C"/>
+        <rect x="150" y="86" width="50" height="64" rx="5" fill="#6B5B95"/>
+        <g fill="#FFE9A8"><rect x="8" y="106" width="7" height="8" rx="2"/><rect x="26" y="120" width="7" height="8" rx="2"/>
+          <rect x="160" y="98" width="7" height="8" rx="2"/><rect x="180" y="116" width="7" height="8" rx="2"/></g>
+        <!-- Spidey -->
+        <g transform="translate(24 96)">
+          <ellipse cx="0" cy="-11" rx="9" ry="11" fill="#1E5AE8"/>
+          <circle cx="0" cy="-27" r="12" fill="#E53935"/>
+          <ellipse cx="-5" cy="-28" rx="4" ry="5.5" fill="#fff" stroke="#111" stroke-width="1.7"/>
+          <ellipse cx="5" cy="-28" rx="4" ry="5.5" fill="#fff" stroke="#111" stroke-width="1.7"/>
+        </g>
+        <!-- web-ball in flight -->
+        <circle cx="66" cy="62" r="4" fill="#fff" opacity=".35"/>
+        <circle cx="80" cy="57" r="6" fill="#fff" opacity=".6"/>
+        <g><circle cx="96" cy="52" r="9.5" fill="#fff" stroke="#8fb4cf" stroke-width="1.8"/>
+          <g stroke="#8fb4cf" stroke-width="1.5" fill="none">
+            <line x1="96" y1="43" x2="96" y2="61"/><line x1="87" y1="52" x2="105" y2="52"/>
+            <line x1="90" y1="46" x2="102" y2="58"/><line x1="102" y1="46" x2="90" y2="58"/></g></g>
+        <!-- Doc Ock -->
+        <g transform="translate(166 86)">
+          <g stroke="#7B47C9" stroke-width="6" fill="none" stroke-linecap="round">
+            <path d="M-10 3 C-22 -2 -29 3 -34 -5"/><path d="M-9 13 C-22 20 -29 17 -36 7"/>
+            <path d="M10 3 C22 -2 29 3 34 -5"/>
+          </g>
+          <ellipse cx="0" cy="12" rx="14" ry="12" fill="#4CAF50"/>
+          <ellipse cx="0" cy="14" rx="9" ry="7" fill="#7BC96F"/>
+          <circle cx="0" cy="-7" r="12.5" fill="#FFD9A0"/>
+          <path d="M-12.5 -8 A12.5 12.5 0 0 1 12.5 -8 Q6 -3 0 -6 Q-6 -3 -12.5 -8 Z" fill="#6B4A2F"/>
+          <circle cx="-5" cy="-5" r="5" fill="#fff" stroke="#FFC93C" stroke-width="1.8"/>
+          <circle cx="5" cy="-5" r="5" fill="#fff" stroke="#FFC93C" stroke-width="1.8"/>
+          <circle cx="-5" cy="-4" r="2.2" fill="#222"/><circle cx="5" cy="-4" r="2.2" fill="#222"/>
+          <path d="M-3.5 4 Q0 8 3.5 4" fill="none" stroke="#8E3B36" stroke-width="2" stroke-linecap="round"/>
+        </g>
+        <!-- knot on a beaten arm -->
+        <g transform="translate(126 78)">
+          <circle r="7" fill="none" stroke="#FFC93C" stroke-width="2.6" stroke-dasharray="4 4"/>
+          <path d="M-5 0 q5 -6 5 0 q5 -6 5 0 q-5 6 -5 0 q-5 6 -5 0 z" fill="#FF8AC5" stroke="#d1568f" stroke-width="1.4"/>
+        </g>
+        <ellipse cx="100" cy="140" rx="26" ry="9" fill="#fff" opacity=".95"/>
+        <ellipse cx="84" cy="137" rx="13" ry="7" fill="#fff" opacity=".95"/>
+        <ellipse cx="116" cy="137" rx="13" ry="7" fill="#fff" opacity=".95"/>
+        <text x="100" y="20" fill="#B71C1C" font-size="15" font-weight="bold" text-anchor="middle" font-family="sans-serif">WEB-BALL BOP!</text>
+      </svg>
+      <div class="name">Web-Ball Bop!</div>
+      <div class="desc">Swing, throw web-balls and block — then tangle up Doc Ock! 12 levels</div>
     </div>
   </div>
 </div>
@@ -351,6 +404,7 @@ document.getElementById('cardXO').onclick=()=>{ primeAudio(); beep(700,0.1); XO.
 document.getElementById('cardRun').onclick=()=>{ store.last='menu'; saveStore(); location.href='temple-run.html'; };
 document.getElementById('cardStory').onclick=()=>{ store.last='menu'; saveStore(); location.href='finish-the-story.html'; };
 document.getElementById('cardSpidey').onclick=()=>{ store.last='menu'; saveStore(); location.href='spidey-games.html'; };
+document.getElementById('cardWebBall').onclick=()=>{ store.last='menu'; saveStore(); location.href='spidey-games/game5-webball-bop.html'; };
 
 /* ================================================================
    PHYSICS GAME

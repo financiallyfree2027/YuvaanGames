@@ -1,0 +1,2343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Web-Ball Bop! 🕸️🥎 — Spidey vs Doc Ock</title>
+<style>
+/* ============================================================
+   WEB-BALL BOP!  —  Version A
+   Bottom half = HOLD to swing.  Top half = TAP to throw a web-ball.
+   Buildings, then a silly octopus boss who fights back. 12 levels.
+   No images. Web Audio only. Never a loss — only Boing!
+   ============================================================ */
+*{margin:0;padding:0;box-sizing:border-box;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;height:100%;overflow:hidden;position:fixed;
+  font-family:'Comic Sans MS','Chalkboard SE','Marker Felt',sans-serif;}
+body{touch-action:none;}
+body.mapOpen, body.mapOpen #stage{touch-action:pan-y;}
+body{background:linear-gradient(#87CEEB 0%,#a8d8ef 45%,#ffd9a0 80%,#FFE9A8 100%);}
+body.sunset{background:linear-gradient(#3b3b7a 0%,#8a5aa8 30%,#ff8a5c 65%,#ffcf6e 100%);}
+
+#stage{position:fixed;inset:0;overflow:hidden;touch-action:none;}
+#scaler{position:absolute;top:0;left:0;transform-origin:0 0;}
+.layer{position:absolute;top:0;left:0;height:700px;will-change:transform;}
+
+/* ---------- skyline ---------- */
+.farB{position:absolute;bottom:0;background:#b9d3e6;border-radius:6px 6px 0 0;}
+.midB{position:absolute;bottom:0;background:#8fb4cf;border-radius:8px 8px 0 0;}
+body.sunset .farB{background:#7a6aa0;} body.sunset .midB{background:#5d4f85;}
+#sun{position:absolute;left:340px;top:60px;width:110px;height:110px;border-radius:50%;
+  background:radial-gradient(circle at 40% 35%,#fff6c9,#FFC93C 70%);box-shadow:0 0 60px 24px rgba(255,201,60,.55);}
+body.sunset #sun{background:radial-gradient(circle at 40% 35%,#ffe0b8,#ff7043 70%);box-shadow:0 0 70px 30px rgba(255,112,67,.55);}
+.decoCloud{position:absolute;font-size:70px;opacity:.85;animation:drift 26s linear infinite;}
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(-260px)}}
+
+/* ---------- buildings ---------- */
+.bldg{position:absolute;border-radius:10px 10px 0 0;box-shadow:inset 0 -30px 60px rgba(0,0,0,.18);}
+.roofLip{position:absolute;height:14px;background:#2F5570;border-radius:7px;}
+.roofLip.purple{background:#4b3f6b;}
+.win-lit,.win-dark{position:absolute;width:30px;height:38px;border-radius:4px;}
+.win-lit{background:#FFE9A8;box-shadow:0 0 12px rgba(255,233,168,.75);}
+.win-dark{background:#26445c;}
+.goalFlag{position:absolute;font-size:56px;z-index:3;animation:flagBob 1.6s ease-in-out infinite;}
+@keyframes flagBob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-10px) rotate(4deg)}}
+
+/* ---------- anchor splat / balloon ---------- */
+.balloon{position:absolute;font-size:80px;z-index:4;animation:balBob 1.8s ease-in-out infinite;will-change:left;}
+@keyframes balBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+.balloonRing{position:absolute;width:150px;height:150px;border:5px dashed rgba(255,255,255,.75);border-radius:50%;
+  z-index:3;animation:ringPulse 1.2s ease-in-out infinite;will-change:left;}
+@keyframes ringPulse{0%,100%{transform:scale(1);opacity:.45}50%{transform:scale(1.12);opacity:.9}}
+
+/* ---------- wind ---------- */
+.windSpark{position:absolute;font-size:34px;z-index:2;opacity:0;animation:sparkFly 3s linear forwards;}
+@keyframes sparkFly{0%{opacity:0;transform:translateX(0) translateY(0)}15%{opacity:.9}
+  100%{opacity:0;transform:translateX(-320px) translateY(-40px)}}
+
+/* ---------- hero ---------- */
+#hero{position:absolute;width:90px;height:110px;left:0;top:0;z-index:6;will-change:transform;transform-origin:45px 110px;}
+#heroInner{width:100%;height:100%;}
+#heroInner.idle{animation:idleBounce 1.2s ease-in-out infinite;}
+@keyframes idleBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+#heroInner.crouch{transform:translateY(8px) scaleY(.92);transform-origin:50% 100%;}
+.armL,.armR{transform-box:fill-box;transform-origin:50% 12%;transition:transform .25s ease;}
+.celebrate .armL{transform:rotate(155deg);} .celebrate .armR{transform:rotate(-155deg);}
+/* shoot recoil — fires once per throw */
+#heroInner.shoot{animation:heroShoot .26s ease-out;}
+@keyframes heroShoot{0%{transform:translateX(0)}30%{transform:translateX(-7px)}100%{transform:translateX(0)}}
+
+/* ---------- trampoline cloud ---------- */
+#cloud{position:absolute;width:330px;height:120px;z-index:4;transition:transform .18s ease;transform-origin:50% 100%;}
+#cloud.squish{transform:scaleY(.55) scaleX(1.12);}
+.puff{position:absolute;background:#fff;border-radius:50%;box-shadow:0 8px 0 rgba(0,0,0,.06);}
+
+/* ---------- ice-cream truck (finale) ---------- */
+#truck{position:absolute;z-index:4;width:200px;height:150px;}
+#truck.giant{transform:scale(1.6);transform-origin:50% 100%;}
+.truckBody{position:absolute;left:0;top:40px;width:200px;height:74px;background:#fff;border-radius:14px;border:6px solid #E53935;}
+.truckStripe{position:absolute;top:58px;width:190px;height:12px;background:#FF8AC5;border-radius:6px;}
+.truckWin{position:absolute;left:16px;top:52px;width:52px;height:34px;background:#8ED0FF;border-radius:6px;border:4px solid #E53935;}
+.wheel{position:absolute;top:104px;width:36px;height:36px;border-radius:50%;background:#333;border:6px solid #888;}
+.truckCone{position:absolute;left:132px;top:-14px;font-size:64px;animation:balBob 1.5s ease-in-out infinite;}
+.truckNote{position:absolute;left:-30px;top:6px;font-size:40px;animation:balBob 1.1s ease-in-out infinite;}
+.friend{position:absolute;font-size:56px;z-index:4;animation:friendJump .9s ease-in-out infinite;transform-origin:50% 100%;}
+@keyframes friendJump{0%,100%{transform:translateY(0)}50%{transform:translateY(-26px)}}
+
+/* ---------- svg fx layer ---------- */
+#fx{position:absolute;top:0;left:0;z-index:5;pointer-events:none;overflow:visible;}
+#preview{stroke:#fff;stroke-width:6;stroke-dasharray:4 16;stroke-linecap:round;fill:none;animation:pulseArc .7s ease-in-out infinite;}
+#preview.tooFar{stroke:#ff5a4d;}
+@keyframes pulseArc{0%,100%{opacity:.45}50%{opacity:1}}
+#chargeLine,#webLine{stroke:#fff;stroke-width:7;stroke-linecap:round;}
+#splat{stroke:#fff;stroke-width:5;stroke-linecap:round;}
+#splat.pulse{animation:splatPulse .8s ease-in-out infinite;}
+@keyframes splatPulse{0%,100%{opacity:.5}50%{opacity:1}}
+
+/* ---------- floating text ---------- */
+.floatText{position:absolute;z-index:9;font-size:52px;font-weight:bold;color:#fff;
+  text-shadow:0 3px 0 rgba(0,0,0,.25), 0 0 18px rgba(255,255,255,.6);
+  animation:floatUp 1.2s ease-out forwards;white-space:nowrap;transform:translateX(-50%);}
+@keyframes floatUp{0%{opacity:0;transform:translateX(-50%) translateY(20px) scale(.5)}
+  25%{opacity:1;transform:translateX(-50%) translateY(0) scale(1.15)}
+  100%{opacity:0;transform:translateX(-50%) translateY(-90px) scale(1)}}
+
+/* ============================================================
+   NEW IN VERSION A
+   ============================================================ */
+
+/* ---- goo-blobs (free practice targets) ---- */
+.blob{position:absolute;font-size:74px;z-index:4;will-change:transform;
+  animation:blobBob 2.1s ease-in-out infinite;filter:drop-shadow(0 0 14px rgba(155,80,220,.6));}
+@keyframes blobBob{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-18px) scale(1.07)}}
+.blob.sky{font-size:88px;filter:drop-shadow(0 0 22px rgba(255,220,80,.9));}
+.blobRing{position:absolute;width:120px;height:120px;border:5px dashed rgba(255,255,255,.6);
+  border-radius:50%;z-index:3;animation:ringPulse 1.3s ease-in-out infinite;}
+.blobRing.sky{border-color:rgba(255,220,80,.95);width:150px;height:150px;}
+
+/* ---- bouncy barrier (sky-shot gate) ---- */
+.barrier{position:absolute;width:26px;z-index:4;border-radius:13px;
+  background:repeating-linear-gradient(180deg,rgba(255,220,80,.85) 0 18px,rgba(255,255,255,.6) 18px 36px);
+  box-shadow:0 0 24px rgba(255,220,80,.8);animation:barrierPulse 1s ease-in-out infinite;}
+@keyframes barrierPulse{0%,100%{opacity:.7;transform:scaleX(1)}50%{opacity:1;transform:scaleX(1.5)}}
+
+/* ---- make-your-own-anchor wall target ---- */
+.wallSpot{position:absolute;width:120px;height:120px;z-index:4;border:6px dashed rgba(255,255,255,.85);
+  border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:52px;
+  background:rgba(0,0,0,.16);animation:ringPulse 1.1s ease-in-out infinite;}
+
+/* ---- web-ball projectile ---- */
+.wball{position:absolute;width:110px;height:60px;z-index:8;pointer-events:none;will-change:transform;}
+.wball svg{width:100%;height:100%;overflow:visible;}
+.webball .ballWeb{transform-box:fill-box;transform-origin:50% 50%;animation:ballSpin .5s linear infinite;}
+@keyframes ballSpin{to{transform:rotate(360deg)}}
+.webball .ballCore{transform-box:fill-box;transform-origin:50% 50%;animation:ballPulse .28s ease-in-out infinite;}
+@keyframes ballPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+
+/* ---- web splat mark ---- */
+.splatMark{position:absolute;width:130px;height:130px;z-index:7;pointer-events:none;
+  animation:splatPop .5s cubic-bezier(.34,1.56,.64,1) forwards;}
+@keyframes splatPop{0%{transform:scale(.2) rotate(-25deg);opacity:0}
+  55%{transform:scale(1.2) rotate(6deg);opacity:1}100%{transform:scale(1) rotate(0);opacity:1}}
+.splatMark.fade{animation:splatFade .8s ease forwards;}
+@keyframes splatFade{to{opacity:0;transform:scale(1.4)}}
+
+/* ---- Doc Ock ---- */
+#ock{position:absolute;width:300px;height:266px;z-index:6;will-change:transform;transform-origin:50% 100%;}
+#ock svg{width:100%;height:100%;overflow:visible;}
+#ock.trip{animation:ockTrip 2s ease-in-out;}
+@keyframes ockTrip{0%{transform:rotate(0)}20%{transform:rotate(-16deg) translateY(10px)}
+  45%{transform:rotate(14deg) translateY(22px)}70%{transform:rotate(-8deg) translateY(14px)}100%{transform:rotate(0)}}
+#ock.lean1{transform:rotate(-5deg)} #ock.lean2{transform:rotate(-11deg)}
+#ock.lean3{transform:rotate(-17deg)} #ock.lean4{transform:rotate(-22deg)}
+.ock .ockBody{transform-box:fill-box;animation:ockBreathe 2.4s ease-in-out infinite;}
+@keyframes ockBreathe{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.ock .pupil{transform-box:fill-box;animation:googly 2.2s ease-in-out infinite;}
+.ock .pupil.b{animation-delay:.18s;}
+@keyframes googly{0%,100%{transform:translate(0,0)}25%{transform:translate(3px,2px)}60%{transform:translate(-3px,1px)}}
+.ock .blushPulse{transform-box:fill-box;transform-origin:50% 50%;animation:blush 2.6s ease-in-out infinite;}
+@keyframes blush{0%,100%{opacity:.45;transform:scale(1)}50%{opacity:.8;transform:scale(1.12)}}
+.ock .tent{transform-box:fill-box;animation:tentWave 2.2s ease-in-out infinite;}
+.ock .t1{transform-origin:100% 100%;animation-delay:0s}
+.ock .t2{transform-origin:100% 65%;animation-delay:.35s}
+.ock .t3{transform-origin:0% 100%;animation-delay:.7s}
+.ock .t4{transform-origin:0% 65%;animation-delay:1.05s}
+@keyframes tentWave{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(7deg)}}
+/* an arm that is GLOWING = shoot me */
+.ock .tent.glow path:first-child{stroke:#FFC93C;}
+.ock .tent.glow{animation:tentLift .8s ease-in-out infinite;}
+@keyframes tentLift{0%,100%{transform:rotate(-14deg)}50%{transform:rotate(-24deg)}}
+/* an arm that is TIED = done */
+.ock .tent.tied{animation:none;opacity:.5;}
+.ock .tent.tied path:first-child{stroke:#9a9a9a;}
+/* wind-up shiver */
+#ock.windup .tent{animation:tentShiver .18s ease-in-out infinite;}
+@keyframes tentShiver{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+#ock.windup .ockBody{transform-origin:50% 100%;animation:ockPuff .5s ease-in-out infinite;}
+@keyframes ockPuff{0%,100%{transform:scale(1,1)}50%{transform:scale(1.06,.95)}}
+#ock.hurt{animation:ockHurt .5s ease-in-out;}
+@keyframes ockHurt{0%,100%{transform:translateX(0)}25%{transform:translateX(-14px) rotate(-6deg)}
+  60%{transform:translateX(10px) rotate(5deg)}}
+
+/* ---- THREE FACES: happy → dizzy (on a hit) → sad (once tangled) ----
+   Order matters: the .dizzy rules come last so a fresh hit always wins. */
+/* scoped to the CLASS, not the id, so Doc Ock renders correctly
+   everywhere he appears (boss, start screen, level map) */
+.ock .faceDizzy, .ock .faceSad{display:none;}
+#ock.sad   .faceIdle{display:none;}
+#ock.sad   .faceSad{display:inline;}
+#ock.dizzy .faceIdle, #ock.dizzy .faceSad{display:none;}
+#ock.dizzy .faceDizzy{display:inline;}
+
+/* dizzy: spiral eyes spin, stars orbit his head, whole body wobbles */
+@keyframes spinCW{to{transform:rotate(360deg)}}
+@keyframes spinCCW{to{transform:rotate(-360deg)}}
+#ock.dizzy .spiral{transform-box:fill-box;transform-origin:50% 50%;animation:spinCW 0.9s linear infinite;}
+#ock.dizzy .spiral.b{animation:spinCCW 1.1s linear infinite;}
+#ock.dizzy .ockStars{transform-box:fill-box;transform-origin:50% 50%;animation:spinCW 2.1s linear infinite;}
+#ock.dizzy .ockStars .st{transform-box:fill-box;transform-origin:50% 50%;animation:spinCCW 2.1s linear infinite;}
+#ock.dizzy .ockBody{animation:dizzyWobble .55s ease-in-out infinite;}
+@keyframes dizzyWobble{0%,100%{transform:rotate(-4deg) translateY(0)}50%{transform:rotate(4deg) translateY(-3px)}}
+
+/* sad: he slumps, blinks slowly, and a fat tear rolls down */
+#ock.sad .ockBody{animation:slump 3.2s ease-in-out infinite;}
+@keyframes slump{0%,100%{transform:translateY(3px) rotate(-1.5deg)}50%{transform:translateY(6px) rotate(1.5deg)}}
+#ock.sad .sadEye{transform-box:fill-box;transform-origin:50% 50%;animation:sadBlink 3.4s ease-in-out infinite;}
+#ock.sad .sadEye.b{animation-delay:.12s;}
+@keyframes sadBlink{0%,88%,100%{transform:scaleY(1)}94%{transform:scaleY(.2)}}
+#ock.sad .tear{animation:tearRoll 2.4s ease-in infinite;}
+@keyframes tearRoll{0%{opacity:0;transform:translate(84px,74px) scale(.5)}
+  18%{opacity:1;transform:translate(84px,80px) scale(1)}
+  100%{opacity:0;transform:translate(80px,116px) scale(1.15)}}
+/* puffed cheeks while he winds up an attack */
+#ock.windup .blushPulse{animation:cheekPuff .5s ease-in-out infinite;}
+@keyframes cheekPuff{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.35);opacity:.9}}
+
+.armRing{position:absolute;width:130px;height:130px;border:7px dashed #FFC93C;border-radius:50%;
+  z-index:5;pointer-events:none;animation:ringPulse 1s ease-in-out infinite;
+  box-shadow:0 0 26px rgba(255,201,60,.7);}
+.bow{position:absolute;font-size:54px;z-index:7;pointer-events:none;
+  animation:bowPop .5s cubic-bezier(.34,1.56,.64,1) forwards;}
+@keyframes bowPop{0%{transform:scale(0) rotate(-40deg)}60%{transform:scale(1.35) rotate(10deg)}100%{transform:scale(1) rotate(0)}}
+
+/* ---- boss projectiles ---- */
+.beach{position:absolute;font-size:80px;z-index:7;will-change:transform;
+  animation:beachSpin 1.4s linear infinite;filter:drop-shadow(0 6px 10px rgba(0,0,0,.25));}
+@keyframes beachSpin{to{transform:rotate(360deg)}}
+.bubbleFx{position:absolute;font-size:44px;z-index:5;opacity:.8;animation:bubUp 3.4s ease-out forwards;}
+@keyframes bubUp{0%{opacity:0;transform:translateY(0) scale(.5)}20%{opacity:.85}
+  100%{opacity:0;transform:translateY(-260px) translateX(-90px) scale(1.3)}}
+.sweepArm{position:absolute;height:34px;z-index:7;border-radius:17px;
+  background:linear-gradient(#8f5fd8,#7B47C9);box-shadow:0 0 18px rgba(155,80,220,.8);
+  border:5px dashed #C9A7F0;}
+
+/* ---- WEB SHIELD (hold to block) ---- */
+#shield{position:absolute;width:170px;height:170px;z-index:7;pointer-events:none;display:none;
+  will-change:transform;}
+#shield.up{display:block;animation:shieldPop .22s cubic-bezier(.34,1.56,.64,1);}
+@keyframes shieldPop{0%{transform:scale(.3);opacity:0}100%{transform:scale(1);opacity:1}}
+#shield svg{width:100%;height:100%;overflow:visible;}
+#shield .shSpin{transform-box:fill-box;transform-origin:50% 50%;animation:shSpin 3.4s linear infinite;}
+@keyframes shSpin{to{transform:rotate(360deg)}}
+#shield .shGlow{transform-box:fill-box;transform-origin:50% 50%;animation:shGlow 1s ease-in-out infinite;}
+@keyframes shGlow{0%,100%{opacity:.55}50%{opacity:1}}
+#shield.hit .shRim{animation:shHit .34s ease-out;}
+@keyframes shHit{0%{transform:scale(1)}40%{transform:scale(1.22)}100%{transform:scale(1)}}
+
+/* ---- block button + stamina meter ---- */
+#blockBtn{position:absolute;left:16px;bottom:16px;width:132px;height:132px;border-radius:34px;
+  border:6px solid #fff;background:#1E5AE8;color:#fff;font-size:58px;pointer-events:auto;
+  box-shadow:0 8px 0 rgba(0,0,0,.22);display:none;align-items:center;justify-content:center;
+  font-family:inherit;z-index:21;}
+#blockBtn.on{display:flex;}
+#blockBtn:active,#blockBtn.held{transform:scale(.92);background:#2f74ff;}
+#blockBtn.empty{opacity:.4;}
+/* the wordless teacher: a control or object that needs attention pulses
+   and throws a halo, instead of a sentence telling him what to do */
+.attn{animation:attnPulse .75s ease-in-out infinite !important;}
+@keyframes attnPulse{
+  0%,100%{transform:scale(1);   box-shadow:0 8px 0 rgba(0,0,0,.22), 0 0 0 0 rgba(255,201,60,.85);}
+  50%    {transform:scale(1.13);box-shadow:0 8px 0 rgba(0,0,0,.22), 0 0 0 26px rgba(255,201,60,0);}}
+#staminaWrap{position:absolute;left:16px;bottom:158px;width:132px;height:26px;border:4px solid #fff;
+  border-radius:13px;background:rgba(0,0,0,.35);display:none;overflow:hidden;z-index:21;}
+#staminaWrap.on{display:block;}
+#staminaFill{height:100%;width:100%;border-radius:9px;background:linear-gradient(90deg,#8ED0FF,#1E5AE8);
+  transition:width .08s linear;}
+#staminaWrap.low #staminaFill{background:linear-gradient(90deg,#ffb36b,#E53935);}
+
+/* ============================================================
+   HUD (unscaled)
+   ============================================================ */
+#hud{position:fixed;inset:0;pointer-events:none;z-index:20;display:none;}
+#muteBtn,#hudMapBtn{position:absolute;top:14px;width:96px;height:96px;border-radius:26px;border:5px solid #fff;
+  background:#1E5AE8;color:#fff;font-size:44px;pointer-events:auto;box-shadow:0 6px 0 rgba(0,0,0,.2);
+  display:flex;align-items:center;justify-content:center;font-family:inherit;}
+#muteBtn{left:14px;} #hudMapBtn{right:14px;background:#7b47c9;}
+#muteBtn:active,#hudMapBtn:active{transform:scale(.93);}
+#tryBadge{position:absolute;top:16px;left:50%;transform:translateX(-50%);background:#E53935;color:#fff;
+  border:5px solid #fff;border-radius:40px;padding:10px 30px;font-size:28px;font-weight:bold;
+  box-shadow:0 6px 0 rgba(0,0,0,.2);white-space:nowrap;}
+#tryBadge.pop{animation:badgePop .4s ease;}
+@keyframes badgePop{0%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.25)}100%{transform:translateX(-50%) scale(1)}}
+#starBar{position:absolute;top:124px;right:18px;background:rgba(255,255,255,.85);border-radius:30px;
+  padding:8px 18px;font-size:38px;display:flex;gap:6px;box-shadow:0 4px 0 rgba(0,0,0,.15);}
+.starSlot{filter:grayscale(1) opacity(.35);transition:filter .3s;} .starSlot.earned{filter:none;}
+#msg{position:absolute;top:126px;left:50%;transform:translateX(-50%);font-size:34px;font-weight:bold;color:#fff;
+  text-shadow:0 3px 0 rgba(0,0,0,.3);background:rgba(30,90,232,.85);padding:10px 30px;border-radius:30px;
+  border:4px solid #fff;opacity:0;white-space:nowrap;max-width:92vw;overflow:hidden;text-overflow:ellipsis;}
+#msg.show{animation:msgIn 2.4s ease forwards;}
+@keyframes msgIn{0%{opacity:0;transform:translateX(-50%) scale(.6)}12%{opacity:1;transform:translateX(-50%) scale(1.08)}
+  20%{transform:translateX(-50%) scale(1)}80%{opacity:1}100%{opacity:0}}
+#hint{position:absolute;bottom:9vh;left:50%;transform:translateX(-50%);font-size:34px;font-weight:bold;color:#fff;
+  background:rgba(229,57,53,.9);border:5px solid #fff;border-radius:40px;padding:14px 34px;
+  animation:hintPulse 1.1s ease-in-out infinite;white-space:nowrap;box-shadow:0 6px 0 rgba(0,0,0,.2);}
+@keyframes hintPulse{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.1)}}
+
+/* ---- the two zones: permanent watermarks, never move ---- */
+#zoneTop,#zoneBot{position:fixed;left:0;width:100%;pointer-events:none;z-index:18;}
+#zoneTop{top:0;height:45%;}
+#zoneBot{bottom:0;height:45%;}
+#zoneTop:before,#zoneTop:after{content:"🕸️";position:absolute;top:118px;font-size:56px;opacity:.34;}
+#zoneTop:before{left:16px;} #zoneTop:after{right:16px;}
+#zoneBot:before{content:"👆";position:absolute;bottom:14px;left:50%;transform:translateX(-50%);font-size:52px;opacity:.3;}
+#zoneTop.cool:before,#zoneTop.cool:after{opacity:.1;}
+#zoneTop.off:before,#zoneTop.off:after{opacity:.08;}
+#zoneBot.off:before{opacity:.07;}
+#zoneTop.flashZone{background:radial-gradient(ellipse at 50% 0%,rgba(255,255,255,.3),transparent 70%);}
+#zoneBot.flashZone{background:radial-gradient(ellipse at 50% 100%,rgba(255,255,255,.3),transparent 70%);}
+/* the throw button — an explicit, always-visible alternative to tapping the top */
+#throwBtn{position:absolute;right:16px;bottom:16px;width:132px;height:132px;border-radius:34px;
+  border:6px solid #fff;background:#0E9E6E;color:#fff;font-size:58px;pointer-events:auto;
+  box-shadow:0 8px 0 rgba(0,0,0,.22);display:flex;align-items:center;justify-content:center;
+  font-family:inherit;z-index:21;}
+#throwBtn:active{transform:scale(.92);}
+#throwBtn.cool{opacity:.42;}
+
+/* ---- boss HUD: arms tied tally (always visibly true) ---- */
+/* sits BELOW #msg (which also lives at top:126px) so the arms tally and the
+   coaching messages never overlap during the fight */
+#bossHud{position:absolute;top:198px;left:50%;transform:translateX(-50%);display:none;
+  background:rgba(123,71,201,.92);border:5px solid #fff;border-radius:34px;padding:8px 26px;
+  color:#fff;font-size:30px;font-weight:bold;white-space:nowrap;box-shadow:0 6px 0 rgba(0,0,0,.2);}
+#bossHud.show{display:block;}
+#bossHud .bows{letter-spacing:2px;}
+
+/* ---- white flash on a landed hit ---- */
+#flash{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:35;}
+#flash.go{animation:flashGo .5s ease-out;}
+@keyframes flashGo{0%{opacity:.85}100%{opacity:0}}
+
+/* ---------- banner + confetti + toast ---------- */
+#banner{position:fixed;top:-160px;left:50%;transform:translateX(-50%);z-index:30;background:#FFC93C;color:#B71C1C;
+  border:6px solid #fff;border-radius:30px;padding:18px 44px;font-size:42px;font-weight:bold;white-space:nowrap;
+  box-shadow:0 10px 0 rgba(0,0,0,.2);transition:top .6s cubic-bezier(.34,1.56,.64,1);}
+#banner.show{top:20px;}
+#confettiBox{position:fixed;inset:0;pointer-events:none;z-index:40;overflow:hidden;}
+.conf{position:absolute;top:-30px;border-radius:3px;animation:confFall linear forwards;}
+@keyframes confFall{0%{transform:translateY(0) rotate(0)}100%{transform:translateY(110vh) rotate(720deg)}}
+#toast{position:fixed;bottom:16vh;left:50%;transform:translateX(-50%) scale(0);z-index:70;background:#E53935;color:#fff;
+  border:5px solid #fff;border-radius:34px;padding:14px 34px;font-size:30px;font-weight:bold;white-space:nowrap;
+  box-shadow:0 6px 0 rgba(0,0,0,.25);transition:transform .25s cubic-bezier(.34,1.56,.64,1);}
+#toast.show{transform:translateX(-50%) scale(1);}
+
+/* ---------- overlays ---------- */
+.overlay{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:20px;text-align:center;padding:20px;}
+/* the start screen must survive a SHORT window — everything scales off vh
+   and the column can scroll rather than clip the title and the PLAY button */
+#startScreen{background:linear-gradient(#87CEEB,#FFE9A8);
+  justify-content:flex-start;overflow-y:auto;overflow-x:hidden;
+  gap:clamp(6px,1.4vh,16px);padding:clamp(8px,2vh,22px) 16px clamp(14px,3vh,26px);}
+#startScreen .bigTitle{font-size:clamp(24px,min(7.4vw,5.6vh),56px);margin-top:auto;}
+#startScreen .bigBtn{font-size:clamp(24px,3.6vh,40px);padding:clamp(12px,2vh,22px) clamp(28px,5vw,54px);
+  min-height:clamp(60px,9vh,96px);}
+.startFoot{font-size:clamp(11px,1.8vh,16px);color:#1a3c6e;font-weight:bold;opacity:.85;
+  background:rgba(255,255,255,.55);padding:5px 16px;border-radius:20px;margin-bottom:auto;}
+
+/* ---- cast row ---- */
+.startPair{display:flex;align-items:flex-end;justify-content:center;gap:clamp(10px,3vw,34px);}
+.castOne{display:flex;flex-direction:column;align-items:center;gap:2px;}
+.castName{font-size:clamp(11px,1.9vh,17px);font-weight:bold;color:#1E5AE8;
+  background:rgba(255,255,255,.8);padding:2px 12px;border-radius:14px;white-space:nowrap;}
+.castName.ock{color:#7B47C9;}
+.vsTag{font-size:clamp(15px,2.6vh,26px);font-weight:bold;color:#fff;background:#E53935;
+  border:3px solid #fff;border-radius:16px;padding:3px 11px;margin-bottom:clamp(14px,3vh,34px);
+  box-shadow:0 4px 0 rgba(0,0,0,.2);}
+#startHero{width:clamp(64px,11vh,120px);height:clamp(78px,13.4vh,147px);
+  animation:idleBounce 1.2s ease-in-out infinite;}
+#startOck{width:clamp(88px,14.6vh,162px);height:clamp(78px,12.9vh,144px);}
+
+/* ---- the control diagram: a little phone split into its two zones ---- */
+.howPhone{width:clamp(180px,min(62vw,30vh),260px);border:5px solid #1E5AE8;border-radius:clamp(14px,2.6vh,24px);
+  overflow:hidden;background:#fff;box-shadow:0 7px 0 rgba(0,0,0,.18);}
+.hz{padding:clamp(5px,1.3vh,11px) 8px;}
+.hz.top{background:linear-gradient(#dff7ec,#eafaf3);}
+.hz.bot{background:linear-gradient(#e6eeff,#f0f5ff);}
+.hz.dead{background:#f2f2f2;color:#9a9a9a;font-size:clamp(9px,1.4vh,13px);padding:clamp(2px,.7vh,6px) 4px;
+  border-top:3px dashed #c2ccd6;border-bottom:3px dashed #c2ccd6;letter-spacing:.06em;}
+.hzIcon{font-size:clamp(20px,3.4vh,34px);line-height:1.1;}
+.hzT{font-size:clamp(12px,2.1vh,20px);font-weight:bold;color:#1E5AE8;line-height:1.15;}
+.hz.top .hzT{color:#0E9E6E;}
+.hzS{font-size:clamp(10px,1.7vh,16px);color:#3a3a3a;line-height:1.2;}
+#winScreen{background:rgba(30,90,232,.92);display:none;}
+.bigTitle{font-size:min(8.4vw,60px);font-weight:bold;color:#E53935;text-shadow:0 4px 0 #fff,0 8px 0 rgba(0,0,0,.15);}
+#winScreen .bigTitle{color:#FFC93C;text-shadow:0 4px 0 rgba(0,0,0,.3);}
+.subTitle{font-size:min(5.2vw,30px);color:#1E5AE8;font-weight:bold;background:rgba(255,255,255,.8);
+  padding:10px 26px;border-radius:26px;}
+.bigBtn{pointer-events:auto;font-family:inherit;font-weight:bold;color:#fff;background:#4CAF50;
+  font-size:40px;padding:22px 54px;border-radius:50px;border:6px solid #fff;box-shadow:0 8px 0 rgba(0,0,0,.25);
+  animation:btnPulse 1.2s ease-in-out infinite;min-height:96px;}
+.bigBtn:active{transform:scale(.93);}
+@keyframes btnPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+.midBtn{pointer-events:auto;font-family:inherit;font-weight:bold;color:#fff;background:#7b47c9;
+  font-size:30px;padding:16px 38px;border-radius:44px;border:5px solid #fff;box-shadow:0 6px 0 rgba(0,0,0,.25);min-height:96px;}
+.midBtn:active{transform:scale(.93);}
+/* the win screen has to survive a short window too */
+#winScreen{justify-content:flex-start;overflow-y:auto;gap:clamp(5px,1.5vh,18px);
+  padding:clamp(10px,2.4vh,24px) 16px;}
+#winScreen .bigTitle{font-size:clamp(19px,min(6.4vw,4.8vh),46px);margin-top:auto;}
+#winScreen .subTitle{font-size:clamp(12px,2vh,26px);}
+#winScreen .bigBtn{font-size:clamp(21px,3.3vh,40px);min-height:clamp(56px,8.4vh,96px);
+  padding:clamp(10px,1.8vh,22px) clamp(24px,5vw,54px);}
+#winScreen .midBtn{font-size:clamp(15px,2.3vh,30px);min-height:clamp(50px,7.4vh,96px);
+  padding:clamp(8px,1.5vh,18px) clamp(18px,4vw,40px);margin-bottom:auto;}
+#winTries{font-size:clamp(12px,2.1vh,26px);}
+#winHonest{font-size:clamp(10px,1.8vh,22px);}
+#winStars{font-size:clamp(34px,6.6vh,76px);display:flex;gap:10px;}
+#winStars span{opacity:0;transform:scale(0);animation:winStar .7s cubic-bezier(.34,1.56,.64,1) forwards;}
+@keyframes winStar{0%{opacity:0;transform:scale(0) rotate(-90deg)}60%{opacity:1;transform:scale(1.3) rotate(10deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
+#winTries{font-size:28px;color:#fff;background:rgba(255,255,255,.18);padding:10px 26px;border-radius:24px;}
+#winHonest{font-size:24px;color:#FFE9A8;}
+
+/* ---------- POWERS I KNOW ---------- */
+#powersScreen{position:fixed;inset:0;z-index:52;display:none;
+  background:linear-gradient(#1E5AE8,#7b47c9);overflow-y:auto;padding:24px 16px 120px;}
+#powersScreen h2{color:#fff;font-size:min(7vw,42px);text-align:center;margin-bottom:18px;
+  text-shadow:0 3px 0 rgba(0,0,0,.3);}
+.powCard{max-width:620px;margin:0 auto 16px;background:rgba(255,255,255,.94);border:5px solid #fff;
+  border-radius:26px;padding:16px 20px;display:flex;gap:16px;align-items:center;}
+.powCard.locked{opacity:.5;}
+.powCard .pi{font-size:60px;flex:0 0 auto;}
+.powCard .pt{font-size:26px;font-weight:bold;color:#1E5AE8;}
+.powCard .pd{font-size:19px;color:#333;}
+#powersClose{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:54;}
+
+/* ---------- LEVEL MAP ---------- */
+#mapScreen{position:fixed;inset:0;z-index:45;display:none;
+  background:linear-gradient(#5a8fd6 0%,#87CEEB 30%,#a8d8ef 60%,#ffd9a0 90%,#FFE9A8 100%);}
+#mapTitle{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:48;font-size:min(6.4vw,40px);
+  font-weight:bold;color:#fff;text-shadow:0 3px 0 rgba(0,0,0,.3);background:rgba(30,90,232,.9);
+  border:5px solid #fff;border-radius:34px;padding:10px 30px;white-space:nowrap;pointer-events:none;}
+#mapScroll{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;touch-action:pan-y;-webkit-overflow-scrolling:touch;}
+#mapPath{position:relative;width:100%;}
+#mapSvg{position:absolute;top:0;left:0;pointer-events:none;}
+.mapDeco{position:absolute;font-size:56px;pointer-events:none;opacity:.9;}
+.mapNode{position:absolute;width:96px;height:96px;border-radius:50%;border:6px solid #fff;
+  display:flex;align-items:center;justify-content:center;font-family:inherit;font-weight:bold;font-size:38px;
+  color:#fff;box-shadow:0 6px 0 rgba(0,0,0,.22);transform:translate(-50%,-50%);pointer-events:auto;}
+.mapNode.play{background:radial-gradient(circle at 35% 30%,#7ee085,#4CAF50);animation:nodePulse 1.1s ease-in-out infinite;}
+@keyframes nodePulse{0%,100%{transform:translate(-50%,-50%) scale(1);box-shadow:0 6px 0 rgba(0,0,0,.22),0 0 0 0 rgba(76,175,80,.5)}
+  50%{transform:translate(-50%,-50%) scale(1.12);box-shadow:0 6px 0 rgba(0,0,0,.22),0 0 0 18px rgba(76,175,80,0)}}
+.mapNode.done{background:radial-gradient(circle at 35% 30%,#7db8ff,#1E5AE8);}
+.mapNode.locked{background:radial-gradient(circle at 35% 30%,#c8c8c8,#8f8f8f);color:#f2f2f2;font-size:32px;}
+.mapNode.boss{border-color:#FFC93C;}
+.mapNode.wiggle{animation:lockWiggle .5s ease;}
+@keyframes lockWiggle{0%,100%{transform:translate(-50%,-50%) rotate(0)}20%{transform:translate(-50%,-50%) rotate(-10deg)}
+  40%{transform:translate(-50%,-50%) rotate(9deg)}60%{transform:translate(-50%,-50%) rotate(-7deg)}80%{transform:translate(-50%,-50%) rotate(5deg)}}
+.nodeStars{position:absolute;left:50%;top:-34px;transform:translateX(-50%);display:flex;gap:2px;font-size:24px;
+  pointer-events:none;white-space:nowrap;}
+.nodeStars .off{filter:grayscale(1) opacity(.4);}
+.nodeStars span:nth-child(1){transform:translateY(8px) rotate(-18deg);}
+.nodeStars span:nth-child(3){transform:translateY(8px) rotate(18deg);}
+.nodeOck{position:absolute;left:50%;bottom:-26px;transform:translateX(-50%);font-size:26px;pointer-events:none;}
+#continueBtn{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);z-index:48;pointer-events:auto;
+  border:6px solid #fff;font-family:inherit;font-weight:bold;color:#fff;background:#4CAF50;font-size:30px;
+  padding:16px 38px;border-radius:50px;box-shadow:0 8px 0 rgba(0,0,0,.25);min-height:96px;white-space:nowrap;
+  animation:btnPulse 1.2s ease-in-out infinite;}
+#continueBtn:active{transform:translateX(-50%) scale(.93);}
+#powersBtn{position:absolute;bottom:18px;right:14px;z-index:48;pointer-events:auto;width:96px;height:96px;
+  border-radius:26px;border:5px solid #fff;background:#E53935;color:#fff;font-size:44px;font-family:inherit;
+  box-shadow:0 6px 0 rgba(0,0,0,.22);}
+#powersBtn:active{transform:scale(.93);}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="scaler">
+    <div class="layer" id="farLayer"></div>
+    <div class="layer" id="midLayer"></div>
+    <div class="layer" id="mainLayer"></div>
+  </div>
+
+  <div id="zoneTop"></div>
+  <div id="zoneBot"></div>
+
+  <div id="hud">
+    <button id="muteBtn" aria-label="sound">🔊</button>
+    <button id="hudMapBtn" aria-label="level map">🗺️</button>
+    <div id="tryBadge">🕸️ Tries: 0</div>
+    <div id="starBar">
+      <span class="starSlot earned" id="st0">⭐</span><span class="starSlot earned" id="st1">⭐</span>
+      <span class="starSlot earned" id="st2">⭐</span>
+    </div>
+    <div id="msg"></div>
+    <div id="bossHud"></div>
+    <div id="hint" style="display:none">👇 ✋ &nbsp;→&nbsp; 🕸️</div>
+    <button id="throwBtn" aria-label="throw a web-ball">🥎</button>
+    <div id="staminaWrap"><div id="staminaFill"></div></div>
+    <button id="blockBtn" aria-label="hold to block">🛡️</button>
+  </div>
+
+  <div id="banner">🕸️ 🌟</div>
+  <div id="confettiBox"></div>
+  <div id="toast"></div>
+  <div id="flash"></div>
+
+  <!-- START -->
+  <div class="overlay" id="startScreen">
+    <div class="bigTitle">🕸️ 🥎 🐙</div>
+
+    <div class="startPair">
+      <div class="castOne"><div id="startHero"></div></div>
+      <div class="vsTag">⚡</div>
+      <div class="castOne"><div id="startOck"></div></div>
+    </div>
+
+    <!-- the whole control scheme, drawn instead of written -->
+    <div class="howPhone">
+      <div class="hz top">
+        <div class="hzIcon">👆</div>
+        <div class="hzS">🥎</div>
+      </div>
+      <div class="hz dead">· · ·</div>
+      <div class="hz bot">
+        <div class="hzIcon">✋</div>
+        <div class="hzS">🕸️ &nbsp; 🛡️</div>
+      </div>
+    </div>
+
+    <button class="bigBtn" id="playBtn">▶️</button>
+    <div class="startFoot">1 · 2 · 3 … 12 &nbsp; ⭐ &nbsp; ☁️</div>
+  </div>
+
+  <!-- LEVEL MAP -->
+  <div id="mapScreen">
+    <div id="mapTitle">🗺️ 🕸️</div>
+    <div id="mapScroll"><div id="mapPath"></div></div>
+    <button id="continueBtn">▶️ Continue</button>
+    <button id="powersBtn" aria-label="powers I know">📖</button>
+  </div>
+
+  <!-- POWERS I KNOW -->
+  <div id="powersScreen">
+    <h2>📖</h2>
+    <div id="powersList"></div>
+    <button class="bigBtn" id="powersClose">👍</button>
+  </div>
+
+  <!-- WIN -->
+  <div class="overlay" id="winScreen">
+    <div class="bigTitle" id="winTitle">🎉</div>
+    <div id="winStars"></div>
+    <div id="winTries"></div>
+    <div id="winHonest"></div>
+    <div class="subTitle">🦸</div>
+    <button class="bigBtn" id="nextBtn">➡️</button>
+    <button class="midBtn" id="toMapBtn">🗺️</button>
+  </div>
+</div>
+<script>
+"use strict";
+/* ================================================================
+   LEVEL LADDER — 12 levels, each strictly harder than the last
+   gap    : gap width as fraction of screen (widest gap in the level)
+   win    : timing window — fraction of the charge sweep that succeeds
+   roofs  : buildings to traverse (gaps = roofs - 1)
+   blobs  : drifting goo-blobs = free, penalty-free practice targets
+   arms   : arms Doc Ock must have tied to be beaten (0 = no boss)
+   throwSec: seconds between Doc Ock's attacks
+   armGlow : seconds each arm stays glowing — the shot window
+   atkDur : how long his thrown ball takes to arrive (lower = faster = harder)
+   volley : how many things he throws at once
+   Every level is strictly harder than the one before it on gap AND win.
+   ================================================================ */
+const LEVELS = [
+  /*  1 */ {gap:0.15,win:0.95,roofs:2,blobs:1,arms:0,throwSec:0,  armGlow:0,  atkDur:0,  volley:0,twist:'tutorial'},
+  /*  2 */ {gap:0.17,win:0.90,roofs:2,blobs:2,arms:0,throwSec:0,  armGlow:0,  atkDur:0,  volley:0,twist:'ballTut'},
+  /*  3 */ {gap:0.19,win:0.86,roofs:3,blobs:2,arms:3,throwSec:3.8,armGlow:4.6,atkDur:2.6,volley:1,twist:'firstOck'},
+  /*  4 */ {gap:0.21,win:0.82,roofs:3,blobs:3,arms:4,throwSec:3.4,armGlow:4.0,atkDur:2.5,volley:1,twist:null},
+  /*  5 */ {gap:0.23,win:0.79,roofs:3,blobs:3,arms:4,throwSec:3.1,armGlow:3.6,atkDur:2.3,volley:1,twist:'high'},
+  /*  6 */ {gap:0.25,win:0.76,roofs:4,blobs:4,arms:4,throwSec:2.8,armGlow:3.2,atkDur:2.2,volley:1,twist:'skyshot'},
+  /*  7 */ {gap:0.26,win:0.73,roofs:4,blobs:4,arms:5,throwSec:2.5,armGlow:2.9,atkDur:2.0,volley:1,twist:'sweep'},
+  /*  8 */ {gap:0.28,win:0.70,roofs:4,blobs:4,arms:5,throwSec:2.3,armGlow:2.6,atkDur:1.9,volley:1,twist:'hop'},
+  /*  9 */ {gap:0.29,win:0.68,roofs:5,blobs:5,arms:5,throwSec:2.1,armGlow:2.4,atkDur:1.8,volley:2,twist:'anchor'},
+  /* 10 */ {gap:0.31,win:0.65,roofs:5,blobs:5,arms:6,throwSec:1.9,armGlow:2.2,atkDur:1.7,volley:2,twist:'twoGlow'},
+  /* 11 */ {gap:0.32,win:0.63,roofs:5,blobs:6,arms:6,throwSec:1.7,armGlow:2.0,atkDur:1.6,volley:2,twist:'sunset'},
+  /* 12 */ {gap:0.34,win:0.60,roofs:6,blobs:6,arms:6,throwSec:1.5,armGlow:1.8,atkDur:1.5,volley:2,twist:'finale'},
+];
+const NLV = LEVELS.length;
+/* hard floors — he is four, so nothing ever gets faster than this */
+const GLOW_FLOOR = 1.6, THROW_FLOOR = 1.4, ATK_FLOOR = 1.4;
+const BIG_FRAC = 0.40;
+
+/* Every level opens with a single emoji. No sentences anywhere. */
+const LEVEL_CUES = {1:'👇',2:'🥎',3:'🐙',6:'🚀',7:'🛡️',9:'🎯',10:'👀',11:'🌇',12:'🍦'};
+
+/* ================================================================
+   WORLD GEOMETRY (design units; world is 700 tall, scaled to fit)
+   ================================================================ */
+const WORLD_H = 700, ROOF_W = 260, BASE_ROOF_Y = 430, CLOUD_TOP = 575;
+const OCK_GAP = 430;                 // world px between last roof and boss tower
+let roofs = [], gapsMeta = [], WORLD_W = 2000;
+const heroHomeX = i => roofs[i].x + roofs[i].w - 60;
+const roofYof = i => roofs[i].y;
+
+/* ================================================================
+   PERSISTENCE — localStorage "yuvaan_spidey2", silent fallback
+   ================================================================ */
+const SAVE_KEY = 'yuvaan_spidey3';
+let save = { unlocked:1, stars:new Array(NLV).fill(0), best:new Array(NLV).fill(0),
+             powers:{swing:false,throw:false,block:false,sky:false,anchor:false}, pops:0, throws:0, blocks:0 };
+function loadSave(){
+  try{
+    const raw = localStorage.getItem(SAVE_KEY);
+    if(!raw) return;
+    const d = JSON.parse(raw);
+    if(!d || typeof d !== 'object') return;
+    save.unlocked = Math.min(NLV, Math.max(1,(d.unlocked|0)||1));
+    if(Array.isArray(d.stars)) save.stars = d.stars.slice(0,NLV).map(x=>Math.min(3,Math.max(0,x|0)));
+    if(Array.isArray(d.best))  save.best  = d.best.slice(0,NLV).map(x=>Math.max(0,x|0));
+    while(save.stars.length<NLV) save.stars.push(0);
+    while(save.best.length<NLV)  save.best.push(0);
+    if(d.powers && typeof d.powers==='object') Object.assign(save.powers,d.powers);
+    save.pops = Math.max(0,(d.pops|0)); save.throws = Math.max(0,(d.throws|0));
+    save.blocks = Math.max(0,(d.blocks|0));
+  }catch(e){ /* in-memory fallback */ }
+}
+function persist(){ try{ localStorage.setItem(SAVE_KEY, JSON.stringify(save)); }catch(e){} }
+loadSave();
+
+/* ================================================================
+   STATE
+   ================================================================ */
+const S = {
+  phase:'start',   // start|map|idle|charging|swinging|falling|bouncing|returning|boss|hitstop|walking|win
+  level:1, roof:0, tries:0, missesOnGap:0, throws:0, pops:0,
+  power:0, chargeDir:1,
+  camX:0, scale:1, viewW:900,
+  fallX:0, vy:0, time:0,
+  lastFire:-99, onBossRoof:false, skyShotUsed:false, frameOck:false,
+  /* the shield: hold to raise it, but it runs out — so he cannot just
+     hold it forever and win.  Learning WHEN to raise it is the point. */
+  shUp:false, shE:1, shLock:0, blocks:0,
+};
+const SH_DRAIN=1/1.5, SH_FILL=1/2.0, SH_REFUND=0.25;
+const hero = { x:0, y:BASE_ROOF_Y, rot:0, sx:1, sy:1 };
+let LV = LEVELS[0];
+
+/* live actor lists */
+let balls = [];      // {x,y,vx,vy,el,tgt,life}
+let blobs = [];      // {x,y,el,ring,alive,sky,gap,drift,phase}
+let beaches = [];    // {x,y,t,dur,x0,y0,x1,y1,el}
+let sweeps = [];     // {el,t,dur,y,live}
+let bows = [];
+
+/* boss */
+const OCK = {
+  el:null, live:false, x:0, y:0, armsTotal:4, tied:[false,false,false,false,false,false],
+  glowing:[], glowT:0, atkT:0, ringEls:[], stunT:0, act:'idle', actT:0, hurtT:0,
+};
+
+/* ================================================================
+   DOM REFS
+   ================================================================ */
+const $ = id => document.getElementById(id);
+const scaler=$('scaler'), mainL=$('mainLayer'), midL=$('midLayer'), farL=$('farLayer'), stage=$('stage');
+
+/* ---------------- ART: Spidey ---------------- */
+function heroSVG(){
+  return `<svg viewBox="0 0 100 130" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+    <g class="armL"><rect x="24" y="72" width="12" height="32" rx="6" fill="#E53935"/>
+      <circle cx="30" cy="103" r="7" fill="#ef6f6c"/></g>
+    <g class="armR"><rect x="64" y="72" width="12" height="32" rx="6" fill="#E53935"/>
+      <circle cx="70" cy="103" r="7" fill="#ef6f6c"/></g>
+    <rect x="37" y="102" width="11" height="24" rx="5.5" fill="#E53935"/>
+    <rect x="52" y="102" width="11" height="24" rx="5.5" fill="#E53935"/>
+    <rect x="31" y="66" width="38" height="44" rx="17" fill="#1E5AE8"/>
+    <circle cx="34" cy="74" r="7" fill="#E53935"/><circle cx="66" cy="74" r="7" fill="#E53935"/>
+    <circle cx="50" cy="38" r="30" fill="#E53935"/>
+    <g stroke="#FFF" stroke-width="2" fill="none" opacity="0.4">
+      <path d="M32 20 Q50 32 68 20"/><path d="M26 32 Q50 46 74 32"/><path d="M24 44 Q50 60 76 44"/>
+      <line x1="50" y1="9" x2="28" y2="48"/><line x1="50" y1="9" x2="43" y2="56"/>
+      <line x1="50" y1="9" x2="57" y2="56"/><line x1="50" y1="9" x2="72" y2="48"/>
+    </g>
+    <ellipse cx="38" cy="42" rx="10.5" ry="14.5" fill="#FFF" stroke="#111" stroke-width="2.5" transform="rotate(-14 38 42)"/>
+    <ellipse cx="62" cy="42" rx="10.5" ry="14.5" fill="#FFF" stroke="#111" stroke-width="2.5" transform="rotate(14 62 42)"/>
+  </svg>`;
+}
+/* ---------------- ART: Doc Ock (friendly-silly, 4-6 noodle arms) ---------------- */
+function ockSVG(nArms){
+  const arms = [
+    {c:'t1', d:'M86 118 C 52 106 30 118 22 98',  tip:[22,98]},
+    {c:'t2', d:'M88 150 C 54 164 32 158 20 136', tip:[20,136]},
+    {c:'t3', d:'M134 118 C 168 106 190 118 198 98', tip:[198,98]},
+    {c:'t4', d:'M132 150 C 166 164 188 158 200 136',tip:[200,136]},
+    {c:'t5', d:'M84 104 C 48 82 30 88 18 66',    tip:[18,66]},
+    {c:'t6', d:'M136 104 C 172 82 190 88 202 66', tip:[202,66]},
+  ].slice(0, nArms);
+  const tents = arms.map((a,i)=>
+    `<g class="tent ${a.c}" data-arm="${i}">
+       <path d="${a.d}" stroke="#7B47C9" stroke-width="14"/>
+       <path d="${a.d}" stroke="#C9A7F0" stroke-width="5" stroke-dasharray="2 12"/>
+     </g>`).join('');
+  return `<svg class="ock" viewBox="0 0 220 195" xmlns="http://www.w3.org/2000/svg">
+    <g fill="none" stroke-linecap="round">${tents}</g>
+    <g class="ockBody">
+      <ellipse cx="92" cy="178" rx="15" ry="7" fill="#6B4A2F"/>
+      <ellipse cx="128" cy="178" rx="15" ry="7" fill="#6B4A2F"/>
+      <ellipse cx="110" cy="138" rx="44" ry="36" fill="#4CAF50"/>
+      <ellipse cx="110" cy="146" rx="29" ry="24" fill="#7BC96F"/>
+      <circle cx="110" cy="118" r="4.5" fill="#FFC93C"/>
+      <circle cx="110" cy="132" r="4.5" fill="#FFC93C"/>
+      <rect x="86" y="94" width="48" height="12" rx="6" fill="#FFC93C"/>
+      <circle cx="110" cy="60" r="38" fill="#FFD9A0"/>
+      <circle class="blushPulse" cx="80" cy="80" r="8" fill="#FF8AC5" opacity=".55"/>
+      <circle class="blushPulse" cx="140" cy="80" r="8" fill="#FF8AC5" opacity=".55"/>
+      <path d="M72 62 A38 38 0 0 1 148 62 Q128 74 110 66 Q92 74 72 62 Z" fill="#6B4A2F"/>
+
+      <!-- ===== FACE 1 of 3 — HAPPY (default) ===== -->
+      <g class="faceIdle">
+        <path class="ockMouth" d="M95 84 Q110 100 125 84 Z" fill="#8E3B36"/>
+        <path d="M104 90 Q110 98 116 90 Z" fill="#FF8AC5"/>
+        <circle cx="93" cy="66" r="16" fill="#FFF" stroke="#FFC93C" stroke-width="5"/>
+        <circle cx="127" cy="66" r="16" fill="#FFF" stroke="#FFC93C" stroke-width="5"/>
+        <rect x="104" y="63" width="12" height="6" rx="3" fill="#FFC93C"/>
+        <circle class="pupil" cx="93" cy="68" r="6.5" fill="#222"/>
+        <circle class="pupil b" cx="127" cy="68" r="6.5" fill="#222"/>
+        <circle cx="90" cy="64" r="2" fill="#FFF"/><circle cx="124" cy="64" r="2" fill="#FFF"/>
+      </g>
+
+      <!-- ===== FACE 2 of 3 — DIZZY (the moment an arm gets tied) ===== -->
+      <g class="faceDizzy">
+        <!-- open "oh!" mouth -->
+        <ellipse cx="110" cy="90" rx="11" ry="13" fill="#8E3B36"/>
+        <ellipse cx="110" cy="95" rx="6" ry="6" fill="#FF8AC5"/>
+        <circle cx="93" cy="66" r="16" fill="#FFF" stroke="#FFC93C" stroke-width="5"/>
+        <circle cx="127" cy="66" r="16" fill="#FFF" stroke="#FFC93C" stroke-width="5"/>
+        <rect x="104" y="63" width="12" height="6" rx="3" fill="#FFC93C"/>
+        <!-- spinning spiral eyes -->
+        <g transform="translate(93,67)"><path class="spiral" fill="none" stroke="#222" stroke-width="2.6"
+          stroke-linecap="round" d="M0 0 C2 -2 5 0 5 3 C5 7 0 9 -4 7 C-9 5 -10 -2 -6 -6 C-1 -11 7 -10 10 -5"/></g>
+        <g transform="translate(127,67)"><path class="spiral b" fill="none" stroke="#222" stroke-width="2.6"
+          stroke-linecap="round" d="M0 0 C2 -2 5 0 5 3 C5 7 0 9 -4 7 C-9 5 -10 -2 -6 -6 C-1 -11 7 -10 10 -5"/></g>
+        <!-- circling stars over his head -->
+        <g class="ockStars" fill="#FFC93C" stroke="#E8A700" stroke-width="1.5">
+          <path class="st" transform="translate(138,10)" d="M0 -8 L2.4 -2.4 L8 0 L2.4 2.4 L0 8 L-2.4 2.4 L-8 0 L-2.4 -2.4 Z"/>
+          <path class="st" transform="translate(110,-18)" d="M0 -8 L2.4 -2.4 L8 0 L2.4 2.4 L0 8 L-2.4 2.4 L-8 0 L-2.4 -2.4 Z"/>
+          <path class="st" transform="translate(82,10)" d="M0 -8 L2.4 -2.4 L8 0 L2.4 2.4 L0 8 L-2.4 2.4 L-8 0 L-2.4 -2.4 Z"/>
+          <path class="st" transform="translate(110,38)" d="M0 -6 L1.8 -1.8 L6 0 L1.8 1.8 L0 6 L-1.8 1.8 L-6 0 L-1.8 -1.8 Z"/>
+        </g>
+      </g>
+
+      <!-- ===== FACE 3 of 3 — SAD (after he has been tangled) ===== -->
+      <g class="faceSad">
+        <!-- wobbly frown -->
+        <path d="M94 97 Q110 83 126 97" fill="none" stroke="#8E3B36" stroke-width="6" stroke-linecap="round"/>
+        <circle cx="93" cy="66" r="16" fill="#FFF" stroke="#FFC93C" stroke-width="5"/>
+        <circle cx="127" cy="66" r="16" fill="#FFF" stroke="#FFC93C" stroke-width="5"/>
+        <rect x="104" y="63" width="12" height="6" rx="3" fill="#FFC93C"/>
+        <!-- droopy little pupils, looking down -->
+        <ellipse class="sadEye"  cx="93"  cy="73" rx="5.5" ry="4.5" fill="#222"/>
+        <ellipse class="sadEye b" cx="127" cy="73" rx="5.5" ry="4.5" fill="#222"/>
+        <!-- sad slanted brows -->
+        <path d="M81 50 Q92 45 103 52" fill="none" stroke="#6B4A2F" stroke-width="5" stroke-linecap="round"/>
+        <path d="M139 50 Q128 45 117 52" fill="none" stroke="#6B4A2F" stroke-width="5" stroke-linecap="round"/>
+        <!-- one big cartoon tear -->
+        <path class="tear" d="M0 0 C4 5 6 9 6 12 C6 16 3 19 0 19 C-3 19 -6 16 -6 12 C-6 9 -4 5 0 0 Z"
+          fill="#8ED0FF" stroke="#5FB8F0" stroke-width="1.5" transform="translate(84,80)"/>
+      </g>
+    </g>
+  </svg>`;
+}
+/* arm tip in Ock-local viewBox coords (220x195) */
+const ARM_TIPS = [[22,98],[20,136],[198,98],[200,136],[18,66],[202,66]];
+const OCK_W = 300, OCK_H = 266;
+function armWorldPos(i){
+  const t = ARM_TIPS[i] || ARM_TIPS[0];
+  return { x: OCK.x + t[0]/220*OCK_W, y: OCK.y + t[1]/195*OCK_H };
+}
+/* ---------------- ART: web-ball + splat ---------------- */
+function ballSVG(){
+  return `<svg class="webball" viewBox="0 0 110 60" xmlns="http://www.w3.org/2000/svg">
+    <g class="trail">
+      <line x1="2" y1="21" x2="22" y2="24" stroke="#FFF" stroke-width="3" stroke-linecap="round" opacity=".35"/>
+      <line x1="2" y1="39" x2="22" y2="36" stroke="#FFF" stroke-width="3" stroke-linecap="round" opacity=".35"/>
+      <circle cx="18" cy="30" r="7" fill="#FFF" opacity=".18"/>
+      <circle cx="34" cy="30" r="10" fill="#FFF" opacity=".32"/>
+      <circle cx="52" cy="30" r="14" fill="#FFF" opacity=".52"/>
+    </g>
+    <g class="ballCore">
+      <circle cx="80" cy="30" r="20" fill="#FFF" stroke="#D8E4EE" stroke-width="2"/>
+      <circle cx="66" cy="47" r="4" fill="#FFF"/><circle cx="96" cy="45" r="3.2" fill="#FFF"/>
+      <circle cx="94" cy="14" r="3.6" fill="#FFF"/>
+      <g class="ballWeb" stroke="#8fb4cf" stroke-width="2" fill="none" stroke-linecap="round">
+        <line x1="80" y1="30" x2="80" y2="11"/><line x1="80" y1="30" x2="93.4" y2="16.6"/>
+        <line x1="80" y1="30" x2="99" y2="30"/><line x1="80" y1="30" x2="93.4" y2="43.4"/>
+        <line x1="80" y1="30" x2="80" y2="49"/><line x1="80" y1="30" x2="66.6" y2="43.4"/>
+        <line x1="80" y1="30" x2="61" y2="30"/><line x1="80" y1="30" x2="66.6" y2="16.6"/>
+        <path d="M88 30 Q85.08 32.1 85.66 35.66 Q82.1 35.08 80 38 Q77.9 35.08 74.34 35.66 Q74.92 32.1 72 30 Q74.92 27.9 74.34 24.34 Q77.9 24.92 80 22 Q82.1 24.92 85.66 24.34 Q85.08 27.9 88 30 Z"/>
+        <path d="M95 30 Q90.16 34.21 90.6 40.6 Q84.21 40.16 80 45 Q75.79 40.16 69.4 40.6 Q69.84 34.21 65 30 Q69.84 25.79 69.4 19.4 Q75.79 19.84 80 15 Q84.21 19.84 90.6 19.4 Q90.16 25.79 95 30 Z"/>
+      </g>
+    </g>
+  </svg>`;
+}
+function splatSVG(){
+  return `<svg viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="65" cy="65" r="30" fill="#FFF" opacity=".95"/>
+    <g stroke="#FFF" stroke-width="9" stroke-linecap="round" opacity=".95">
+      <line x1="65" y1="65" x2="65" y2="16"/><line x1="65" y1="65" x2="99" y2="31"/>
+      <line x1="65" y1="65" x2="114" y2="65"/><line x1="65" y1="65" x2="99" y2="99"/>
+      <line x1="65" y1="65" x2="65" y2="114"/><line x1="65" y1="65" x2="31" y2="99"/>
+      <line x1="65" y1="65" x2="16" y2="65"/><line x1="65" y1="65" x2="31" y2="31"/>
+    </g>
+    <g stroke="#FFF" stroke-width="5" fill="none" opacity=".8">
+      <circle cx="65" cy="65" r="44" stroke-dasharray="6 14"/>
+    </g>
+    <circle cx="42" cy="40" r="6" fill="#FFF"/><circle cx="92" cy="46" r="5" fill="#FFF"/>
+    <circle cx="46" cy="94" r="4.5" fill="#FFF"/>
+  </svg>`;
+}
+/* ---------------- ART: the web shield ---------------- */
+function shieldSVG(){
+  return `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <circle class="shGlow" cx="100" cy="100" r="92" fill="rgba(142,208,255,.22)"
+      stroke="rgba(255,255,255,.55)" stroke-width="4"/>
+    <g class="shSpin" stroke="#FFF" fill="none" stroke-linecap="round">
+      <circle class="shRim" cx="100" cy="100" r="86" stroke-width="7" stroke-dasharray="14 12" opacity=".95"/>
+      <circle cx="100" cy="100" r="62" stroke-width="4" stroke-dasharray="8 14" opacity=".8"/>
+      <circle cx="100" cy="100" r="36" stroke-width="4" stroke-dasharray="6 10" opacity=".7"/>
+      <g stroke-width="4" opacity=".8">
+        <line x1="100" y1="100" x2="100" y2="14"/><line x1="100" y1="100" x2="161" y2="39"/>
+        <line x1="100" y1="100" x2="186" y2="100"/><line x1="100" y1="100" x2="161" y2="161"/>
+        <line x1="100" y1="100" x2="100" y2="186"/><line x1="100" y1="100" x2="39" y2="161"/>
+        <line x1="100" y1="100" x2="14" y2="100"/><line x1="100" y1="100" x2="39" y2="39"/>
+      </g>
+    </g>
+    <circle cx="100" cy="100" r="15" fill="#FFF" opacity=".92"/>
+  </svg>`;
+}
+
+/* ---------------- ART: boss-arena water tower ---------------- */
+function towerSVG(){
+  return `<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">
+    <path d="M100 6 L168 74 L32 74 Z" fill="#8B5E3C"/>
+    <rect x="32" y="74" width="136" height="122" rx="10" fill="#A9714A"/>
+    <g stroke="#7A4F31" stroke-width="3">
+      <line x1="52" y1="80" x2="52" y2="192"/><line x1="68" y1="80" x2="68" y2="192"/>
+      <line x1="84" y1="80" x2="84" y2="192"/><line x1="100" y1="80" x2="100" y2="192"/>
+      <line x1="116" y1="80" x2="116" y2="192"/><line x1="132" y1="80" x2="132" y2="192"/>
+      <line x1="148" y1="80" x2="148" y2="192"/>
+    </g>
+    <rect x="32" y="112" width="136" height="9" rx="4.5" fill="#B98A5E"/>
+    <rect x="32" y="164" width="136" height="9" rx="4.5" fill="#B98A5E"/>
+    <line x1="54" y1="206" x2="146" y2="252" stroke="#5F7E93" stroke-width="7" stroke-linecap="round"/>
+    <line x1="146" y1="206" x2="54" y2="252" stroke="#5F7E93" stroke-width="7" stroke-linecap="round"/>
+    <rect x="46" y="192" width="11" height="64" rx="5.5" fill="#5F7E93" transform="rotate(9 51 192)"/>
+    <rect x="143" y="192" width="11" height="64" rx="5.5" fill="#5F7E93" transform="rotate(-9 148 192)"/>
+    <circle cx="100" cy="16" r="7" fill="#E53935"/>
+  </svg>`;
+}
+
+/* persistent world elements */
+const cloudEl = document.createElement('div');
+cloudEl.id='cloud';
+cloudEl.innerHTML = `
+  <div class="puff" style="left:0;top:44px;width:110px;height:76px"></div>
+  <div class="puff" style="left:70px;top:14px;width:130px;height:100px"></div>
+  <div class="puff" style="left:170px;top:30px;width:120px;height:86px"></div>
+  <div class="puff" style="left:240px;top:52px;width:90px;height:64px"></div>`;
+
+const fx = document.createElementNS('http://www.w3.org/2000/svg','svg');
+fx.setAttribute('id','fx'); fx.setAttribute('height',WORLD_H);
+fx.innerHTML = `<path id="preview" d="" style="display:none"/>
+  <line id="chargeLine" style="display:none"/>
+  <line id="webLine" style="display:none"/>
+  <g id="splat" style="display:none">
+    ${[0,45,90,135,180,225,270,315].map(a=>{const r=a*Math.PI/180;
+      return `<line x1="${Math.cos(r)*5}" y1="${Math.sin(r)*5}" x2="${Math.cos(r)*16}" y2="${Math.sin(r)*16}"/>`;}).join('')}
+  </g>`;
+
+const heroEl = document.createElement('div');
+heroEl.id='hero';
+heroEl.innerHTML = `<div id="heroInner" class="idle">${heroSVG()}</div>`;
+
+const shieldEl = document.createElement('div');
+shieldEl.id='shield';
+shieldEl.innerHTML = shieldSVG();
+
+let previewEl, chargeLineEl, webLineEl, splatEl, heroInner, truckEl=null, truckX=0;
+function bindFxRefs(){
+  previewEl=$('preview'); chargeLineEl=$('chargeLine');
+  webLineEl=$('webLine'); splatEl=$('splat'); heroInner=$('heroInner');
+}
+
+/* ================================================================
+   LEVEL BUILD
+   ================================================================ */
+let windTimer=null, bubTimer=null;
+function clearTimers(){
+  if(windTimer){clearInterval(windTimer); windTimer=null;}
+  if(bubTimer){clearInterval(bubTimer); bubTimer=null;}
+}
+function clearActors(){
+  balls.forEach(b=>b.el&&b.el.remove());   balls=[];
+  blobs.forEach(b=>{b.el&&b.el.remove(); b.ring&&b.ring.remove();}); blobs=[];
+  beaches.forEach(b=>b.el&&b.el.remove()); beaches=[];
+  sweeps.forEach(s=>s.el&&s.el.remove()); sweeps=[];
+  bows.forEach(b=>b.remove()); bows=[];
+  OCK.ringEls.forEach(r=>r.remove()); OCK.ringEls=[];
+  shieldDown(true);
+  if(OCK.el){OCK.el.remove(); OCK.el=null;}
+  OCK.live=false;
+}
+
+function buildLevel(n){
+  LV = LEVELS[n-1];
+  resize();
+  const vw = S.viewW;
+  const nRoofs = LV.roofs, nGaps = nRoofs-1;
+  clearActors(); clearTimers();
+  S.onBossRoof=false; S.skyShotUsed=false; S.frameOck=false;
+
+  /* --- gaps: ramp width up across the level; special gaps get twists --- */
+  const midG = Math.max(0, Math.floor(nGaps/2));
+  gapsMeta = [];
+  for(let i=0;i<nGaps;i++){
+    const lo = Math.max(0.13, LV.gap-0.03);
+    let frac = nGaps===1 ? LV.gap : lo + (LV.gap-lo)*(i/(nGaps-1));
+    const isSky    = (LV.twist==='skyshot') && i===midG;
+    const isAnchor = (LV.twist==='anchor')  && i===midG;
+    const isBig    = (LV.twist==='big')     && i===midG;
+    if(isBig) frac = BIG_FRAC;
+    gapsMeta.push({ frac, gapPx:Math.max(130,frac*vw),
+      moving:(LV.twist==='move'&&i===midG)||(LV.twist==='sunset'&&(i===1||i===nGaps-1)),
+      sky:isSky, needAnchor:isAnchor, anchorMade:false, barrier:isSky,
+      ax:0, ay:95, baseAx:0, amp:0.05*vw, barEl:null, wallEl:null });
+  }
+
+  /* --- roof heights --- */
+  const ys = new Array(nRoofs).fill(BASE_ROOF_Y);
+  if(LV.twist==='high' && nRoofs>2) ys[nRoofs-1] = BASE_ROOF_Y-70;
+  if(LV.twist==='mixed'){ for(let i=1;i<nRoofs-1;i++) ys[i] = (i%2)?392:466; }
+
+  /* --- lay out roofs --- */
+  roofs=[]; let x=120;
+  for(let i=0;i<nRoofs;i++){
+    const w = (n===NLV && i===nRoofs-1) ? 430 : ROOF_W;
+    roofs.push({x,w,y:ys[i]});
+    x += w + (i<nGaps ? gapsMeta[i].gapPx : 0);
+  }
+  const last = roofs[nRoofs-1];
+  const hasBoss = LV.arms>0;
+  WORLD_W = last.x + last.w + (hasBoss ? OCK_GAP+360 : 340);
+  [farL,midL,mainL].forEach(l=>l.style.width=WORLD_W+'px');
+
+  /* --- anchors per gap --- */
+  for(let i=0;i<nGaps;i++){
+    const m=gapsMeta[i], a=roofs[i], b=roofs[i+1];
+    m.midX = (a.x+a.w+b.x)/2;
+    m.baseAx = (heroHomeX(i)+b.x+110)/2;
+    m.ax = m.baseAx;
+  }
+
+  /* --- parallax skylines --- */
+  farL.innerHTML = `<div id="sun"></div>
+    <div class="decoCloud" style="left:600px;top:70px">☁️</div>
+    <div class="decoCloud" style="left:1400px;top:130px;animation-duration:34s">☁️</div>
+    <div class="decoCloud" style="left:2200px;top:50px;animation-duration:29s">☁️</div>`;
+  let fh='';
+  for(let fx2=0;fx2<WORLD_W;fx2+=150){ const ht=160+((fx2*7919)%170);
+    fh+=`<div class="farB" style="left:${fx2}px;width:110px;height:${ht}px"></div>`; }
+  farL.innerHTML += fh;
+  let mh='';
+  for(let mx=-60;mx<WORLD_W;mx+=210){ const ht=220+((mx*6271)%190);
+    mh+=`<div class="midB" style="left:${mx}px;width:150px;height:${ht}px"></div>`; }
+  midL.innerHTML = mh;
+
+  /* --- main buildings --- */
+  let h='';
+  const drawBldg = (r,i)=>{
+    const purple = i%2===1;
+    h+=`<div class="bldg" style="left:${r.x}px;top:${r.y}px;width:${r.w}px;height:${WORLD_H-r.y}px;
+         background:${purple?'#6B5B95':'#3E6B8C'}"></div>`;
+    h+=`<div class="roofLip ${purple?'purple':''}" style="left:${r.x-8}px;top:${r.y-6}px;width:${r.w+16}px"></div>`;
+    const rows=Math.min(4,Math.floor((WORLD_H-r.y-50)/58));
+    const cols=Math.min(6,Math.floor((r.w-40)/54));
+    for(let row=0;row<rows;row++) for(let col=0;col<cols;col++){
+      const lit=((i*13+row*7+col*5)%3)!==0;
+      h+=`<div class="${lit?'win-lit':'win-dark'}" style="left:${r.x+30+col*54}px;top:${r.y+34+row*58}px"></div>`;
+    }
+  };
+  roofs.forEach(drawBldg);
+
+  /* --- boss tower --- */
+  let ockRoof=null;
+  if(hasBoss){
+    ockRoof = { x:last.x+last.w+OCK_GAP, w:300, y:BASE_ROOF_Y-30 };
+    drawBldg(ockRoof, nRoofs);
+  }
+  mainL.innerHTML = h;
+
+  /* --- barriers / wall-spots / blobs --- */
+  gapsMeta.forEach((m,i)=>{
+    if(m.barrier){
+      const bar=document.createElement('div'); bar.className='barrier';
+      const b=roofs[i+1];
+      bar.style.left=(b.x-16)+'px'; bar.style.top=(b.y-250)+'px'; bar.style.height='250px';
+      mainL.appendChild(bar); m.barEl=bar;
+    }
+    if(m.needAnchor){
+      const w=document.createElement('div'); w.className='wallSpot'; w.textContent='🎯';
+      w.style.left=(m.midX-60)+'px'; w.style.top='60px';
+      mainL.appendChild(w); m.wallEl=w; m.wallX=m.midX; m.wallY=120;
+    }
+  });
+
+  /* goo-blobs — spread over the gaps, plus the sky blob on sky levels */
+  let placed=0;
+  for(let i=0;i<nGaps && placed<LV.blobs;i++){
+    const m=gapsMeta[i];
+    const perGap = Math.ceil((LV.blobs-placed)/(nGaps-i));
+    for(let k=0;k<perGap && placed<LV.blobs;k++){
+      const bx = m.midX + (k-(perGap-1)/2)*130;
+      spawnBlob(bx, 190+((placed*97)%110), false, i);
+      placed++;
+    }
+  }
+  gapsMeta.forEach((m,i)=>{ if(m.sky) spawnBlob(m.midX, 120, true, i); });
+
+  /* --- goal marker / finale --- */
+  truckEl=null;
+  if(n===NLV){
+    truckX = last.x+120;
+    truckEl=document.createElement('div');
+    truckEl.id='truck'; truckEl.className='giant';
+    truckEl.style.left=truckX+'px'; truckEl.style.top=(last.y-150)+'px';
+    truckEl.innerHTML=`<div class="truckBody"></div><div class="truckStripe" style="left:5px"></div>
+      <div class="truckWin"></div><div class="wheel" style="left:26px"></div>
+      <div class="wheel" style="left:140px"></div><div class="truckCone">🍦</div><div class="truckNote">🎵</div>`;
+    mainL.appendChild(truckEl);
+    ['🧒','👧','🦸'].forEach((f,i)=>{
+      const d=document.createElement('div'); d.className='friend'; d.textContent=f;
+      d.style.left=(last.x+20+i*46)+'px'; d.style.top=(last.y-66)+'px';
+      d.style.animationDelay=(i*0.18)+'s'; mainL.appendChild(d);
+    });
+  } else if(!hasBoss){
+    const flag=document.createElement('div'); flag.className='goalFlag'; flag.textContent='🚩';
+    flag.style.left=(last.x+last.w/2-20)+'px'; flag.style.top=(last.y-66)+'px';
+    mainL.appendChild(flag);
+  }
+
+  /* --- Doc Ock on his tower --- */
+  if(hasBoss){
+    const tw=document.createElement('div');
+    /* pushed clear of Doc Ock so it never camouflages a glowing arm */
+    tw.style.cssText=`position:absolute;left:${ockRoof.x+ockRoof.w-30}px;top:${ockRoof.y-250}px;width:190px;height:250px;z-index:1;opacity:.72`;
+    tw.innerHTML=towerSVG();
+    mainL.appendChild(tw);
+
+    OCK.armsTotal = Math.min(6, LV.arms);
+    OCK.tied = new Array(OCK.armsTotal).fill(false);
+    /* early stages: he already tripped over one arm, so it starts tied */
+    if(LV.arms===3) { OCK.armsTotal=4; OCK.tied=new Array(4).fill(false); OCK.tied[3]=true; }
+    OCK.el=document.createElement('div');
+    OCK.el.id='ock';
+    OCK.el.innerHTML = ockSVG(OCK.armsTotal);
+    OCK.x = ockRoof.x + 10;
+    OCK.y = ockRoof.y - OCK_H;
+    OCK.el.style.left=OCK.x+'px'; OCK.el.style.top=OCK.y+'px';
+    mainL.appendChild(OCK.el);
+    OCK.live=false; OCK.glowing=[]; OCK.glowT=0; OCK.atkT=0; OCK.stunT=0; OCK.act='idle';
+    refreshArmClasses();
+    /* place the pre-tied bow if there is one */
+    OCK.tied.forEach((t,i)=>{ if(t) addBow(i); });
+  }
+
+  /* --- fx + cloud + hero on top --- */
+  fx.setAttribute('width',WORLD_W);
+  mainL.appendChild(fx); mainL.appendChild(cloudEl);
+  mainL.appendChild(shieldEl); mainL.appendChild(heroEl);
+  bindFxRefs();
+  shieldDown(true);
+
+  /* --- sky mood, wind, bubbles --- */
+  document.body.classList.toggle('sunset', LV.twist==='sunset');
+  if(LV.twist==='bubbles' || LV.twist==='sunset'){
+    bubTimer=setInterval(()=>{
+      if(!inLevel()) return;
+      const b=document.createElement('div'); b.className='bubbleFx'; b.textContent='🫧';
+      b.style.left=(S.camX+S.viewW*(0.3+Math.random()*0.65))+'px';
+      b.style.top=(360+Math.random()*220)+'px';
+      mainL.appendChild(b); setTimeout(()=>b.remove(),3500);
+    },780);
+  }
+
+  /* --- reset actors --- */
+  hero.x=heroHomeX(0); hero.y=roofYof(0); hero.rot=0; hero.sx=hero.sy=1;
+  heroEl.classList.remove('celebrate');
+  S.roof=0; S.power=0;
+  S.camX=Math.min(Math.max(hero.x-S.viewW*0.35,0),Math.max(0,WORLD_W-S.viewW));
+  positionCloudHome();
+}
+
+/* ================================================================
+   BLOBS — free, penalty-free practice targets
+   ================================================================ */
+function spawnBlob(x,y,sky,gapIdx){
+  const el=document.createElement('div');
+  el.className='blob'+(sky?' sky':''); el.textContent = sky?'🟡':'🟣';
+  el.style.left=(x-37)+'px'; el.style.top=(y-37)+'px';
+  el.style.animationDelay = (Math.random()*1.4)+'s';
+  mainL.appendChild(el);
+  const ring=document.createElement('div');
+  ring.className='blobRing'+(sky?' sky':'');
+  ring.style.left=(x-(sky?75:60))+'px'; ring.style.top=(y-(sky?75:60))+'px';
+  mainL.appendChild(ring);
+  blobs.push({x,y,el,ring,alive:true,sky:!!sky,gap:gapIdx,
+              baseX:x, drift:(Math.random()*2-1)*40, ph:Math.random()*6.28});
+}
+function popBlob(b){
+  if(!b.alive) return;
+  b.alive=false;
+  splatAt(b.x,b.y,true);
+  b.el.remove(); b.ring.remove();
+  S.pops++; save.pops++;
+  sndPop(); sndSparkle();
+  confetti(b.sky?26:10);
+  if(b.sky){
+    /* SKY SHOT — the barrier drops and the far roof opens up */
+    const m=gapsMeta[b.gap];
+    if(m){ m.barrier=false; if(m.barEl){ m.barEl.remove(); m.barEl=null; } }
+    S.skyShotUsed=true;
+    if(!save.powers.sky){ save.powers.sky=true; persist(); }
+    floatText(b.x,b.y-90,'🚀 SKY SHOT!',62);
+    cue('🚀 🌟');
+    banner('🚀 🌟');
+  } else {
+    floatText(b.x,b.y-70,pick(['✨','💥','⭐','🎉']),52);
+  }
+}
+
+/* ================================================================
+   AUDIO — Web Audio chiptune + SFX (no external files)
+   ================================================================ */
+const AU={ctx:null,master:null,musicG:null,muted:false,step:0,nextT:0,whistle:null};
+const mfreq=m=>440*Math.pow(2,(m-69)/12);
+const MELODY=[60,62,64,67, 64,62,60,null, 67,69,72,69, 67,64,62,null,
+              60,64,67,72, 69,67,64,null, 62,64,67,64, 62,60,null,null];
+const BASS=[48,43,45,43, 48,43,45,47];
+function audioInit(){
+  if(AU.ctx){AU.ctx.resume(); return;}
+  AU.ctx=new (window.AudioContext||window.webkitAudioContext)();
+  AU.master=AU.ctx.createGain(); AU.master.gain.value=0.15; AU.master.connect(AU.ctx.destination);
+  AU.musicG=AU.ctx.createGain(); AU.musicG.gain.value=0.7; AU.musicG.connect(AU.master);
+  AU.nextT=AU.ctx.currentTime+0.1;
+  setInterval(musicSchedule,30);
+}
+function musicSchedule(){
+  if(!AU.ctx||AU.muted){ if(AU.ctx) AU.nextT=AU.ctx.currentTime+0.1; return; }
+  const stepDur=60/110/2;
+  while(AU.nextT<AU.ctx.currentTime+0.15){
+    const n=MELODY[AU.step%32];
+    if(n!==null) tone(mfreq(n),'square',AU.nextT,0.22,0.045,AU.musicG);
+    if(AU.step%4===0){ const b=BASS[(AU.step/4)%8]; tone(mfreq(b),'triangle',AU.nextT,0.45,0.09,AU.musicG); }
+    AU.step++; AU.nextT+=stepDur;
+  }
+}
+function tone(freq,type,t,dur,vol,dest){
+  const o=AU.ctx.createOscillator(), g=AU.ctx.createGain();
+  o.type=type; o.frequency.setValueAtTime(freq,t);
+  g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(vol,t+0.015);
+  g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+  o.connect(g); g.connect(dest||AU.master); o.start(t); o.stop(t+dur+0.05);
+}
+function noiseBurst(t,dur,vol){
+  const len=Math.max(1,Math.floor(AU.ctx.sampleRate*dur));
+  const buf=AU.ctx.createBuffer(1,len,AU.ctx.sampleRate), d=buf.getChannelData(0);
+  for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*(1-i/len);
+  const src=AU.ctx.createBufferSource(); src.buffer=buf;
+  const g=AU.ctx.createGain(); g.gain.value=vol;
+  src.connect(g); g.connect(AU.master); src.start(t);
+}
+const sfxOK=()=>AU.ctx&&!AU.muted;
+function sndThwip(){ if(sfxOK()) noiseBurst(AU.ctx.currentTime,0.1,0.5); }
+function sndBoing(){ if(!sfxOK())return; const t=AU.ctx.currentTime;
+  const o=AU.ctx.createOscillator(),g=AU.ctx.createGain(); o.type='sine';
+  o.frequency.setValueAtTime(160,t); o.frequency.exponentialRampToValueAtTime(620,t+0.09);
+  o.frequency.exponentialRampToValueAtTime(120,t+0.4);
+  g.gain.setValueAtTime(0.35,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.45);
+  o.connect(g); g.connect(AU.master); o.start(t); o.stop(t+0.5); }
+function sndOops(){ if(!sfxOK())return; const t=AU.ctx.currentTime;
+  tone(392,'triangle',t,0.18,0.12); tone(330,'triangle',t+0.16,0.25,0.12); }
+function sndYay(){ if(!sfxOK())return; const t=AU.ctx.currentTime;
+  tone(523,'square',t,0.12,0.12); tone(659,'square',t+0.1,0.12,0.12); tone(784,'square',t+0.2,0.2,0.12); }
+function sndSparkle(){ if(!sfxOK())return; const t=AU.ctx.currentTime;
+  [1046,1318,1568].forEach((f,i)=>tone(f,'triangle',t+i*0.07,0.16,0.1)); }
+function sndPop(){ if(!sfxOK())return; const t=AU.ctx.currentTime;
+  tone(880,'sine',t,0.1,0.16); tone(1174,'sine',t+0.06,0.14,0.14); }
+function sndSplat(){ if(!sfxOK())return; const t=AU.ctx.currentTime;
+  noiseBurst(t,0.16,0.4); tone(220,'sine',t,0.14,0.14); }
+function sndOop(){ if(!sfxOK())return; const t=AU.ctx.currentTime;
+  tone(500,'sine',t,0.1,0.16); tone(380,'sine',t+0.09,0.18,0.16); }
+function sndFanfare(){ if(!sfxOK())return; const t=AU.ctx.currentTime;
+  [523,659,784,1046].forEach((f,i)=>tone(f,'triangle',t+i*0.16,0.34,0.2));
+  tone(1046,'triangle',t+0.72,0.7,0.22); noiseBurst(t+0.72,0.4,0.25); }
+function sndSlide(){ if(!sfxOK())return; const t=AU.ctx.currentTime;
+  const o=AU.ctx.createOscillator(),g=AU.ctx.createGain(); o.type='sine';
+  o.frequency.setValueAtTime(900,t); o.frequency.exponentialRampToValueAtTime(180,t+0.9);
+  g.gain.setValueAtTime(0.14,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.95);
+  o.connect(g); g.connect(AU.master); o.start(t); o.stop(t+1); }
+function whistleStart(dur){ if(!sfxOK())return; const t=AU.ctx.currentTime;
+  const o=AU.ctx.createOscillator(),g=AU.ctx.createGain(); o.type='sine';
+  o.frequency.setValueAtTime(280,t); o.frequency.linearRampToValueAtTime(880,t+dur);
+  g.gain.setValueAtTime(0.07,t); g.gain.linearRampToValueAtTime(0.001,t+dur+0.05);
+  o.connect(g); g.connect(AU.master); o.start(t); o.stop(t+dur+0.1); AU.whistle=o; }
+function whistleStop(){ if(AU.whistle){ try{AU.whistle.stop();}catch(e){} AU.whistle=null; } }
+
+$('muteBtn').addEventListener('pointerdown',e=>{
+  e.stopPropagation(); e.preventDefault();
+  AU.muted=!AU.muted; $('muteBtn').textContent=AU.muted?'🔇':'🔊';
+  if(AU.ctx&&!AU.muted) AU.ctx.resume();
+});
+
+/* ================================================================
+   TWEEN MINI-ENGINE
+   ================================================================ */
+const tweens=[];
+function tween(dur,fn,done){ tweens.push({t:0,dur,fn,done}); }
+function clearTweens(){ tweens.length=0; }
+const easeInOut=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+const qBez=(a,c,b,t)=>{const u=1-t; return u*u*a+2*u*t*c+t*t*b;};
+
+/* ================================================================
+   UI HELPERS
+   ================================================================ */
+/* TEXT POLICY: Yuvaan is 4 and cannot read. This game shows NO WORDS
+   during play — only pictures, emoji, numbers, glow and sound.
+   showMsg() is kept as a no-op so nothing has to be rewired. */
+function showMsg(){ /* intentionally silent — no words on the playfield */ }
+/* the only on-screen message: one or two emoji */
+function cue(sym){
+  const m=$('msg'); m.classList.remove('show'); void m.offsetWidth;
+  m.textContent=sym; m.classList.add('show');
+}
+/* draw the eye to a control or an object, with no words at all */
+function attn(el, ms){
+  if(!el) return;
+  el.classList.remove('attn'); void el.offsetWidth; el.classList.add('attn');
+  setTimeout(()=>el.classList.remove('attn'), ms||3000);
+}
+function floatText(wx,wy,text,size){
+  const d=document.createElement('div'); d.className='floatText';
+  d.style.left=wx+'px'; d.style.top=wy+'px';
+  if(size) d.style.fontSize=size+'px';
+  d.textContent=text; mainL.appendChild(d);
+  d.addEventListener('animationend',()=>d.remove());
+}
+let bannerTimer=null;
+function banner(text){
+  const b=$('banner'); b.textContent=text; b.classList.add('show');
+  if(bannerTimer) clearTimeout(bannerTimer);
+  bannerTimer=setTimeout(()=>b.classList.remove('show'),1800);
+}
+function flash(){ const f=$('flash'); f.classList.remove('go'); void f.offsetWidth; f.classList.add('go'); }
+function splatAt(x,y,fade){
+  const d=document.createElement('div'); d.className='splatMark';
+  d.style.left=(x-65)+'px'; d.style.top=(y-65)+'px';
+  d.innerHTML=splatSVG(); mainL.appendChild(d);
+  if(fade){ setTimeout(()=>{ d.classList.add('fade'); setTimeout(()=>d.remove(),800); },420); }
+  else setTimeout(()=>{ d.classList.add('fade'); setTimeout(()=>d.remove(),800); },1400);
+}
+function starsForTries(tries,par){
+  if(tries<=par+2) return 3;
+  if(tries<=par*2+4) return 2;
+  return 1;
+}
+function levelPar(){ return (LV.roofs-1) + (LV.arms||0) + 2; }
+function updateTryBadge(){
+  const b=$('tryBadge');
+  b.textContent='🕸️ '+S.level+'   🔁 '+S.tries;
+  b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
+  const f = S.tries===0 ? 3 : starsForTries(S.tries,levelPar());
+  for(let i=0;i<3;i++) $('st'+i).classList.toggle('earned', i<f);
+}
+/* Persistence is shown, not narrated: the counter ticks up, and every
+   5th try throws a star. Milestone tries get a bigger burst. */
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+function braveSparkle(){ sndSparkle(); floatText(hero.x,hero.y-180,'⭐',56); }
+function milestone(n){
+  if(n!==10 && n!==20 && n!==30) return;
+  sndSparkle(); confetti(18);
+  floatText(hero.x,hero.y-200,'🏅'+n,64);
+}
+function setIdle(on){
+  heroInner.classList.toggle('idle',on);
+  $('hint').style.display=(on&&S.level<=2&&S.tries===0&&!S.onBossRoof)?'':'none';
+}
+let toastTimer=null;
+function showToast(text){
+  const t=$('toast'); t.textContent=text; t.classList.add('show');
+  if(toastTimer) clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),1800);
+}
+function confetti(n){
+  const box=$('confettiBox');
+  const colors=['#E53935','#1E5AE8','#FFC93C','#4CAF50','#FF8AC5','#8ED0FF'];
+  for(let i=0;i<n;i++){
+    const c=document.createElement('div'); c.className='conf';
+    const sz=8+Math.random()*8;
+    c.style.cssText=`left:${Math.random()*100}vw;width:${sz}px;height:${sz*1.6}px;
+      background:${colors[i%colors.length]};animation-duration:${1.5+Math.random()*1.4}s;
+      animation-delay:${Math.random()*0.6}s`;
+    box.appendChild(c); setTimeout(()=>c.remove(),3600);
+  }
+}
+
+/* ---- boss arm visuals ---- */
+function refreshArmClasses(){
+  if(!OCK.el) return;
+  const tents=OCK.el.querySelectorAll('.tent');
+  tents.forEach((t,i)=>{
+    t.classList.toggle('tied', !!OCK.tied[i]);
+    t.classList.toggle('glow', OCK.glowing.indexOf(i)>=0 && !OCK.tied[i]);
+  });
+  /* rings follow the glowing arms */
+  OCK.ringEls.forEach(r=>r.remove()); OCK.ringEls=[];
+  OCK.glowing.forEach(i=>{
+    if(OCK.tied[i]) return;
+    const p=armWorldPos(i);
+    const r=document.createElement('div'); r.className='armRing';
+    r.style.left=(p.x-65)+'px'; r.style.top=(p.y-65)+'px';
+    mainL.appendChild(r); OCK.ringEls.push(r);
+  });
+  updateBossHud();
+}
+function addBow(i){
+  const p=armWorldPos(i);
+  const d=document.createElement('div'); d.className='bow'; d.textContent='🎀';
+  d.style.left=(p.x-27)+'px'; d.style.top=(p.y-27)+'px';
+  mainL.appendChild(d); bows.push(d);
+}
+function tiedCount(){ return OCK.tied.filter(Boolean).length; }
+function updateBossHud(){
+  const hud=$('bossHud');
+  if(!OCK.live){ hud.classList.remove('show'); return; }
+  hud.classList.add('show');
+  let s=''; for(let i=0;i<OCK.armsTotal;i++) s += OCK.tied[i]?'🎀':'〰️';
+  hud.innerHTML='🐙 '+tiedCount()+'/'+OCK.armsTotal+' <span class="bows">'+s+'</span>';
+}
+
+/* ================================================================
+   GAP / SWING MATH — timing window + silent rubber-band assist
+   ================================================================ */
+function gapInfo(){
+  const i=S.roof;
+  const a=roofs[i], b=roofs[i+1], m=gapsMeta[i];
+  const startX=heroHomeX(i);
+  const gap=b.x-(a.x+a.w);
+  return {a,b,m,startX,gap,maxDist:gap+320};
+}
+function anchorNow(m){
+  const drift = m.moving ? m.amp*Math.sin(2*Math.PI*0.2*S.time) : 0;
+  return {x:m.baseAx+drift, y:m.ay};
+}
+function predictedLandX(g){ return g.startX+60+S.power*g.maxDist; }
+function effectiveWindow(){
+  /* silent rubber-band: every 3 misses on the same gap → window +0.05 */
+  const assist=Math.floor(S.missesOnGap/3)*0.05;
+  return Math.min(0.95, LV.win+assist);
+}
+const canSwing = ()=> S.phase==='idle' && !S.onBossRoof && S.roof < roofs.length-1;
+
+/* ================================================================
+   INPUT — TWO ZONES.  Bottom = hold to swing.  Top = tap to throw.
+   The 0.45–0.55 band is a DEAD ZONE so a seam touch never fires
+   the wrong verb.  The zones never move and never flip.
+   ================================================================ */
+const TOP_MAX=0.45, BOT_MIN=0.55;
+function zoneOf(e){
+  const f=(e.clientY||0)/Math.max(1,window.innerHeight);
+  if(f<TOP_MAX) return 'top';
+  if(f>BOT_MIN) return 'bot';
+  return 'dead';
+}
+stage.addEventListener('pointerdown',e=>{
+  if(!inLevel()) return;
+  const z=zoneOf(e);
+  if(z==='top'){ e.preventDefault(); fireBall(); return; }
+  if(z==='bot'){
+    e.preventDefault();
+    /* SAME GESTURE, TWO JOBS: on a rooftop HOLD swings you.
+       On the boss roof there is nothing to swing to, so HOLD blocks. */
+    if(canSwing()) beginCharge();
+    else if(S.phase==='boss') shieldUp();
+  }
+});
+['pointerup','pointercancel'].forEach(ev=>
+  stage.addEventListener(ev,e=>{
+    if(S.phase==='charging'){ e.preventDefault(); releaseCharge(); }
+    else if(S.shUp){ e.preventDefault(); shieldDown(); }
+  }));
+document.addEventListener('contextmenu',e=>e.preventDefault());
+document.addEventListener('gesturestart',e=>e.preventDefault());
+document.addEventListener('dblclick',e=>e.preventDefault());
+/* the explicit throw button — same action as tapping the top */
+$('throwBtn').addEventListener('pointerdown',e=>{ e.stopPropagation(); e.preventDefault(); if(inLevel()) fireBall(); });
+
+/* ---- the block ---- */
+function shieldUp(){
+  if(S.shLock>0 || S.shE<=0.04) { sndOops(); return; }
+  S.shUp=true;
+  shieldEl.classList.add('up');
+  $('blockBtn').classList.add('held');
+  if(!save.powers.block){ save.powers.block=true; persist(); }
+}
+function shieldDown(silent){
+  S.shUp=false;
+  shieldEl.classList.remove('up','hit');
+  $('blockBtn').classList.remove('held');
+  if(!silent) return;
+  S.shE=1; S.shLock=0;
+  $('staminaFill').style.width='100%';
+  $('staminaWrap').classList.remove('low');
+}
+function updateShield(dt){
+  if(S.shUp){
+    S.shE-=SH_DRAIN*dt;
+    if(S.shE<=0){ S.shE=0; S.shLock=0.7; shieldDown(); sndOops();
+      floatText(hero.x,hero.y-150,'🛡️💤',52); }
+  } else {
+    if(S.shLock>0) S.shLock-=dt;
+    else if(S.shE<1) S.shE=Math.min(1,S.shE+SH_FILL*dt);
+  }
+  const pc=Math.max(0,Math.min(1,S.shE));
+  $('staminaFill').style.width=(pc*100)+'%';
+  $('staminaWrap').classList.toggle('low',pc<0.34);
+  $('blockBtn').classList.toggle('empty',S.shLock>0||pc<=0.04);
+  if(S.shUp){
+    /* held out in FRONT of him, at chest height — see shieldCovers() */
+    shieldEl.style.transform='translate('+(hero.x)+'px,'+(hero.y-153)+'px)';
+  }
+}
+/* is something in front of Yuvaan and inside the shield disc?
+   these numbers must stay in step with the transform above:
+   the 170px disc is drawn at (hero.x, hero.y-153), so its centre is
+   (hero.x+85, hero.y-68).                                            */
+function shieldCovers(x,y){
+  if(!S.shUp) return false;
+  const cx=hero.x+85, cy=hero.y-68;
+  return x>hero.x-30 && Math.hypot(x-cx,y-cy)<115;
+}
+function blockedIt(x,y,label){
+  S.blocks++;
+  S.shE=Math.min(1,S.shE+SH_REFUND);      // a good block pays you back a little
+  shieldEl.classList.remove('hit'); void shieldEl.offsetWidth; shieldEl.classList.add('hit');
+  sndBoing(); sndSparkle();
+  splatAt(x,y,true);
+  floatText(hero.x,hero.y-170,'🛡️✨',58);
+  confetti(10);
+  if(label) showMsg(label);
+}
+$('blockBtn').addEventListener('pointerdown',e=>{ e.stopPropagation(); e.preventDefault();
+  if(S.phase==='boss') shieldUp(); });
+['pointerup','pointercancel','pointerleave'].forEach(ev=>
+  $('blockBtn').addEventListener(ev,e=>{ e.stopPropagation(); if(S.shUp) shieldDown(); }));
+
+function flashZoneHint(which){
+  const el = which==='top' ? $('zoneTop') : $('zoneBot');
+  el.classList.remove('flashZone'); void el.offsetWidth; el.classList.add('flashZone');
+  setTimeout(()=>el.classList.remove('flashZone'),650);
+}
+
+/* ================================================================
+   SWING — charge on hold, release to swing (unchanged feel)
+   ================================================================ */
+function beginCharge(){
+  S.phase='charging'; S.power=0; S.chargeDir=1;
+  setIdle(false);
+  heroInner.classList.add('crouch');
+  const g=gapInfo();
+  const needs = g.m.needAnchor && !g.m.anchorMade;
+  if(!needs){
+    const an=anchorNow(g.m);
+    splatEl.style.display=''; splatEl.classList.add('pulse');
+    splatEl.setAttribute('transform',`translate(${an.x},${an.y})`);
+    chargeLineEl.style.display='';
+  }
+  previewEl.style.display='';
+  previewEl.classList.toggle('tooFar', needs);
+}
+function releaseCharge(){
+  heroInner.classList.remove('crouch');
+  previewEl.style.display='none'; previewEl.classList.remove('tooFar');
+  chargeLineEl.style.display='none'; splatEl.classList.remove('pulse');
+
+  S.tries++; updateTryBadge();
+  if(S.tries%5===0) braveSparkle();
+  milestone(S.tries);
+  if(!save.powers.swing){ save.powers.swing=true; persist(); }
+
+  const g=gapInfo();
+  const landX=predictedLandX(g);
+  const w=effectiveWindow();
+  const pMid=Math.min(0.85,Math.max(0.15,(g.b.x+g.b.w/2-g.startX-60)/g.maxDist));
+  let success=Math.abs(S.power-pMid)<=w/2;
+  if(S.level===1 && S.missesOnGap>=1) success=true;         // tutorial kindness
+
+  /* gates: no anchor made yet, or the sky-shot barrier still up */
+  let gateMsg=null, gateEl=null;
+  if(g.m.needAnchor && !g.m.anchorMade){ success=false; gateMsg='anchor'; gateEl=g.m.wallEl; }
+  else if(g.m.barrier){ success=false; gateMsg='barrier'; gateEl=g.m.barEl; }
+
+  let endX,endY;
+  if(success){
+    endX=Math.min(Math.max(landX,g.b.x+45),g.b.x+g.b.w-70); endY=g.b.y;
+  } else {
+    endX=Math.min(Math.max(landX,g.a.x+g.a.w+30),g.b.x-40); endY=BASE_ROOF_Y+40;
+  }
+  S.fallX=endX;
+  cloudEl.style.left=(endX-165)+'px'; cloudEl.style.top=(CLOUD_TOP-15)+'px';
+
+  sndThwip();
+  S.phase='swinging';
+  const p0x=hero.x, p0y=hero.y;
+  const dur=0.72+0.3*S.power;
+  whistleStart(dur);
+  const showWeb = !(g.m.needAnchor && !g.m.anchorMade);
+  if(showWeb) webLineEl.style.display='';
+  const cpx=(p0x+endX)/2, cpy=Math.max(p0y,endY)+105;
+  tween(dur,k=>{
+    const e=easeInOut(k);
+    hero.x=qBez(p0x,cpx,endX,e); hero.y=qBez(p0y,cpy,endY,e);
+    hero.rot=(0.5-e)*-26;
+    if(showWeb){ const an=anchorNow(g.m); drawWebTo(an.x,an.y); }
+  },()=>{
+    webLineEl.style.display='none'; splatEl.style.display='none';
+    /* the sky shot may have dropped the barrier DURING the swing — re-check */
+    if(!success && gateMsg==='barrier' && !g.m.barrier){
+      const lx=Math.min(Math.max(landX,g.b.x+45),g.b.x+g.b.w-70);
+      hero.x=lx; doLand(lx,g); return;
+    }
+    if(success) doLand(endX,g);
+    else {
+      /* wordless teaching: flash the thing that is in the way, and the
+         button that deals with it — no sentence for him to decode */
+      if(gateMsg){ attn(gateEl, 2600); attn($('throwBtn'), 2600); }
+      startFall();
+    }
+  });
+}
+function drawWebTo(ax,ay){
+  webLineEl.setAttribute('x1',hero.x+4); webLineEl.setAttribute('y1',hero.y-92);
+  webLineEl.setAttribute('x2',ax);       webLineEl.setAttribute('y2',ay);
+}
+
+/* ================================================================
+   WEB-BALLS — fire on pointer DOWN, auto-aimed inside a forward cone.
+   The child decides WHEN, never WHERE.  Misses are invisible.
+   ================================================================ */
+const FIRE_CD=0.35, BALL_SPEED=1150, CONE=75*Math.PI/180;
+function collectTargets(){
+  const t=[];
+  blobs.forEach(b=>{
+    if(!b.alive) return;
+    /* the SKY blob only counts while airborne — that IS the sky shot */
+    if(b.sky && S.phase!=='swinging') return;
+    t.push({x:b.x,y:b.y,kind:'blob',ref:b,pri:1.0});
+  });
+  if(OCK.live){
+    OCK.glowing.forEach(i=>{ if(OCK.tied[i]) return;
+      const p=armWorldPos(i); t.push({x:p.x,y:p.y,kind:'arm',ref:i,pri:0.55}); });
+  }
+  beaches.forEach(b=>t.push({x:b.x,y:b.y,kind:'beach',ref:b,pri:0.45}));
+  sweeps.forEach(s=>{ if(s.live) t.push({x:s.x,y:s.y,kind:'sweep',ref:s,pri:0.45}); });
+  gapsMeta.forEach(m=>{ if(m.needAnchor&&!m.anchorMade&&m.wallEl)
+    t.push({x:m.wallX,y:m.wallY,kind:'wall',ref:m,pri:0.65}); });
+  return t;
+}
+function bestTarget(hx,hy){
+  const list=collectTargets();
+  let best=null,bestScore=1e9;
+  for(const t of list){
+    const dx=t.x-hx, dy=t.y-hy;
+    const d=Math.hypot(dx,dy);
+    if(d<1) continue;
+    const ang=Math.abs(Math.atan2(dy,dx));   // 0 = straight forward (+x)
+    if(ang>CONE) continue;                    // outside the forward cone
+    const score=d*t.pri;
+    if(score<bestScore){ bestScore=score; best=t; }
+  }
+  return best;
+}
+function fireBall(){
+  if(S.time-S.lastFire < FIRE_CD){ return; }        // silent cooldown
+  S.lastFire=S.time;
+  S.throws++; save.throws++;
+  if(!save.powers.throw){ save.powers.throw=true; persist(); }
+
+  const hx=hero.x+30, hy=hero.y-88;
+  const tgt=bestTarget(hx,hy);
+  let vx,vy;
+  if(tgt){ const d=Math.hypot(tgt.x-hx,tgt.y-hy)||1;
+    vx=(tgt.x-hx)/d*BALL_SPEED; vy=(tgt.y-hy)/d*BALL_SPEED; }
+  else { vx=BALL_SPEED*0.94; vy=-BALL_SPEED*0.34; }   // a hopeful lob, no penalty
+
+  const el=document.createElement('div');
+  el.className='wball'; el.innerHTML=ballSVG();
+  mainL.appendChild(el);
+  balls.push({x:hx,y:hy,vx,vy,el,tgt,life:0});
+
+  heroInner.classList.remove('shoot'); void heroInner.offsetWidth; heroInner.classList.add('shoot');
+  sndThwip();
+  /* cooldown feedback on both affordances */
+  $('throwBtn').classList.add('cool'); $('zoneTop').classList.add('cool');
+  setTimeout(()=>{ $('throwBtn').classList.remove('cool'); $('zoneTop').classList.remove('cool'); },FIRE_CD*1000);
+}
+function updateBalls(dt){
+  for(let i=balls.length-1;i>=0;i--){
+    const b=balls[i];
+    b.life+=dt;
+    /* gentle homing so a 4-year-old's timing is all that matters */
+    if(b.tgt){
+      let tx=b.tgt.x, ty=b.tgt.y;
+      if(b.tgt.kind==='blob'){ if(!b.tgt.ref.alive){ b.tgt=null; } else { tx=b.tgt.ref.x; ty=b.tgt.ref.y; } }
+      else if(b.tgt.kind==='arm'){ const p=armWorldPos(b.tgt.ref); tx=p.x; ty=p.y;
+        if(OCK.tied[b.tgt.ref]) b.tgt=null; }
+      else if(b.tgt.kind==='beach'){ if(beaches.indexOf(b.tgt.ref)<0) b.tgt=null; else {tx=b.tgt.ref.x; ty=b.tgt.ref.y;} }
+      else if(b.tgt.kind==='sweep'){ if(!b.tgt.ref.live) b.tgt=null; else {tx=b.tgt.ref.x; ty=b.tgt.ref.y;} }
+      if(b.tgt){
+        const d=Math.hypot(tx-b.x,ty-b.y)||1;
+        const wx=(tx-b.x)/d*BALL_SPEED, wy=(ty-b.y)/d*BALL_SPEED;
+        b.vx += (wx-b.vx)*Math.min(1,dt*14);
+        b.vy += (wy-b.vy)*Math.min(1,dt*14);
+        if(d<46){ resolveBallHit(b); b.el.remove(); balls.splice(i,1); continue; }
+      }
+    }
+    if(!b.tgt) b.vy += 900*dt;                       // untargeted lob just arcs away
+    b.x+=b.vx*dt; b.y+=b.vy*dt;
+    b.el.style.transform=`translate(${b.x-80}px,${b.y-30}px) rotate(${Math.atan2(b.vy,b.vx)*57.3}deg)`;
+    if(b.life>2.6 || b.y>WORLD_H+120 || b.x>WORLD_W+200){ b.el.remove(); balls.splice(i,1); }
+  }
+}
+function resolveBallHit(b){
+  const t=b.tgt;
+  if(!t) return;
+  if(t.kind==='blob') popBlob(t.ref);
+  else if(t.kind==='arm') tieArm(t.ref);
+  else if(t.kind==='beach'){
+    splatAt(t.ref.x,t.ref.y,true); sndPop(); confetti(8);
+    floatText(t.ref.x,t.ref.y-60,'💥',52);
+    t.ref.el.remove(); const k=beaches.indexOf(t.ref); if(k>=0) beaches.splice(k,1);
+  }
+  else if(t.kind==='sweep'){
+    splatAt(t.ref.x,t.ref.y,true); sndPop(); confetti(8);
+    floatText(t.ref.x,t.ref.y-60,'🕸️✨',52);
+    t.ref.live=false; t.ref.el.remove(); const k=sweeps.indexOf(t.ref); if(k>=0) sweeps.splice(k,1);
+  }
+  else if(t.kind==='wall'){
+    const m=t.ref;
+    m.anchorMade=true;
+    m.baseAx=m.wallX; m.ay=m.wallY;
+    if(m.wallEl){ m.wallEl.remove(); m.wallEl=null; }
+    splatAt(m.wallX,m.wallY,false);
+    sndSplat(); sndSparkle(); confetti(18);
+    floatText(m.wallX,m.wallY-80,'🕸️✨',60);
+    cue('🕸️ ✨');
+    banner('🕸️ ✨');
+    if(!save.powers.anchor){ save.powers.anchor=true; persist(); }
+  }
+}
+
+/* ================================================================
+   DOC OCK — the silly octopus.  Four arms = four knots = beaten.
+   He never hurts Yuvaan.  Worst case is a Boing.
+   ================================================================ */
+function beginBoss(){
+  if(!OCK.el) return;
+  S.onBossRoof=true;
+  S.frameOck=true;
+  OCK.live=true;
+  OCK.el.classList.remove('sad','dizzy');
+  OCK.glowT=0; OCK.atkT=2.2; OCK.stunT=0; OCK.act='idle';
+  refreshArmClasses(); updateBossHud();
+  /* the bottom half now BLOCKS instead of swinging — same hold gesture */
+  shieldDown(true);
+  $('blockBtn').classList.add('on');
+  $('staminaWrap').classList.add('on');
+  S.phase='boss';
+  setIdle(true);
+  banner('🐙');
+  /* no instructions — just make the two controls announce themselves */
+  cue('🐙');
+  attn($('blockBtn'), 4200); attn($('throwBtn'), 4200);
+  sndOop();
+}
+function glowDur(){ return Math.max(GLOW_FLOOR, LV.armGlow); }
+function throwGap(){ return Math.max(THROW_FLOOR, LV.throwSec); }
+function untiedArms(){
+  const a=[]; for(let i=0;i<OCK.armsTotal;i++) if(!OCK.tied[i]) a.push(i);
+  return a;
+}
+function pickGlow(){
+  const free=untiedArms();
+  if(!free.length){ OCK.glowing=[]; return; }
+  const want = (LV.twist==='twoGlow' && free.length>1) ? 2 : 1;
+  const shuffled=free.slice().sort(()=>Math.random()-0.5);
+  OCK.glowing=shuffled.slice(0,want);
+  OCK.glowT=glowDur();
+  refreshArmClasses();
+}
+function tieArm(i){
+  if(OCK.tied[i]) return;
+  OCK.tied[i]=true;
+  const p=armWorldPos(i);
+  /* ---- the 1-second ceremony: the world stops and waits for him ---- */
+  flash(); sndSplat(); sndOop(); sndSparkle();
+  splatAt(p.x,p.y,false);
+  addBow(i);
+  confetti(22);
+  OCK.el.classList.remove('hurt'); void OCK.el.offsetWidth; OCK.el.classList.add('hurt');
+  /* his face goes DIZZY — spiral eyes, circling stars, open "oh!" mouth —
+     and from now on he looks sad, because he is losing. */
+  OCK.el.classList.add('dizzy');
+  setTimeout(()=>{ if(OCK.el){ OCK.el.classList.remove('dizzy'); OCK.el.classList.add('sad'); } },1250);
+  const n=tiedCount();
+  floatText(p.x,p.y-90, '🎀'.repeat(Math.min(n,4)), 58);
+  OCK.glowing=OCK.glowing.filter(g=>g!==i);
+  /* he leans further over with every knot */
+  OCK.el.classList.remove('lean1','lean2','lean3','lean4');
+  if(n<OCK.armsTotal) OCK.el.classList.add('lean'+Math.min(4,n));
+  refreshArmClasses();
+  /* freeze-frame */
+  OCK.hurtT=1.0;
+  if(n>=OCK.armsTotal){ defeatOck(); return; }
+  /* the knot, the flash and the sound already say it */
+  OCK.glowT=Math.min(OCK.glowT,0.35);      // next arm lights up soon
+}
+function defeatOck(){
+  OCK.live=false; OCK.glowing=[];
+  OCK.ringEls.forEach(r=>r.remove()); OCK.ringEls=[];
+  $('bossHud').classList.remove('show');
+  /* tangle every arm, plant a tiny white flag, spin him into a bow */
+  OCK.el.querySelectorAll('.tent').forEach(t=>{t.classList.add('tied'); t.classList.remove('glow');});
+  OCK.el.classList.remove('lean1','lean2','lean3','lean4','windup');
+  const knot=document.createElement('div');
+  knot.style.cssText=`position:absolute;left:${OCK.x+OCK_W/2-52}px;top:${OCK.y+OCK_H*0.55}px;
+    font-size:104px;z-index:8;pointer-events:none`;
+  knot.textContent='🎀'; mainL.appendChild(knot); bows.push(knot);
+  const flagEl=document.createElement('div');
+  flagEl.style.cssText=`position:absolute;left:${OCK.x+OCK_W-40}px;top:${OCK.y+40}px;
+    font-size:74px;z-index:8;pointer-events:none`;
+  flagEl.textContent='🏳️'; mainL.appendChild(flagEl); bows.push(flagEl);
+  sndSlide(); sndFanfare(); confetti(90);
+  floatText(OCK.x+OCK_W/2, OCK.y-40, '🎀🎀🎀', 66);
+  banner('🎀🎀🎀 🐙');
+  cue('🎉');
+  /* he spins dizzily into the bow, THEN sits there looking sad */
+  OCK.el.classList.add('dizzy');
+  tween(1.2,k=>{ OCK.el.style.transform='rotate('+(720*k)+'deg) scale('+(1-0.12*Math.sin(Math.PI*k))+')'; },
+    ()=>{ OCK.el.style.transform='rotate(0deg)'; });
+  setTimeout(()=>{
+    if(!OCK.el) return;
+    OCK.el.classList.remove('dizzy');
+    OCK.el.classList.add('sad');
+    sndOops();
+    floatText(OCK.x+OCK_W/2, OCK.y+10, '😢', 62);
+  },1350);
+  /* clear anything still flying at him */
+  beaches.forEach(b=>b.el.remove()); beaches=[];
+  sweeps.forEach(s=>s.el.remove()); sweeps=[];
+  /* linger so Yuvaan actually gets to SEE the tangled, sorry octopus */
+  setTimeout(()=>{ if(S.phase!=='map'&&S.phase!=='start') levelComplete(); },3200);
+}
+
+/* ---- his attacks: slow, telegraphed, and all poppable ---- */
+function atkTime(){ return Math.max(ATK_FLOOR, LV.atkDur||2.4); }
+function lobBeach(){
+  const n=Math.max(1, LV.volley||1);
+  for(let k=0;k<n;k++){
+    setTimeout(()=>{
+      if(!OCK.live || S.phase!=='boss') return;
+      const y0=OCK.y+70+k*46;
+      const b={x0:OCK.x+30,y0,x1:hero.x,y1:hero.y-60,t:0,dur:atkTime(),
+               x:OCK.x+30,y:y0,el:null,ret:false};
+      const el=document.createElement('div'); el.className='beach';
+      el.textContent = k===0 ? '🏐' : '⚽';
+      mainL.appendChild(el); b.el=el;
+      beaches.push(b);
+      sndOop();
+    }, k*540);
+  }
+}
+function doSweep(){
+  const last=roofs[roofs.length-1];
+  const s={x:OCK.x-20,y:last.y-24,live:true,t:0,dur:2.0,x0:OCK.x-20,x1:last.x-60,el:null};
+  const el=document.createElement('div'); el.className='sweepArm';
+  el.style.top=(s.y-17)+'px'; el.style.left=s.x+'px'; el.style.width='150px';
+  mainL.appendChild(el); s.el=el;
+  sweeps.push(s);
+  attn($('throwBtn'), 1600);
+}
+function selfTrip(){
+  OCK.el.classList.remove('trip'); void OCK.el.offsetWidth; OCK.el.classList.add('trip');
+  OCK.glowing=untiedArms(); OCK.glowT=2.6; OCK.stunT=2.6;
+  refreshArmClasses();
+  sndOop(); sndBoing();
+  floatText(OCK.x+OCK_W/2, OCK.y+20, '😆', 60);
+  cue('🌟');
+  setTimeout(()=>OCK.el.classList.remove('trip'),2000);
+}
+function ockWindup(next){
+  OCK.el.classList.add('windup');
+  OCK.act='windup'; OCK.actT=1.2; OCK.nextAct=next;
+}
+
+function updateBoss(dt){
+  if(!OCK.el) return;
+  /* the ceremony freeze — the world waits for him */
+  if(OCK.hurtT>0){ OCK.hurtT-=dt; return; }
+  if(!OCK.live) return;
+
+  /* arm glow cycle */
+  if(OCK.glowing.length===0 || OCK.glowT<=0){
+    if(OCK.glowT<=0 && OCK.glowing.length>0 && OCK.stunT<=0){
+      /* window closed without a hit — no scolding, just move on */
+      OCK.glowing=[]; refreshArmClasses();
+    }
+    if(OCK.glowing.length===0) pickGlow();
+  } else if(LV.armGlow<90){
+    OCK.glowT-=dt;
+  }
+  if(OCK.stunT>0){ OCK.stunT-=dt; if(OCK.stunT<=0){ OCK.glowing=[]; refreshArmClasses(); } }
+
+  /* keep the rings glued to the arms */
+  OCK.ringEls.forEach((r,k)=>{
+    const i=OCK.glowing[k]; if(i===undefined) return;
+    const p=armWorldPos(i);
+    r.style.left=(p.x-65)+'px'; r.style.top=(p.y-65)+'px';
+  });
+
+  /* wind-up → attack */
+  if(OCK.act==='windup'){
+    OCK.actT-=dt;
+    if(OCK.actT<=0){
+      OCK.el.classList.remove('windup');
+      OCK.act='idle';
+      if(OCK.nextAct==='sweep') doSweep(); else lobBeach();
+    }
+    return;
+  }
+  /* attack timer */
+  if(OCK.stunT<=0){
+    OCK.atkT-=dt;
+    if(OCK.atkT<=0){
+      OCK.atkT=throwGap();
+      const r=Math.random();
+      /* he clowns around early on, then gets serious */
+      const clown = S.level<=5 ? 0.13 : (S.level<=8 ? 0.06 : 0);
+      if(r<clown) selfTrip();
+      else if(S.level>=7 && r<clown+0.42) ockWindup('sweep');
+      else ockWindup('lob');
+    }
+  }
+
+  /* the hop twist */
+  if(LV.twist==='hop'){
+    OCK.el.style.marginTop = (Math.sin(S.time*2.2)*16)+'px';
+  }
+
+  /* the things he throws — blockable, poppable, or they get you */
+  for(let i=beaches.length-1;i>=0;i--){
+    const b=beaches[i];
+    b.t+=dt;
+    const k=Math.min(1,b.t/b.dur);
+    b.x=b.x0+(b.x1-b.x0)*k;
+    b.y=qBez(b.y0,Math.min(b.y0,b.y1)-(b.ret?150:190),b.y1,k);
+    b.el.style.left=(b.x-40)+'px'; b.el.style.top=(b.y-40)+'px';
+
+    if(b.ret){                                   /* flying back at Doc Ock */
+      if(k>=1){ b.el.remove(); beaches.splice(i,1); ockBonked(); }
+      continue;
+    }
+    if(shieldCovers(b.x,b.y)){                   /* BLOCKED — send it back */
+      b.ret=true; b.x0=b.x; b.y0=b.y;
+      b.x1=OCK.x+OCK_W*0.42; b.y1=OCK.y+120; b.t=0; b.dur=0.8;
+      blockedIt(b.x,b.y,'🛡️ Blocked! Right back at him! 🏐');
+      continue;
+    }
+    if(Math.hypot(b.x-hero.x,b.y-(hero.y-55))<74){
+      b.el.remove(); beaches.splice(i,1); hitByOck('🏐 Silly ball!'); continue;
+    }
+    if(k>=1){ b.el.remove(); beaches.splice(i,1); }
+  }
+  /* sweeping arm slides across the roof */
+  for(let i=sweeps.length-1;i>=0;i--){
+    const s=sweeps[i];
+    s.t+=dt;
+    const k=Math.min(1,s.t/s.dur);
+    s.x=s.x0+(s.x1-s.x0)*k;
+    s.el.style.left=s.x+'px';
+    if(s.live && shieldCovers(s.x+70,s.y)){      /* BLOCKED — the arm recoils */
+      s.live=false; s.el.remove(); sweeps.splice(i,1);
+      blockedIt(s.x+70,s.y,'🛡️ Blocked his arm! 💪');
+      ockRecoil();
+      continue;
+    }
+    if(s.live && Math.abs(s.x-hero.x)<70 && Math.abs(s.y-hero.y)<80){
+      s.live=false; s.el.remove(); sweeps.splice(i,1); hitByOck('〰️ Wobbly arm!'); continue;
+    }
+    if(k>=1){ s.el.remove(); sweeps.splice(i,1); }
+  }
+}
+
+/* his own ball comes back and bonks him — every untied arm lights up */
+function ockBonked(){
+  if(!OCK.live) return;
+  sndSplat(); sndOop(); flash();
+  OCK.el.classList.remove('hurt'); void OCK.el.offsetWidth; OCK.el.classList.add('hurt');
+  OCK.el.classList.add('dizzy');
+  setTimeout(()=>{ if(OCK.el&&OCK.live){ OCK.el.classList.remove('dizzy');
+    if(tiedCount()>0) OCK.el.classList.add('sad'); } },1100);
+  floatText(OCK.x+OCK_W/2,OCK.y+10,'💥',60);
+  cue('🌟');
+  OCK.glowing=untiedArms(); OCK.glowT=2.4; OCK.stunT=2.4;
+  OCK.atkT=Math.max(OCK.atkT,2.4);
+  refreshArmClasses();
+  confetti(20);
+}
+/* blocking his sweep makes him flinch and pause */
+function ockRecoil(){
+  if(!OCK.live) return;
+  OCK.el.classList.remove('hurt'); void OCK.el.offsetWidth; OCK.el.classList.add('hurt');
+  OCK.atkT=Math.max(OCK.atkT,1.2);
+  sndOop();
+}
+
+/* getting hit costs TIME and nothing else — no health, no arm un-ties */
+function hitByOck(what){
+  if(S.phase!=='boss') return;
+  sndOops();
+  floatText(hero.x,hero.y-150,'💫',56);
+  /* the Boing sound and the cloud say it better than words */
+  S.phase='falling';
+  S.vy=40;
+  const last=roofs[roofs.length-1];
+  S.fallX=last.x+last.w+120;
+  cloudEl.style.left=(S.fallX-165)+'px'; cloudEl.style.top=(CLOUD_TOP-15)+'px';
+}
+
+/* ================================================================
+   LANDING / FALLING / BOUNCING — never a loss, only Boing
+   ================================================================ */
+function doLand(lx,g){
+  whistleStop();
+  hero.x=lx; hero.y=g.b.y; hero.rot=0;
+  sndYay();
+  floatText(lx,g.b.y-160,pick(['🌟','🎉','💚','⭐']),60);
+  tween(0.3,k=>{ const s=Math.sin(k*Math.PI); hero.sy=1-0.28*s; hero.sx=1+0.28*s; },()=>{
+    hero.sx=hero.sy=1;
+    S.roof++; S.missesOnGap=0;
+    if(S.roof===roofs.length-1){
+      if(LV.arms>0) beginBoss();
+      else levelComplete();
+    } else {
+      S.phase='idle'; setIdle(true); positionCloudHome();
+    }
+  });
+}
+function startFall(){
+  whistleStop(); sndOops();
+  S.missesOnGap++;
+  S.phase='falling'; S.vy=60;
+}
+function doBounce(){
+  S.phase='bouncing';
+  sndBoing();
+  floatText(S.fallX,CLOUD_TOP-120,'☁️',58);
+  cloudEl.classList.add('squish');
+  setTimeout(()=>cloudEl.classList.remove('squish'),220);
+  tween(0.7,k=>{
+    const s=Math.sin(k*Math.PI);
+    hero.y=CLOUD_TOP-150*s;
+    hero.rot=Math.sin(k*Math.PI*3)*12;
+    hero.sy=1+0.18*s; hero.sx=1-0.12*s;
+  },()=>{ hero.rot=0; hero.sx=hero.sy=1; doReturn(); });
+}
+function doReturn(){
+  S.phase='returning';
+  const sx0=hero.x, sy0=hero.y;
+  const tx=heroHomeX(S.roof), ty=roofYof(S.roof);
+  tween(0.7,k=>{
+    const e=easeInOut(k);
+    hero.x=sx0+(tx-sx0)*e;
+    hero.y=sy0+(ty-sy0)*e-180*Math.sin(Math.PI*k);
+  },()=>{
+    hero.x=tx; hero.y=ty;
+    if(S.onBossRoof && OCK.live){ S.phase='boss'; setIdle(true); }
+    else { S.phase='idle'; setIdle(true); }
+  });
+}
+function positionCloudHome(){
+  if(S.onBossRoof){
+    const last=roofs[roofs.length-1];
+    cloudEl.style.left=(last.x+last.w+120-165)+'px';
+    cloudEl.style.top=(CLOUD_TOP-15)+'px';
+    return;
+  }
+  if(S.roof<roofs.length-1){
+    const g=gapInfo();
+    cloudEl.style.left=((g.a.x+g.a.w+g.b.x)/2-165)+'px';
+    cloudEl.style.top=(CLOUD_TOP-15)+'px';
+  }
+}
+
+/* ================================================================
+   LEVEL COMPLETE
+   ================================================================ */
+function levelComplete(){
+  if(S.phase==='win'||S.phase==='walking') return;
+  const par=levelPar();
+  const earned=starsForTries(S.tries,par);
+  const idx=S.level-1;
+  const prevBest=save.best[idx];
+  if(earned>save.stars[idx]) save.stars[idx]=earned;
+  /* honest scorekeeping: the record only moves when the run is genuinely better */
+  if(prevBest===0 || S.tries<prevBest) save.best[idx]=S.tries;
+  save.blocks=(save.blocks|0)+S.blocks;
+  if(S.level<NLV) save.unlocked=Math.max(save.unlocked,S.level+1);
+  persist();
+
+  $('bossHud').classList.remove('show');
+  $('blockBtn').classList.remove('on','held','empty');
+  $('staminaWrap').classList.remove('on');
+  shieldDown(true);
+  S.frameOck=false;                    // camera goes back to Yuvaan for his own celebration
+
+  if(S.level===NLV) walkToTruck(earned,prevBest);
+  else {
+    S.phase='win';
+    heroEl.classList.add('celebrate');
+    sndFanfare(); confetti(40);
+    cue('🎉');
+    tween(0.9,k=>{ hero.y=roofYof(roofs.length-1)-150*Math.sin(Math.PI*k); hero.rot=360*k; },
+      ()=>{ hero.rot=0; });
+    setTimeout(()=>showWinScreen(earned,prevBest),1300);
+  }
+}
+function walkToTruck(earned,prevBest){
+  S.phase='walking';
+  cue('🍦');
+  const sx0=hero.x, tx=truckX-110, ry=roofYof(roofs.length-1);
+  tween(1.1,k=>{ hero.x=sx0+(tx-sx0)*k; hero.y=ry-Math.abs(Math.sin(k*Math.PI*3))*24; },
+    ()=>winParty(earned,prevBest));
+}
+function winParty(earned,prevBest){
+  S.phase='win';
+  const ry=roofYof(roofs.length-1);
+  hero.y=ry; heroEl.classList.add('celebrate');
+  sndFanfare(); confetti(90);
+  banner('🍨 '+NLV+' 🌟');
+  floatText(truckX+100,ry-240,'🍨🍦🍧',74);
+  tween(0.9,k=>{ hero.y=ry-170*Math.sin(Math.PI*k); hero.rot=360*k; },()=>{ hero.rot=0; });
+  setTimeout(()=>sndFanfare(),1000);
+  setTimeout(()=>{ confetti(60); showWinScreen(earned,prevBest); },2200);
+}
+function showWinScreen(earned,prevBest){
+  $('winTitle').textContent = S.level===NLV ? '🍨🍦🍧' : '🎉 '+S.level+' 🎉';
+  const ws=$('winStars'); ws.innerHTML='';
+  for(let i=0;i<3;i++){
+    const s=document.createElement('span'); s.textContent='⭐';
+    s.style.animationDelay=(i*0.25)+'s';
+    if(i>=earned) s.style.filter='grayscale(1) opacity(.35)';
+    ws.appendChild(s);
+  }
+  let line='🔁 '+S.tries;
+  if(S.throws>0) line += '   🥎 '+S.throws;
+  if(S.blocks>0) line += '   🛡️ '+S.blocks;
+  $('winTries').textContent=line;
+  /* honest scorekeeping, stated warmly */
+  /* honest scorekeeping, wordlessly: your best ever, and a medal if beaten */
+  const h=$('winHonest');
+  h.textContent = prevBest>0 ? (S.tries<prevBest ? '🏅 '+S.tries : '🏆 '+prevBest) : '';
+  $('nextBtn').style.display = S.level<NLV ? '' : 'none';
+  $('winScreen').style.display='flex';
+  [0,1,2].forEach(i=>{ if(i<earned) setTimeout(sndSparkle,300+i*300); });
+  confetti(30);
+}
+
+/* ================================================================
+   POWERS I KNOW
+   ================================================================ */
+/* wordless power cards: the icons ARE the label */
+const POWERS=[
+  {k:'swing', i:'🕸️', t:'👇 ✋ → 🕸️'},
+  {k:'throw', i:'🥎', t:'👆 → 🥎'},
+  {k:'block', i:'🛡️', t:'👇 ✋ → 🛡️'},
+  {k:'sky',   i:'🚀', t:'🕸️ + 🥎 → 🚀'},
+  {k:'anchor',i:'🤩', t:'🥎 + 🧱 → 🕸️'},
+];
+function buildPowers(){
+  const box=$('powersList'); box.innerHTML='';
+  POWERS.forEach(p=>{
+    const got=!!save.powers[p.k];
+    const d=document.createElement('div');
+    d.className='powCard'+(got?'':' locked');
+    d.innerHTML=`<div class="pi">${got?p.i:'🔒'}</div>
+      <div><div class="pt">${got?p.t:'🔒'}</div></div>`;
+    box.appendChild(d);
+  });
+  const tot=document.createElement('div');
+  tot.className='powCard';
+  tot.innerHTML=`<div class="pi">🏅</div><div><div class="pt">`+
+    `🥎 ${save.throws} &nbsp; 🟣 ${save.pops} &nbsp; 🛡️ ${save.blocks}</div></div>`;
+  box.appendChild(tot);
+}
+$('powersBtn').addEventListener('pointerdown',e=>{ e.stopPropagation(); e.preventDefault();
+  buildPowers(); $('powersScreen').style.display='block'; sndPop(); });
+$('powersClose').addEventListener('pointerdown',e=>{ e.stopPropagation(); e.preventDefault();
+  $('powersScreen').style.display='none'; });
+
+/* ================================================================
+   LEVEL MAP
+   ================================================================ */
+const NODE_SPACING=175, MAP_PAD_TOP=150, MAP_PAD_BOT=170;
+function nodePos(i,w,H){
+  const xf=[0.28,0.5,0.72,0.5][i%4];
+  return {x:w*xf, y:H-MAP_PAD_BOT-i*NODE_SPACING};
+}
+function buildMap(){
+  const wrap=$('mapPath'), scroll=$('mapScroll');
+  const w=scroll.clientWidth||window.innerWidth;
+  const H=MAP_PAD_TOP+MAP_PAD_BOT+(NLV-1)*NODE_SPACING+120;
+  wrap.style.height=H+'px';
+  const pts=[];
+  for(let i=0;i<NLV;i++){ const p=nodePos(i,w,H); pts.push(p.x+','+p.y); }
+  let html=`<svg id="mapSvg" width="${w}" height="${H}" xmlns="http://www.w3.org/2000/svg">
+    <polyline points="${pts.join(' ')}" fill="none" stroke="rgba(255,255,255,.9)"
+      stroke-width="7" stroke-dasharray="4 18" stroke-linecap="round"/>
+    <polyline points="${pts.join(' ')}" fill="none" stroke="rgba(30,90,232,.25)"
+      stroke-width="16" stroke-linecap="round"/></svg>`;
+  const decos=['🏙️','🏢','🌆','☁️','⛅','☁️','🌤️','☁️','🕸️','☁️'];
+  for(let i=0;i<NLV;i+=2){
+    const p=nodePos(i,w,H); const side=(i%4===0)?0.9:0.08;
+    html+=`<div class="mapDeco" style="left:${w*side-30}px;top:${p.y-90}px">${decos[(i/2)%decos.length]}</div>`;
+  }
+  for(let i=0;i<NLV;i++){
+    const lvl=i+1, p=nodePos(i,w,H);
+    const done=save.stars[i]>0, unlocked=lvl<=save.unlocked;
+    const hasBoss=LEVELS[i].arms>0;
+    const cls=(!unlocked?'locked':(done?'done':'play'))+(hasBoss?' boss':'');
+    const inner=!unlocked?'🔒':lvl;
+    let starsHtml='';
+    if(done){
+      starsHtml='<div class="nodeStars">';
+      for(let s=0;s<3;s++) starsHtml+=`<span class="${s<save.stars[i]?'':'off'}">⭐</span>`;
+      starsHtml+='</div>';
+    }
+    const ockTag = hasBoss&&unlocked ? '<div class="nodeOck">🐙</div>' : '';
+    html+=`<button class="mapNode ${cls}" id="node${lvl}" data-lvl="${lvl}"
+      style="left:${p.x}px;top:${p.y}px">${inner}${starsHtml}${ockTag}</button>`;
+  }
+  wrap.innerHTML=html;
+  wrap.querySelectorAll('.mapNode').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const lvl=parseInt(btn.dataset.lvl,10);
+      if(lvl<=save.unlocked){ sndPop(); startLevel(lvl); }
+      else {
+        btn.classList.remove('wiggle'); void btn.offsetWidth; btn.classList.add('wiggle');
+        sndOops(); showToast('🔒 '+(lvl-1));
+      }
+    });
+  });
+  $('continueBtn').textContent='▶️ '+nextUnbeaten();
+}
+function nextUnbeaten(){
+  for(let i=0;i<NLV;i++) if(i+1<=save.unlocked && save.stars[i]===0) return i+1;
+  return Math.min(NLV,save.unlocked);
+}
+function scrollToNode(lvl,smooth){
+  const el=$('node'+lvl);
+  if(el) el.scrollIntoView({block:'center',behavior:smooth?'smooth':'auto'});
+}
+function openMap(){
+  clearTweens(); whistleStop(); clearTimers();
+  S.phase='map';
+  document.body.classList.remove('sunset');
+  $('winScreen').style.display='none';
+  $('powersScreen').style.display='none';
+  $('banner').classList.remove('show');
+  $('hud').style.display='none';
+  $('bossHud').classList.remove('show');
+  $('blockBtn').classList.remove('on','held','empty');
+  $('staminaWrap').classList.remove('on');
+  shieldDown(true);
+  buildMap();
+  document.body.classList.add('mapOpen');
+  $('mapScreen').style.display='block';
+  requestAnimationFrame(()=>scrollToNode(save.unlocked,false));
+}
+$('continueBtn').addEventListener('pointerdown',e=>{ e.stopPropagation(); e.preventDefault();
+  scrollToNode(nextUnbeaten(),true); });
+$('hudMapBtn').addEventListener('pointerdown',e=>{ e.stopPropagation(); e.preventDefault();
+  if(S.phase==='start'||S.phase==='map') return; openMap(); });
+
+/* ================================================================
+   FLOW
+   ================================================================ */
+function startLevel(n){
+  clearTweens(); whistleStop();
+  S.level=n; S.tries=0; S.missesOnGap=0; S.power=0; S.throws=0; S.pops=0; S.blocks=0;
+  S.lastFire=-99;
+  document.body.classList.remove('mapOpen');
+  $('mapScreen').style.display='none';
+  $('winScreen').style.display='none';
+  $('powersScreen').style.display='none';
+  $('banner').classList.remove('show');
+  $('blockBtn').classList.remove('on','held','empty');
+  $('staminaWrap').classList.remove('on');
+  $('zoneBot').classList.remove('off');
+  $('zoneTop').classList.remove('off','cool');
+  $('throwBtn').classList.remove('cool');
+  buildLevel(n);
+  heroInner.classList.remove('crouch','shoot');
+  previewEl.style.display='none'; chargeLineEl.style.display='none';
+  webLineEl.style.display='none'; splatEl.style.display='none';
+  splatEl.classList.remove('pulse');
+  /* must be an explicit value: the stylesheet has #hud{display:none},
+     so clearing the inline style would leave the whole HUD hidden */
+  $('hud').style.display='block';
+  updateTryBadge();
+  $('tryBadge').textContent='🕸️ '+n+'   🔁 0';
+  S.phase='idle';
+  setIdle(true);
+  const prev=save.best[n-1];
+  if(LEVEL_CUES[n]) cue(LEVEL_CUES[n]);
+  if(n===1) attn($('blockBtn'),0), attn($('throwBtn'),0);   /* clear any leftovers */
+  if(n===2) attn($('throwBtn'),4200);                        /* web-ball level */
+  /* the previous-best record lives on the win screen, not on the playfield */
+}
+$('playBtn').addEventListener('pointerdown',e=>{ e.stopPropagation(); e.preventDefault(); startGame(); });
+$('startScreen').addEventListener('pointerdown',e=>{ e.stopPropagation(); e.preventDefault(); startGame(); });
+function startGame(){
+  if(S.phase!=='start') return;
+  audioInit();
+  $('startScreen').style.display='none';
+  openMap();
+}
+$('nextBtn').addEventListener('pointerdown',e=>{ e.stopPropagation(); e.preventDefault();
+  if(S.level<NLV) startLevel(S.level+1); else openMap(); });
+$('toMapBtn').addEventListener('pointerdown',e=>{ e.stopPropagation(); e.preventDefault(); openMap(); });
+
+/* ================================================================
+   MAIN LOOP
+   ================================================================ */
+function resize(){
+  S.scale=window.innerHeight/WORLD_H;
+  S.viewW=window.innerWidth/S.scale;
+  scaler.style.transform='scale('+S.scale+')';
+}
+window.addEventListener('resize',resize);
+window.addEventListener('orientationchange',()=>setTimeout(resize,250));
+resize();
+
+const inLevel=()=>['idle','charging','swinging','falling','bouncing','returning','boss','walking','win'].includes(S.phase);
+
+let lastT=performance.now();
+function loop(now){
+  const dt=Math.min(0.05,(now-lastT)/1000);
+  lastT=now; S.time+=dt;
+
+  if(inLevel()){
+    /* drifting anchors */
+    for(let i=0;i<gapsMeta.length;i++){
+      const m=gapsMeta[i];
+      if(!m.moving) continue;
+      m.ax=m.baseAx+m.amp*Math.sin(2*Math.PI*0.2*S.time);
+    }
+    /* blobs drift + bob so they read as alive */
+    for(const b of blobs){
+      if(!b.alive) continue;
+      b.x=b.baseX+b.drift*Math.sin(S.time*0.55+b.ph);
+      b.el.style.left=(b.x-(b.sky?44:37))+'px';
+      b.ring.style.left=(b.x-(b.sky?75:60))+'px';
+    }
+    updateBalls(dt);
+    if(S.onBossRoof) updateShield(dt);
+    if(S.phase==='boss'||OCK.hurtT>0) updateBoss(dt);
+  }
+
+  /* charging: ping-pong power + live preview arc */
+  if(S.phase==='charging'){
+    S.power+=S.chargeDir*dt/1.4;
+    if(S.power>=1){ S.power=1; S.chargeDir=-1; }
+    if(S.power<=0){ S.power=0; S.chargeDir=1; }
+    const g=gapInfo();
+    const needs=g.m.needAnchor&&!g.m.anchorMade;
+    const an=anchorNow(g.m);
+    if(!needs){
+      splatEl.setAttribute('transform',`translate(${an.x},${an.y})`);
+      const hx=hero.x+4, hy=hero.y-92;
+      chargeLineEl.setAttribute('x1',hx); chargeLineEl.setAttribute('y1',hy);
+      chargeLineEl.setAttribute('x2',hx+(an.x-hx)*S.power);
+      chargeLineEl.setAttribute('y2',hy+(an.y-hy)*S.power);
+    }
+    const lx=predictedLandX(g);
+    const cpx=(hero.x+lx)/2;
+    previewEl.setAttribute('d',
+      `M ${hero.x+4} ${hero.y-92} Q ${cpx} ${BASE_ROOF_Y+90} ${lx} ${g.b.y-10}`);
+  }
+
+  /* falling to the trampoline cloud */
+  if(S.phase==='falling'){
+    S.vy+=1500*dt;
+    hero.y+=S.vy*dt;
+    hero.rot+=dt*60;
+    if(hero.y>=CLOUD_TOP){ hero.y=CLOUD_TOP; doBounce(); }
+  }
+
+  /* tweens */
+  for(let i=tweens.length-1;i>=0;i--){
+    const tw=tweens[i];
+    tw.t+=dt;
+    const k=Math.min(1,tw.t/tw.dur);
+    tw.fn(k);
+    if(k>=1){ tweens.splice(i,1); if(tw.done) tw.done(); }
+  }
+
+  /* camera + parallax */
+  if(inLevel()){
+    let focus=hero.x;
+    /* frame BOTH fighters for the whole boss sequence — including the
+       tangle-up celebration, which is the funniest beat in the game and
+       must not scroll off-screen just because he stopped being 'live'. */
+    if(S.frameOck && OCK.el) focus=(hero.x+OCK.x+OCK_W/2)/2;
+    const target=Math.min(Math.max(focus-S.viewW*0.42,0),Math.max(0,WORLD_W-S.viewW));
+    S.camX+=(target-S.camX)*Math.min(1,dt*4);
+    mainL.style.transform='translate3d('+(-S.camX)+'px,0,0)';
+    midL.style.transform ='translate3d('+(-S.camX*0.5)+'px,0,0)';
+    farL.style.transform ='translate3d('+(-S.camX*0.25)+'px,0,0)';
+    heroEl.style.transform='translate('+(hero.x-45)+'px,'+(hero.y-110)+'px)'+
+      ' rotate('+hero.rot+'deg) scale('+hero.sx+','+hero.sy+')';
+  }
+  requestAnimationFrame(loop);
+}
+
+/* start-screen cast */
+$('startHero').innerHTML=heroSVG();
+$('startOck').innerHTML=ockSVG(4);
+buildLevel(1);
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>

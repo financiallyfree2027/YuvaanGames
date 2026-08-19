@@ -1,0 +1,1176 @@
+{
+ "id": "dinosaur-island",
+ "title": "Dinosaur Island",
+ "emoji": "🦖",
+ "seq": 3,
+ "lesson_word": "DINOSAURS",
+ "lesson": "Milo meets a plant eater and a meat eater.",
+ "tint": "#2FAE7C",
+ "glow": "#6fe0b4",
+ "facts": [
+  "Some dinosaurs ate plants.",
+  "Some dinosaurs ate meat.",
+  "Fossils teach us about animals from long ago."
+ ],
+ "pages": [
+  {
+   "text": "Milo and Robo landed on a strange island.",
+   "scene": {
+    "bg": "bg_jungle_island",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 94,
+      "y": 86,
+      "w": 12,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "tree",
+      "x": 7,
+      "y": 86,
+      "w": 24,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "rocket",
+      "x": 76,
+      "y": 86,
+      "w": 32,
+      "z": 5
+     },
+     {
+      "asset": "milo_standing",
+      "x": 30,
+      "y": 86,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "robo_standing",
+      "x": 52,
+      "y": 86,
+      "w": 27,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "THUMP!",
+   "scene": {
+    "bg": "bg_jungle_island",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 94,
+      "y": 86,
+      "w": 12,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "tree",
+      "x": 7,
+      "y": 86,
+      "w": 24,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "footprint_big",
+      "x": 56,
+      "y": 86,
+      "w": 30,
+      "z": 4,
+      "anim": "pop",
+      "anchor": "center"
+     },
+     {
+      "asset": "dust_puff",
+      "x": 56,
+      "y": 64,
+      "w": 26,
+      "z": 5,
+      "anchor": "center"
+     },
+     {
+      "asset": "milo_surprised",
+      "x": 24,
+      "y": 86,
+      "w": 36,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "THUMP!",
+   "scene": {
+    "bg": "bg_jungle_island",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 94,
+      "y": 86,
+      "w": 12,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "tree",
+      "x": 7,
+      "y": 86,
+      "w": 24,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "footprint_big",
+      "x": 50,
+      "y": 86,
+      "w": 32,
+      "z": 4,
+      "anim": "pop",
+      "anchor": "center"
+     },
+     {
+      "asset": "dust_puff",
+      "x": 50,
+      "y": 66,
+      "w": 28,
+      "z": 5,
+      "anchor": "center"
+     },
+     {
+      "asset": "milo_surprised",
+      "x": 22,
+      "y": 86,
+      "w": 36,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "THUMP!",
+   "scene": {
+    "bg": "bg_jungle_island",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 94,
+      "y": 86,
+      "w": 12,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "tree",
+      "x": 7,
+      "y": 86,
+      "w": 24,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "footprint_big",
+      "x": 44,
+      "y": 86,
+      "w": 34,
+      "z": 4,
+      "anim": "pop",
+      "anchor": "center"
+     },
+     {
+      "asset": "dust_puff",
+      "x": 44,
+      "y": 68,
+      "w": 30,
+      "z": 5,
+      "anchor": "center"
+     },
+     {
+      "asset": "milo_hiding",
+      "x": 20,
+      "y": 86,
+      "w": 36,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "The ground began to shake.",
+   "scene": {
+    "bg": "bg_jungle_island",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 94,
+      "y": 86,
+      "w": 12,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "tree",
+      "x": 7,
+      "y": 86,
+      "w": 24,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "milo_surprised",
+      "x": 34,
+      "y": 86,
+      "w": 36,
+      "z": 6,
+      "anim": "shake"
+     },
+     {
+      "asset": "robo_standing",
+      "x": 60,
+      "y": 86,
+      "w": 27,
+      "z": 6,
+      "anim": "shake"
+     },
+     {
+      "asset": "dust_puff",
+      "x": 78,
+      "y": 78,
+      "w": 26,
+      "z": 4,
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "“What was that?” whispered Milo.",
+   "scene": {
+    "bg": "bg_jungle_island",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 94,
+      "y": 86,
+      "w": 12,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "tree",
+      "x": 7,
+      "y": 86,
+      "w": 24,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "milo_hiding",
+      "x": 34,
+      "y": 86,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "robo_standing",
+      "x": 62,
+      "y": 86,
+      "w": 27,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "A huge dinosaur walked toward them.",
+   "scene": {
+    "bg": "bg_jungle_island",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 94,
+      "y": 86,
+      "w": 12,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "tree",
+      "x": 7,
+      "y": 86,
+      "w": 24,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "dino_plant_eater",
+      "x": 66,
+      "y": 86,
+      "w": 50,
+      "z": 5,
+      "anim": "walk"
+     },
+     {
+      "asset": "milo_surprised",
+      "x": 20,
+      "y": 86,
+      "w": 36,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "Milo quickly hid behind Robo.",
+   "scene": {
+    "bg": "bg_jungle_island",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 94,
+      "y": 86,
+      "w": 12,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "tree",
+      "x": 7,
+      "y": 86,
+      "w": 24,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "robo_standing",
+      "x": 42,
+      "y": 86,
+      "w": 27,
+      "z": 6
+     },
+     {
+      "asset": "milo_hiding",
+      "x": 26,
+      "y": 86,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "dino_plant_eater",
+      "x": 76,
+      "y": 86,
+      "w": 50,
+      "z": 4
+     }
+    ]
+   }
+  },
+  {
+   "text": "But the dinosaur did not chase them.",
+   "scene": {
+    "bg": "bg_jungle_island",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 94,
+      "y": 86,
+      "w": 12,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "tree",
+      "x": 7,
+      "y": 86,
+      "w": 24,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "dino_plant_eater",
+      "x": 62,
+      "y": 86,
+      "w": 50,
+      "z": 5,
+      "anim": "bob"
+     },
+     {
+      "asset": "milo_thinking",
+      "x": 22,
+      "y": 86,
+      "w": 36,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "It started eating leaves.",
+   "scene": {
+    "bg": "bg_jungle_island",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 94,
+      "y": 86,
+      "w": 12,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "tree",
+      "x": 7,
+      "y": 86,
+      "w": 24,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "dino_plant_eater",
+      "x": 58,
+      "y": 86,
+      "w": 50,
+      "z": 5,
+      "anim": "bob"
+     },
+     {
+      "asset": "leaves",
+      "x": 30,
+      "y": 54,
+      "w": 20,
+      "z": 6,
+      "anim": "sway",
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "Robo smiled.",
+   "scene": {
+    "bg": "bg_jungle_island",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 94,
+      "y": 86,
+      "w": 12,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "tree",
+      "x": 7,
+      "y": 86,
+      "w": 24,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "robo_happy",
+      "x": 40,
+      "y": 86,
+      "w": 27,
+      "z": 6
+     },
+     {
+      "asset": "milo_happy",
+      "x": 20,
+      "y": 86,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "dino_plant_eater",
+      "x": 78,
+      "y": 86,
+      "w": 50,
+      "z": 4
+     }
+    ]
+   }
+  },
+  {
+   "text": "“This dinosaur eats plants.”",
+   "scene": {
+    "bg": "bg_jungle_island",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 94,
+      "y": 86,
+      "w": 12,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "tree",
+      "x": 7,
+      "y": 86,
+      "w": 24,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "robo_pointing",
+      "x": 26,
+      "y": 86,
+      "w": 27,
+      "z": 6
+     },
+     {
+      "asset": "dino_plant_eater",
+      "x": 66,
+      "y": 86,
+      "w": 50,
+      "z": 5
+     },
+     {
+      "asset": "leaves",
+      "x": 44,
+      "y": 60,
+      "w": 16,
+      "z": 6,
+      "anim": "sway",
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "Suddenly—",
+   "scene": {
+    "bg": "bg_jungle_island",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 94,
+      "y": 86,
+      "w": 12,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "tree",
+      "x": 7,
+      "y": 86,
+      "w": 24,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "milo_surprised",
+      "x": 40,
+      "y": 86,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "sound_arcs",
+      "x": 74,
+      "y": 48,
+      "w": 26,
+      "z": 7,
+      "anim": "pop",
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "ROAAAAR!",
+   "scene": {
+    "bg": "bg_jungle_island",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 94,
+      "y": 86,
+      "w": 12,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "tree",
+      "x": 7,
+      "y": 86,
+      "w": 24,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "dino_meat_eater",
+      "x": 60,
+      "y": 86,
+      "w": 50,
+      "z": 6,
+      "anim": "shake"
+     },
+     {
+      "asset": "sound_arcs",
+      "x": 22,
+      "y": 44,
+      "w": 26,
+      "z": 7,
+      "anim": "pop",
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "Another dinosaur came running.",
+   "scene": {
+    "bg": "bg_jungle_island",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 94,
+      "y": 86,
+      "w": 12,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "tree",
+      "x": 7,
+      "y": 86,
+      "w": 24,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "dino_meat_eater",
+      "x": 58,
+      "y": 86,
+      "w": 50,
+      "z": 6,
+      "anim": "walk"
+     },
+     {
+      "asset": "milo_running",
+      "x": 20,
+      "y": 86,
+      "w": 36,
+      "z": 6,
+      "flip": true
+     }
+    ]
+   }
+  },
+  {
+   "text": "It had big, sharp teeth.",
+   "scene": {
+    "bg": "bg_jungle_island",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 94,
+      "y": 86,
+      "w": 12,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "tree",
+      "x": 7,
+      "y": 86,
+      "w": 24,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "dino_meat_eater",
+      "x": 54,
+      "y": 86,
+      "w": 50,
+      "z": 6
+     },
+     {
+      "asset": "milo_surprised",
+      "x": 18,
+      "y": 86,
+      "w": 36,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "“That one eats meat!” shouted Robo.",
+   "scene": {
+    "bg": "bg_jungle_island",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 94,
+      "y": 86,
+      "w": 12,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "tree",
+      "x": 7,
+      "y": 86,
+      "w": 24,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "robo_pointing",
+      "x": 26,
+      "y": 86,
+      "w": 27,
+      "z": 6
+     },
+     {
+      "asset": "dino_meat_eater",
+      "x": 70,
+      "y": 86,
+      "w": 50,
+      "z": 5
+     }
+    ]
+   }
+  },
+  {
+   "text": "“Run!”",
+   "scene": {
+    "bg": "bg_jungle_island",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 94,
+      "y": 86,
+      "w": 12,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "tree",
+      "x": 7,
+      "y": 86,
+      "w": 24,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "milo_running",
+      "x": 34,
+      "y": 86,
+      "w": 36,
+      "z": 6,
+      "anim": "shake"
+     },
+     {
+      "asset": "robo_standing",
+      "x": 56,
+      "y": 86,
+      "w": 27,
+      "z": 6
+     },
+     {
+      "asset": "dust_puff",
+      "x": 22,
+      "y": 78,
+      "w": 22,
+      "z": 4,
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "They hid behind a large rock.",
+   "scene": {
+    "bg": "bg_jungle_island",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 94,
+      "y": 86,
+      "w": 12,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "tree",
+      "x": 7,
+      "y": 86,
+      "w": 24,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "rock",
+      "x": 56,
+      "y": 86,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "milo_hiding",
+      "x": 34,
+      "y": 86,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "robo_standing",
+      "x": 74,
+      "y": 86,
+      "w": 27,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "Milo looked down.",
+   "scene": {
+    "bg": "bg_jungle_island",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 94,
+      "y": 86,
+      "w": 12,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "tree",
+      "x": 7,
+      "y": 86,
+      "w": 24,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "rock_with_fossil",
+      "x": 58,
+      "y": 86,
+      "w": 38,
+      "z": 5
+     },
+     {
+      "asset": "milo_thinking",
+      "x": 28,
+      "y": 86,
+      "w": 36,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "He saw something inside the rock.",
+   "scene": {
+    "bg": "bg_jungle_island",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 94,
+      "y": 86,
+      "w": 12,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "tree",
+      "x": 7,
+      "y": 86,
+      "w": 24,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "rock_with_fossil",
+      "x": 60,
+      "y": 86,
+      "w": 40,
+      "z": 5,
+      "anim": "pop"
+     },
+     {
+      "asset": "milo_surprised",
+      "x": 26,
+      "y": 86,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "sparkle",
+      "x": 74,
+      "y": 48,
+      "w": 16,
+      "z": 7,
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "“What is this?”",
+   "scene": {
+    "bg": "bg_jungle_island",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 94,
+      "y": 86,
+      "w": 12,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "tree",
+      "x": 7,
+      "y": 86,
+      "w": 24,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "fossil",
+      "x": 64,
+      "y": 86,
+      "w": 30,
+      "z": 6
+     },
+     {
+      "asset": "milo_thinking",
+      "x": 28,
+      "y": 86,
+      "w": 36,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "“It is a fossil,” said Robo.",
+   "scene": {
+    "bg": "bg_jungle_island",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 94,
+      "y": 86,
+      "w": 12,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "tree",
+      "x": 7,
+      "y": 86,
+      "w": 24,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "robo_pointing",
+      "x": 28,
+      "y": 86,
+      "w": 27,
+      "z": 6
+     },
+     {
+      "asset": "fossil",
+      "x": 68,
+      "y": 86,
+      "w": 30,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "“Fossils help us learn about animals that lived long ago.”",
+   "scene": {
+    "bg": "bg_jungle_island",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 94,
+      "y": 86,
+      "w": 12,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "tree",
+      "x": 7,
+      "y": 86,
+      "w": 24,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "fossil",
+      "x": 44,
+      "y": 86,
+      "w": 28,
+      "z": 6
+     },
+     {
+      "asset": "robo_talking",
+      "x": 22,
+      "y": 86,
+      "w": 27,
+      "z": 6
+     },
+     {
+      "asset": "sparkle",
+      "x": 72,
+      "y": 44,
+      "w": 18,
+      "z": 7,
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "Milo smiled.",
+   "scene": {
+    "bg": "bg_jungle_island",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 94,
+      "y": 86,
+      "w": 12,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "tree",
+      "x": 7,
+      "y": 86,
+      "w": 24,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "milo_happy",
+      "x": 40,
+      "y": 86,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "robo_happy",
+      "x": 68,
+      "y": 86,
+      "w": 27,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "“Dinosaurs lived on Earth before people!”",
+   "scene": {
+    "bg": "bg_jungle_island",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 94,
+      "y": 86,
+      "w": 12,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "tree",
+      "x": 7,
+      "y": 86,
+      "w": 24,
+      "z": 1,
+      "anim": "sway"
+     },
+     {
+      "asset": "milo_jumping",
+      "x": 36,
+      "y": 86,
+      "w": 36,
+      "z": 6,
+      "anim": "bob"
+     },
+     {
+      "asset": "dino_plant_eater",
+      "x": 76,
+      "y": 86,
+      "w": 50,
+      "z": 4
+     },
+     {
+      "asset": "fossil",
+      "x": 18,
+      "y": 86,
+      "w": 18,
+      "z": 5
+     }
+    ]
+   }
+  }
+ ],
+ "questions": [
+  {
+   "q": "What did the first dinosaur eat?",
+   "o": [
+    "Plants",
+    "Meat",
+    "Rocks"
+   ],
+   "a": 0
+  },
+  {
+   "q": "What did the second dinosaur eat?",
+   "o": [
+    "Meat",
+    "Leaves",
+    "Fish"
+   ],
+   "a": 0
+  },
+  {
+   "q": "What did Milo find in the rock?",
+   "o": [
+    "A fossil",
+    "A coin",
+    "An egg"
+   ],
+   "a": 0
+  },
+  {
+   "q": "What do fossils teach us about?",
+   "o": [
+    "Animals from long ago",
+    "The weather",
+    "Space"
+   ],
+   "a": 0
+  },
+  {
+   "q": "Where did Milo hide first?",
+   "o": [
+    "Behind Robo",
+    "In a tree",
+    "Under water"
+   ],
+   "a": 0
+  }
+ ],
+ "created": "2026-08-18"
+}

@@ -1,0 +1,1110 @@
+{
+ "id": "five-gold-coins",
+ "title": "The Five Gold Coins",
+ "emoji": "💰",
+ "seq": 7,
+ "lesson_word": "SAVING",
+ "lesson": "Milo learns he can spend some and save some.",
+ "tint": "#F4A340",
+ "glow": "#ffc98a",
+ "facts": [
+  "We can spend money.",
+  "We can save money.",
+  "We do not need to buy everything we want."
+ ],
+ "pages": [
+  {
+   "text": "Milo had five gold coins.",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 90,
+      "y": 10,
+      "w": 16,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 14,
+      "w": 20,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "milo_happy",
+      "x": 34,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "coin_stack",
+      "x": 68,
+      "y": 82,
+      "w": 22,
+      "z": 6,
+      "anim": "bob"
+     }
+    ]
+   }
+  },
+  {
+   "text": "He went to a toy shop.",
+   "scene": {
+    "bg": "bg_toy_shop",
+    "elements": [
+     {
+      "asset": "book",
+      "x": 6,
+      "y": 86,
+      "w": 12,
+      "z": 1
+     },
+     {
+      "asset": "milo_running",
+      "x": 32,
+      "y": 86,
+      "w": 36,
+      "z": 6,
+      "anim": "walk"
+     },
+     {
+      "asset": "shop_shelf",
+      "x": 74,
+      "y": 86,
+      "w": 32,
+      "z": 3
+     }
+    ]
+   }
+  },
+  {
+   "text": "He saw a big red car.",
+   "scene": {
+    "bg": "bg_toy_shop",
+    "elements": [
+     {
+      "asset": "book",
+      "x": 6,
+      "y": 86,
+      "w": 12,
+      "z": 1
+     },
+     {
+      "asset": "shop_shelf",
+      "x": 70,
+      "y": 86,
+      "w": 34,
+      "z": 3
+     },
+     {
+      "asset": "toy_car",
+      "x": 70,
+      "y": 86,
+      "w": 26,
+      "z": 5,
+      "anim": "pop"
+     },
+     {
+      "asset": "milo_surprised",
+      "x": 26,
+      "y": 86,
+      "w": 36,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "“I want it!”",
+   "scene": {
+    "bg": "bg_toy_shop",
+    "elements": [
+     {
+      "asset": "book",
+      "x": 6,
+      "y": 86,
+      "w": 12,
+      "z": 1
+     },
+     {
+      "asset": "milo_pointing",
+      "x": 30,
+      "y": 86,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "toy_car",
+      "x": 70,
+      "y": 86,
+      "w": 28,
+      "z": 5,
+      "anim": "bob"
+     },
+     {
+      "asset": "sparkle",
+      "x": 86,
+      "y": 40,
+      "w": 14,
+      "z": 7,
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "The car cost five coins.",
+   "scene": {
+    "bg": "bg_toy_shop",
+    "elements": [
+     {
+      "asset": "book",
+      "x": 6,
+      "y": 86,
+      "w": 12,
+      "z": 1
+     },
+     {
+      "asset": "toy_car",
+      "x": 36,
+      "y": 86,
+      "w": 26,
+      "z": 5
+     },
+     {
+      "asset": "coin_stack",
+      "x": 70,
+      "y": 86,
+      "w": 24,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "Robo asked, “Do you want to use all your coins?”",
+   "scene": {
+    "bg": "bg_toy_shop",
+    "elements": [
+     {
+      "asset": "book",
+      "x": 6,
+      "y": 86,
+      "w": 12,
+      "z": 1
+     },
+     {
+      "asset": "robo_talking",
+      "x": 34,
+      "y": 86,
+      "w": 27,
+      "z": 6
+     },
+     {
+      "asset": "milo_thinking",
+      "x": 66,
+      "y": 86,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "coin_stack",
+      "x": 86,
+      "y": 86,
+      "w": 16,
+      "z": 5
+     }
+    ]
+   }
+  },
+  {
+   "text": "Milo stopped and thought.",
+   "scene": {
+    "bg": "bg_toy_shop",
+    "elements": [
+     {
+      "asset": "book",
+      "x": 6,
+      "y": 86,
+      "w": 12,
+      "z": 1
+     },
+     {
+      "asset": "milo_thinking",
+      "x": 44,
+      "y": 86,
+      "w": 36,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "Then he saw a small blue ball.",
+   "scene": {
+    "bg": "bg_toy_shop",
+    "elements": [
+     {
+      "asset": "book",
+      "x": 6,
+      "y": 86,
+      "w": 12,
+      "z": 1
+     },
+     {
+      "asset": "shop_shelf",
+      "x": 70,
+      "y": 86,
+      "w": 32,
+      "z": 3
+     },
+     {
+      "asset": "ball",
+      "x": 70,
+      "y": 86,
+      "w": 18,
+      "z": 5,
+      "anim": "pop"
+     },
+     {
+      "asset": "milo_surprised",
+      "x": 26,
+      "y": 86,
+      "w": 36,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "The ball cost two coins.",
+   "scene": {
+    "bg": "bg_toy_shop",
+    "elements": [
+     {
+      "asset": "book",
+      "x": 6,
+      "y": 86,
+      "w": 12,
+      "z": 1
+     },
+     {
+      "asset": "ball",
+      "x": 36,
+      "y": 86,
+      "w": 20,
+      "z": 5
+     },
+     {
+      "asset": "coin",
+      "x": 64,
+      "y": 86,
+      "w": 13,
+      "z": 6
+     },
+     {
+      "asset": "coin",
+      "x": 78,
+      "y": 86,
+      "w": 13,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "“I have an idea,” said Milo.",
+   "scene": {
+    "bg": "bg_toy_shop",
+    "elements": [
+     {
+      "asset": "book",
+      "x": 6,
+      "y": 86,
+      "w": 12,
+      "z": 1
+     },
+     {
+      "asset": "milo_happy",
+      "x": 34,
+      "y": 86,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "sparkle",
+      "x": 64,
+      "y": 42,
+      "w": 18,
+      "z": 7,
+      "anchor": "center"
+     },
+     {
+      "asset": "robo_standing",
+      "x": 70,
+      "y": 86,
+      "w": 27,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "“I can buy the ball and save three coins.”",
+   "scene": {
+    "bg": "bg_toy_shop",
+    "elements": [
+     {
+      "asset": "book",
+      "x": 6,
+      "y": 86,
+      "w": 12,
+      "z": 1
+     },
+     {
+      "asset": "milo_pointing",
+      "x": 26,
+      "y": 86,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "ball",
+      "x": 56,
+      "y": 86,
+      "w": 18,
+      "z": 5
+     },
+     {
+      "asset": "coin_stack",
+      "x": 80,
+      "y": 86,
+      "w": 20,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "He bought the ball.",
+   "scene": {
+    "bg": "bg_toy_shop",
+    "elements": [
+     {
+      "asset": "book",
+      "x": 6,
+      "y": 86,
+      "w": 12,
+      "z": 1
+     },
+     {
+      "asset": "milo_happy",
+      "x": 34,
+      "y": 86,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "ball",
+      "x": 64,
+      "y": 86,
+      "w": 20,
+      "z": 7,
+      "anim": "bob"
+     }
+    ]
+   }
+  },
+  {
+   "text": "Then he put three coins into his money box.",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 90,
+      "y": 10,
+      "w": 16,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 14,
+      "w": 20,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "milo_standing",
+      "x": 28,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "money_box",
+      "x": 66,
+      "y": 82,
+      "w": 30,
+      "z": 5
+     },
+     {
+      "asset": "coin",
+      "x": 66,
+      "y": 82,
+      "w": 12,
+      "z": 7,
+      "anim": "fall"
+     }
+    ]
+   }
+  },
+  {
+   "text": "CLINK!",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 90,
+      "y": 10,
+      "w": 16,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 14,
+      "w": 20,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "money_box",
+      "x": 56,
+      "y": 82,
+      "w": 32,
+      "z": 5,
+      "anim": "shake"
+     },
+     {
+      "asset": "coin",
+      "x": 56,
+      "y": 82,
+      "w": 13,
+      "z": 7,
+      "anim": "fall"
+     }
+    ]
+   }
+  },
+  {
+   "text": "CLINK!",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 90,
+      "y": 10,
+      "w": 16,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 14,
+      "w": 20,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "money_box",
+      "x": 56,
+      "y": 82,
+      "w": 32,
+      "z": 5,
+      "anim": "shake"
+     },
+     {
+      "asset": "coin",
+      "x": 56,
+      "y": 82,
+      "w": 13,
+      "z": 7,
+      "anim": "fall"
+     }
+    ]
+   }
+  },
+  {
+   "text": "CLINK!",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 90,
+      "y": 10,
+      "w": 16,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 14,
+      "w": 20,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "money_box",
+      "x": 56,
+      "y": 82,
+      "w": 32,
+      "z": 5,
+      "anim": "shake"
+     },
+     {
+      "asset": "coin",
+      "x": 56,
+      "y": 82,
+      "w": 13,
+      "z": 7,
+      "anim": "fall"
+     },
+     {
+      "asset": "sparkle",
+      "x": 80,
+      "y": 48,
+      "w": 16,
+      "z": 6,
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "A few days later, Milo got two more coins.",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 90,
+      "y": 10,
+      "w": 16,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 14,
+      "w": 20,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "milo_happy",
+      "x": 32,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "coin",
+      "x": 64,
+      "y": 82,
+      "w": 14,
+      "z": 6,
+      "anim": "bob"
+     },
+     {
+      "asset": "coin",
+      "x": 78,
+      "y": 82,
+      "w": 14,
+      "z": 6,
+      "anim": "bob",
+      "delay": 0.5
+     }
+    ]
+   }
+  },
+  {
+   "text": "He counted his money.",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 90,
+      "y": 10,
+      "w": 16,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 14,
+      "w": 20,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "milo_thinking",
+      "x": 28,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "coin_stack",
+      "x": 68,
+      "y": 82,
+      "w": 26,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "“One, two, three, four, five!”",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 90,
+      "y": 10,
+      "w": 16,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 14,
+      "w": 20,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "milo_pointing",
+      "x": 26,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "coin_stack",
+      "x": 68,
+      "y": 82,
+      "w": 28,
+      "z": 6,
+      "anim": "pop"
+     }
+    ]
+   }
+  },
+  {
+   "text": "“I have five coins again!”",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 90,
+      "y": 10,
+      "w": 16,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 14,
+      "w": 20,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "milo_jumping",
+      "x": 34,
+      "y": 82,
+      "w": 36,
+      "z": 6,
+      "anim": "bob"
+     },
+     {
+      "asset": "coin_stack",
+      "x": 70,
+      "y": 82,
+      "w": 26,
+      "z": 6
+     },
+     {
+      "asset": "sparkle",
+      "x": 20,
+      "y": 48,
+      "w": 16,
+      "z": 6,
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "Robo smiled.",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 90,
+      "y": 10,
+      "w": 16,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 14,
+      "w": 20,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "robo_happy",
+      "x": 44,
+      "y": 82,
+      "w": 27,
+      "z": 6
+     },
+     {
+      "asset": "milo_happy",
+      "x": 20,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     }
+    ]
+   }
+  },
+  {
+   "text": "“That happened because you saved some money.”",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 90,
+      "y": 10,
+      "w": 16,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 14,
+      "w": 20,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "robo_talking",
+      "x": 30,
+      "y": 82,
+      "w": 27,
+      "z": 6
+     },
+     {
+      "asset": "money_box",
+      "x": 70,
+      "y": 82,
+      "w": 26,
+      "z": 5
+     },
+     {
+      "asset": "sparkle",
+      "x": 88,
+      "y": 50,
+      "w": 14,
+      "z": 6,
+      "anchor": "center"
+     }
+    ]
+   }
+  },
+  {
+   "text": "Milo nodded.",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 90,
+      "y": 10,
+      "w": 16,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 14,
+      "w": 20,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "milo_happy",
+      "x": 42,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "ball",
+      "x": 70,
+      "y": 82,
+      "w": 16,
+      "z": 5
+     }
+    ]
+   }
+  },
+  {
+   "text": "“I can use some money now and save some for later.”",
+   "scene": {
+    "bg": "bg_sky_day",
+    "elements": [
+     {
+      "asset": "grass_tuft",
+      "x": 6,
+      "y": 82,
+      "w": 11,
+      "z": 1
+     },
+     {
+      "asset": "cloud",
+      "x": 90,
+      "y": 10,
+      "w": 16,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "cloud",
+      "x": 10,
+      "y": 14,
+      "w": 20,
+      "z": 1,
+      "anchor": "center",
+      "anim": "drift"
+     },
+     {
+      "asset": "milo_happy",
+      "x": 26,
+      "y": 82,
+      "w": 36,
+      "z": 6
+     },
+     {
+      "asset": "ball",
+      "x": 52,
+      "y": 82,
+      "w": 15,
+      "z": 5
+     },
+     {
+      "asset": "money_box",
+      "x": 78,
+      "y": 82,
+      "w": 26,
+      "z": 5
+     },
+     {
+      "asset": "sparkle",
+      "x": 64,
+      "y": 44,
+      "w": 14,
+      "z": 6,
+      "anchor": "center"
+     }
+    ]
+   }
+  }
+ ],
+ "questions": [
+  {
+   "q": "How many coins did Milo have?",
+   "o": [
+    "Five",
+    "Two",
+    "Ten"
+   ],
+   "a": 0
+  },
+  {
+   "q": "What did Milo buy?",
+   "o": [
+    "The ball",
+    "The car",
+    "A book"
+   ],
+   "a": 0
+  },
+  {
+   "q": "How many coins did he save?",
+   "o": [
+    "Three",
+    "Five",
+    "None"
+   ],
+   "a": 0
+  },
+  {
+   "q": "Where did he put the saved coins?",
+   "o": [
+    "His money box",
+    "His pocket",
+    "The bin"
+   ],
+   "a": 0
+  },
+  {
+   "q": "Do we need to buy everything we want?",
+   "o": [
+    "No",
+    "Yes",
+    "Always"
+   ],
+   "a": 0
+  }
+ ],
+ "created": "2026-08-18"
+}

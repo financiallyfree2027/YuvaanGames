@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+<rect x="92" y="24" width="16" height="52" rx="8" fill="#FDFAF4"/>
+<rect x="92" y="24" width="16" height="52" rx="8" fill="none" stroke="#B8C6D1" stroke-width="2.5"/>
+<line x1="92" y1="34" x2="108" y2="34" stroke="#B8C6D1" stroke-width="2.5"/>
+<line x1="92" y1="44" x2="108" y2="44" stroke="#B8C6D1" stroke-width="2.5"/>
+<line x1="92" y1="54" x2="108" y2="54" stroke="#B8C6D1" stroke-width="2.5"/>
+<line x1="92" y1="64" x2="108" y2="64" stroke="#B8C6D1" stroke-width="2.5"/>
+<path d="M 100,72 L 76,92" fill="none" stroke="#FDFAF4" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 100,72 L 124,92" fill="none" stroke="#FDFAF4" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 82,80 C 46,86 26,116 30,150 C 32,172 50,182 66,176 C 82,170 88,146 88,120 C 88,100 88,84 82,80 Z" fill="#FF8AC5"/>
+<path d="M 118,80 C 154,86 174,116 170,150 C 168,172 150,182 134,176 C 118,170 112,146 112,120 C 112,100 112,84 118,80 Z" fill="#FF8AC5"/>
+<path d="M 60,110 C 46,120 42,140 46,158" fill="none" stroke="#FDFAF4" stroke-width="4" stroke-linecap="round" stroke-opacity="0.5"/>
+<path d="M 140,110 C 154,120 158,140 154,158" fill="none" stroke="#FDFAF4" stroke-width="4" stroke-linecap="round" stroke-opacity="0.5"/>
+<path d="M 80,96 L 66,124" fill="none" stroke="#FDFAF4" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 120,96 L 134,124" fill="none" stroke="#FDFAF4" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

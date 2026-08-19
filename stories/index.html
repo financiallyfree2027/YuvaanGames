@@ -53,6 +53,52 @@ body.myturn .words{background:#effcfa}
 .picnote{position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:11px;
   color:#b3a795;letter-spacing:.4px}
 
+/* ================= SCENE STAGE =================
+   New stories are composed from reusable SVG assets instead of one big
+   illustration. The picture panel becomes a little theatre stage: a
+   background fills it, and elements are placed by percentage so the
+   same scene works at any screen size. Old PNG stories are untouched. */
+.stage{position:absolute;inset:0;overflow:hidden}
+.stage .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+/* The assets are square (viewBox 0 0 200 200) but a viewBox-only SVG gives the
+   browser no dependable intrinsic height, so the box is squared explicitly. */
+.stage .el{position:absolute;transform-origin:50% 50%;will-change:transform;aspect-ratio:1}
+.stage .el .in{width:100%;height:100%}
+.stage .el img{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none;
+  filter:drop-shadow(0 5px 9px rgba(0,0,0,.20))}
+.stage .el.flip img{transform:scaleX(-1)}
+/* gentle, slow motion only — this is for a five-year-old */
+@keyframes sc_float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7%)}}
+@keyframes sc_bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3%)}}
+@keyframes sc_sway{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+@keyframes sc_walk{0%,100%{transform:translateX(-4%) translateY(0)}50%{transform:translateX(4%) translateY(-2%)}}
+@keyframes sc_rise{0%{transform:translateY(14%);opacity:0}20%{opacity:.95}100%{transform:translateY(-46%);opacity:0}}
+@keyframes sc_fall{0%{transform:translateY(-24%);opacity:0}20%{opacity:1}100%{transform:translateY(30%);opacity:0}}
+@keyframes sc_drift{0%{transform:translateX(-6%)}100%{transform:translateX(6%)}}
+@keyframes sc_spin{to{transform:rotate(360deg)}}
+@keyframes sc_pop{0%{transform:scale(.4);opacity:0}60%{transform:scale(1.12);opacity:1}100%{transform:scale(1);opacity:1}}
+@keyframes sc_blink{0%,92%,100%{opacity:1}96%{opacity:.25}}
+@keyframes sc_shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-2.5%)}75%{transform:translateX(2.5%)}}
+@keyframes sc_zoom{0%{transform:scale(.9)}100%{transform:scale(1.06)}}
+.anim-float .in{animation:sc_float 3.6s ease-in-out infinite}
+.anim-bob   .in{animation:sc_bob 2.2s ease-in-out infinite}
+.anim-sway  .in{animation:sc_sway 3.4s ease-in-out infinite}
+.anim-walk  .in{animation:sc_walk 2.6s ease-in-out infinite}
+.anim-rise  .in{animation:sc_rise 4.2s ease-in infinite}
+.anim-fall  .in{animation:sc_fall 2.6s linear infinite}
+.anim-drift .in{animation:sc_drift 14s ease-in-out infinite alternate}
+.anim-spin  .in{animation:sc_spin 9s linear infinite}
+.anim-pop   .in{animation:sc_pop .7s cubic-bezier(.34,1.56,.64,1) both}
+.anim-blink .in{animation:sc_blink 4s ease-in-out infinite}
+.anim-shake .in{animation:sc_shake .5s ease-in-out infinite}
+.anim-zoom  .in{animation:sc_zoom 7s ease-in-out infinite alternate}
+/* every character gets a quiet breathing idle so no scene is ever dead still */
+@keyframes sc_idle{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-1.6%) scale(1.012)}}
+.anim-idle{animation:sc_idle 3.2s ease-in-out infinite}
+.stage .el:nth-child(3) .anim-idle{animation-delay:.5s}
+.stage .el:nth-child(4) .anim-idle{animation-delay:1s}
+@media (prefers-reduced-motion:reduce){.stage .in{animation:none!important}}
+
 .turnlabel{font-size:13px;letter-spacing:3.4px;color:var(--muted);height:17px;font-weight:700;
   transition:.3s}
 body.myturn .turnlabel{color:var(--mine)}
@@ -87,6 +133,22 @@ body.myturn .w.on{background:linear-gradient(180deg,var(--mine),#0b7f74);
 .btn.next{background:var(--blue);color:#fff;border-bottom-color:rgba(0,0,0,.25)}
 .btn.next.pulse{animation:pl 1.5s ease-in-out infinite}
 @keyframes pl{0%,100%{box-shadow:0 0 0 0 rgba(61,141,219,.5)}50%{box-shadow:0 0 0 14px rgba(61,141,219,0)}}
+
+/* ---------------- Yuvaan's own recording ---------------- */
+.btn.rec{background:#e0453c;color:#fff;border-bottom-color:rgba(0,0,0,.25);
+  animation:recPulse 1s ease-in-out infinite}
+@keyframes recPulse{0%,100%{box-shadow:0 0 0 0 rgba(224,69,60,.55)}50%{box-shadow:0 0 0 15px rgba(224,69,60,0)}}
+.btn.play{background:#2fae7c;color:#fff;border-bottom-color:rgba(0,0,0,.25)}
+.btn.hidden{display:none}
+/* a red dot on the picture while the mic is live */
+#recDot{position:fixed;top:52px;right:14px;z-index:20;display:none;align-items:center;gap:7px;
+  background:rgba(0,0,0,.55);color:#fff;border-radius:20px;padding:5px 12px;font-size:13px;font-weight:700}
+#recDot.on{display:flex}
+#recDot i{width:11px;height:11px;border-radius:50%;background:#ff4b3e;
+  animation:blink .9s steps(2,end) infinite;display:inline-block}
+@keyframes blink{50%{opacity:.15}}
+body.recording .w.on{background:linear-gradient(180deg,#e0453c,#a82a22);
+  box-shadow:0 8px 20px -8px #e0453c}
 .meta{font-size:12px;color:var(--muted);min-width:42px;text-align:center}
 .speed{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted)}
 input[type=range]{width:74px;accent-color:var(--tint)}
@@ -178,10 +240,14 @@ input[type=range]{width:74px;accent-color:var(--tint)}
     <div class="pic" id="pic"></div>
   </div>
 
+  <div id="recDot"><i></i>REC</div>
+
   <div class="controls">
     <button class="btn" id="prev">◀</button>
     <button class="btn hear" id="hear">🔊 Read it</button>
     <button class="btn mine" id="mine">🙋 My turn</button>
+    <button class="btn play hidden" id="playMe">▶️ Hear me</button>
+    <button class="btn hidden" id="stopMe">⏹ Stop</button>
     <button class="btn next" id="next">Next ▶</button>
     <div class="meta" id="pageNo"></div>
     <div class="speed"><span>🐢</span><input type="range" id="rate" min="0.55" max="1.15" step="0.05" value="0.9"><span>🐇</span></div>
@@ -269,18 +335,28 @@ function clip(id,text,done){
   speak(text,done);
 }
 /* play a slice of a longer file */
+/* Every playback gets a generation number. Sentences now live next to each
+   other inside one sprite file, so without this an OLD watcher loop from the
+   previous page sees the clock jump past its own end marker and pauses the
+   audio — the new sentence then plays silently with no highlight. */
+let segGen = 0;
 function playSeg(v,done,onTick){
+  const my = ++segGen;
   player.pause(); player.onended=null;
-  const go=()=>{ player.currentTime=v.a||0; player.playbackRate=rate;
+  const go=()=>{
+    if(my!==segGen) return;                    /* superseded before we started */
+    player.currentTime=v.a||0; player.playbackRate=rate;
     player.play().then(()=>{
+      if(my!==segGen) return;
       cancelAnimationFrame(raf);
       (function w(){
+        if(my!==segGen) return;                /* a newer clip has taken over */
         if(player.paused){return}
         if(onTick) onTick(player.currentTime);
         if(v.b!==undefined && player.currentTime>=v.b-0.02){ player.pause(); done&&done(); return; }
         raf=requestAnimationFrame(w);
       })();
-    }).catch(()=>done&&done());
+    }).catch(()=>{ if(my===segGen) done&&done(); });
   };
   const src=VB+v.f;
   if(!player.src.endsWith(v.f)){ player.src=src; player.onloadedmetadata=go; player.onerror=()=>done&&done(); }
@@ -338,42 +414,125 @@ function wordByWord(after){
   })();
 }
 
-/* ================= BEAT 3 — your turn, no voice ================= */
-function beatMine(){
-  stopAll(); mode="mine"; document.body.classList.add("myturn");
+/* ================= BEAT 3 — YOUR TURN: Yuvaan reads, and we record him =====
+   No spoken "now it is your turn" — he just gets the highlight and the mic.
+   Press 🙋 to start, press ⏹ to stop, then ▶️ to hear himself.
+   ========================================================================= */
+const REC = { stream:null, rec:null, chunks:[], url:null, on:false, audio:null, gen:0 };
+window.REC = REC;               /* exposed so it can be inspected / tested */
+
+function recSupported(){
+  return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder);
+}
+function clearRecording(){
+  stopPlayback();
+  REC.gen++;                    /* invalidates any recorder stop still in flight */
+  if(REC.url){ URL.revokeObjectURL(REC.url); REC.url=null; }
+  REC.chunks=[];
+  $("playMe").classList.add("hidden");
+  $("stopMe").classList.add("hidden");
+}
+function releaseMic(){
+  if(REC.stream){ REC.stream.getTracks().forEach(t=>t.stop()); REC.stream=null; }
+  REC.rec=null;
+}
+async function startRecording(){
+  if(!recSupported()) return false;
+  try{
+    REC.stream = await navigator.mediaDevices.getUserMedia({audio:true});
+  }catch(e){ return false; }                      /* mic blocked or unavailable */
+  try{
+    REC.chunks=[];
+    const myGen = ++REC.gen;                      /* this take's identity */
+    REC.rec = new MediaRecorder(REC.stream);
+    REC.rec.ondataavailable = e=>{ if(e.data && e.data.size) REC.chunks.push(e.data); };
+    REC.rec.onstop = ()=>{
+      releaseMic();
+      /* if he has already turned the page, throw this take away rather than
+         popping a stale "Hear me" button back onto the new page */
+      if(myGen !== REC.gen || !REC.chunks.length){ REC.chunks=[]; return; }
+      const blob = new Blob(REC.chunks, {type: REC.chunks[0].type || "audio/webm"});
+      if(REC.url) URL.revokeObjectURL(REC.url);
+      REC.url = URL.createObjectURL(blob);
+      $("playMe").classList.remove("hidden");     /* now he can hear himself */
+    };
+    REC.rec.start();
+    REC.on=true;
+    document.body.classList.add("recording");
+    $("recDot").classList.add("on");
+    $("mine").textContent="⏹ Stop";
+    $("mine").classList.remove("mine"); $("mine").classList.add("rec");
+    return true;
+  }catch(e){ releaseMic(); return false; }
+}
+function stopRecording(){
+  if(!REC.on) return;
+  REC.on=false;
+  try{ if(REC.rec && REC.rec.state!=="inactive") REC.rec.stop(); }catch(e){ releaseMic(); }
+  document.body.classList.remove("recording");
+  $("recDot").classList.remove("on");
+  $("mine").textContent="🙋 My turn";
+  $("mine").classList.remove("rec"); $("mine").classList.add("mine");
+  clearTimeout(pace);
+  clearMarks();
+  $("turnlabel").textContent="WELL READ!";
+  $("next").classList.add("pulse");
+  mode="done";
+}
+function playRecording(){
+  if(!REC.url) return;
+  stopAll();
+  stopPlayback();
+  REC.audio = new Audio(REC.url);
+  REC.audio.onended = ()=>{ $("stopMe").classList.add("hidden"); };
+  REC.audio.play().catch(()=>{});
+  $("stopMe").classList.remove("hidden");
+}
+function stopPlayback(){
+  if(REC.audio){ try{ REC.audio.pause(); }catch(e){} REC.audio=null; }
+  $("stopMe").classList.add("hidden");
+}
+
+/* the highlight pacer — a guide for his eyes while he reads aloud */
+function paceHighlight(){
+  const t=timesFor(sid(key,n));
+  const dur = t ? tokens.map((_,i)=>Math.max(.45,((i<t.length-1?t[i+1]:t[i]+.75)-t[i])*1.6))
+                : tokens.map(w=>.46+w.length*.08);
+  let i=0;
+  (function stepP(){
+    if(mode!=="mine")return;
+    if(i>=tokens.length){ mark(tokens.length-1); return; }   /* hold on the last word */
+    mark(i); pace=setTimeout(()=>{i++;stepP()}, dur[i]*1000/Math.max(rate,.55));
+  })();
+}
+
+async function beatMine(){
+  /* pressing it a second time ends the recording */
+  if(REC.on){ stopRecording(); return; }
+  stopAll(); clearRecording();
+  mode="mine"; document.body.classList.add("myturn");
   $("turnlabel").textContent="YOUR TURN";
   marks(true,true,true);
-  clip("yourturn",(window.COMMON&&window.COMMON.yourturn)||"Now it is your turn. You read it.",()=>{
-    if(mode!=="mine")return;
-    const t=timesFor(sid(key,n));
-    const dur = t ? tokens.map((_,i)=>Math.max(.45,((i<t.length-1?t[i+1]:t[i]+.75)-t[i])*1.6))
-                  : tokens.map(w=>.46+w.length*.08);
-    let i=0;
-    (function stepP(){
-      if(mode!=="mine")return;
-      if(i>=tokens.length){
-        mark(tokens.length-1);
-        setTimeout(()=>{ if(mode!=="mine")return; clearMarks();
-          $("turnlabel").textContent="WELL READ!"; $("next").classList.add("pulse"); mode="done"; },750);
-        return;
-      }
-      mark(i); pace=setTimeout(()=>{i++;stepP()}, dur[i]*1000/Math.max(rate,.55));
-    })();
-  });
+  paceHighlight();                     /* highlight first, so he knows where to start */
+  const ok = await startRecording();
+  if(!ok){
+    /* no mic (or blocked, or opened from a file:// URL) — reading still works */
+    $("turnlabel").textContent="YOUR TURN 🎤✖";
+  }
 }
 
 function stopAll(){
   cancelAnimationFrame(raf); clearTimeout(pace);
   player.pause(); player.onended=null; player.onloadedmetadata=null;
   speechSynthesis.cancel(); clearMarks(); $("next").classList.remove("pulse");
+  if(typeof stopPlayback==="function") stopPlayback();
 }
 
 /* ================= title card — shown while the story name is spoken ========= */
 function titleCard(k){
   stopAll(); mode="title";
-  const first = PICS[k+"_"+S.screens[0].art];
-  $("pic").innerHTML = first ? `<img src="${IB}${first}" alt="">`
-                             : `<div class="picfall">${ph(k)}</div>`;
+  const cover = coverHTML(k,S);
+  $("pic").innerHTML = cover;
   $("dots").innerHTML = "";
   $("turnlabel").textContent = S.lesson_word || "";
   const t=$("text"); t.innerHTML="";
@@ -399,13 +558,58 @@ function titleCard(k){
 }
 
 /* ================= render one screen ================= */
+/* ================= SCENE STAGE RENDERER =================
+   Builds a page picture from reusable assets listed in ASSETS.
+   A page uses EITHER the legacy `art` key (one big PNG, the original
+   three stories) OR a `scene` object (new stories). Nothing else changes. */
+function assetURL(name){
+  const a=ASSETS[name];
+  return a ? a.file : null;
+}
+function sceneHTML(scene){
+  if(!scene) return null;
+  const bgURL = scene.bg ? assetURL(scene.bg) : null;
+  let h = '<div class="stage">';
+  if(bgURL) h += `<img class="bg" src="${bgURL}" alt="">`;
+  const els = scene.elements || scene.el || [];
+  els.forEach(e=>{
+    const url = assetURL(e.asset);
+    if(!url){ missingAtRuntime.add(e.asset); return; }   /* never break the story */
+    const scale = e.scale || 1;
+    const w = (e.w || 26) * scale;                        /* % of stage width  */
+    const x = (e.x!==undefined? e.x : 50);
+    const y = (e.y!==undefined? e.y : 60);
+    const z = e.z!==undefined ? e.z : 5;
+    /* Anchoring: by default `y` is where the element's FEET sit, so characters
+       and props stand on the ground line instead of floating. Sky things
+       (clouds, sun, a swimming whale) pass anchor:"center". */
+    const anchor = e.anchor || 'base';
+    const tf = anchor === 'center' ? 'translate(-50%,-50%)' : 'translate(-50%,-100%)';
+    /* every character breathes gently unless the page asked for something else */
+    const isChar = /^(milo|robo)_/.test(e.asset);
+    const anim = e.anim ? ` anim-${e.anim}` : (isChar ? ' anim-idle' : '');
+    const flip = e.flip ? ' flip' : '';
+    const delay = e.delay ? `animation-delay:${e.delay}s;` : '';
+    h += `<div class="el${flip}" style="left:${x}%;top:${y}%;width:${w}%;`
+       + `transform:${tf};z-index:${z}">`
+       + `<div class="in${anim}" style="${delay}"><img src="${url}" alt=""></div></div>`;
+  });
+  return h + '</div>';
+}
+const missingAtRuntime = new Set();
+
 function render(){
   stopAll(); mode="idle"; pass=0; document.body.classList.remove("myturn");
   const sc=S.screens[n];
-  const pname=key+"_"+sc.art, file=PICS[pname];
-  $("pic").innerHTML = file
-    ? `<img src="${IB}${file}" alt="">`
-    : `<div class="picfall">${ph(key)}<div class="picnote">picture: ${pname}.png</div></div>`;
+  const stage = sceneHTML(sc.scene);
+  if(stage){
+    $("pic").innerHTML = stage;
+  } else {
+    const pname=key+"_"+sc.art, file=PICS[pname];
+    $("pic").innerHTML = file
+      ? `<img src="${IB}${file}" alt="">`
+      : `<div class="picfall">${ph(key)}<div class="picnote">picture: ${pname}.png</div></div>`;
+  }
 
   tokens=sc.text.split(/\s+/).filter(Boolean);
   const t=$("text"); t.innerHTML="";
@@ -492,25 +696,119 @@ function openStory(k){
   $("storyName").textContent=S.name; show("reader"); drawStars();
   titleCard(k);
 }
+/* ================= REUSABLE ASSET CATALOGUE + JSON STORIES =================
+   Assets live in story-assets/ and are described by story-assets/assets.json.
+   New stories are plain JSON in data/ and are listed in data/index.json.
+   The three original stories stay exactly as they were, in stories.js. */
+let ASSETS = {};
+
+async function loadLibrary(){
+  try{
+    const r = await fetch('story-assets/assets.json', {cache:'no-cache'});
+    if(r.ok) ASSETS = await r.json();
+  }catch(e){ /* offline / file:// — scenes fall back to the placeholder */ }
+  /* Recorded narration for the new stories: ONE small mp3 per sentence in
+     assets/audio/. Deliberately not a single sprite — with a sprite every page
+     shares one clock, and a leftover watcher from the previous page pauses the
+     next one. Separate files use the reader's plain play/onended path, so the
+     whole sentence plays while the highlight walks the words. */
+  try{
+    const r = await fetch('data/audio-missions.json', {cache:'no-cache'});
+    if(r.ok){
+      const d = await r.json();
+      (d.HAVE_AUDIO||[]).forEach(id=>GEN.add(id));
+      Object.assign(GT, d.TIMINGS||{});
+    }
+  }catch(e){ /* no narration yet — the browser voice reads it instead */ }
+  try{
+    const r = await fetch('data/index.json', {cache:'no-cache'});
+    if(!r.ok) return;
+    const list = await r.json();
+    const files = (list.stories || []);
+    const loaded = await Promise.all(files.map(async f => {
+      try{
+        const rr = await fetch('data/' + f, {cache:'no-cache'});
+        return rr.ok ? await rr.json() : null;
+      }catch(e){ return null; }
+    }));
+    loaded.forEach(st => { if(st && st.id) window.STORIES[st.id] = normaliseStory(st); });
+  }catch(e){ /* no data folder yet — the original stories still work */ }
+}
+
+/* accept the authoring format and fill in what the reader expects */
+function normaliseStory(st){
+  const pages = st.pages || st.screens || [];
+  return Object.assign({}, st, {
+    name: st.title || st.name,
+    lesson_word: st.lesson_word || (st.badge || 'STORY'),
+    lesson: st.lesson || st.subtitle || '',
+    tint: st.tint || '#3D8DDB',
+    glow: st.glow || '#6fb4ff',
+    art: st.art || {},
+    screens: pages.map(p => ({ text: p.text, art: p.art, scene: p.scene })),
+    questions: st.questions || [],
+    created: st.created || '',
+  });
+}
+
+/* a story's home-screen thumbnail: first scene page, or its legacy PNG */
+function coverHTML(k, st){
+  const first = st.screens && st.screens[0];
+  if(first && first.scene){
+    const h = sceneHTML(first.scene);
+    if(h) return h;
+  }
+  const f = first ? PICS[k+"_"+first.art] : null;
+  return f ? `<img src="${IB}${f}" alt="">` : `<div class="picfall">${ph(k)}</div>`;
+}
+
+/* Newest first. A story carries `created` (YYYY-MM-DD); anything without one
+   (the three original stories) sorts to the bottom. Within the same date,
+   `seq` keeps a numbered series reading 1,2,3… instead of shuffling. */
+function storiesNewestFirst(){
+  return Object.entries(window.STORIES).sort((a,b)=>{
+    const A=a[1].created||'', B=b[1].created||'';
+    if(A!==B){
+      if(A && B) return B.localeCompare(A);
+      return A ? -1 : 1;
+    }
+    return (a[1].seq||99) - (b[1].seq||99);
+  });
+}
+
 function buildHome(){
-  $("cards").innerHTML=Object.entries(window.STORIES).map(([k,s])=>{
-    const f=PICS[k+"_"+s.screens[0].art];
+  $("cards").innerHTML=storiesNewestFirst().map(([k,s])=>{
     return `<div class="card" data-k="${k}" style="--ct:${s.glow}">
-      <div class="thumb">${f?`<img src="${IB}${f}" alt="">`:ph(k)}<div class="lw">${s.lesson_word}</div></div>
+      <div class="thumb">${coverHTML(k,s)}<div class="lw">${s.lesson_word}</div></div>
       <div class="body"><h2>${s.name}</h2><small>${s.lesson}</small></div></div>`}).join("");
 }
 $("cards").onclick=e=>{const c=e.target.closest(".card");if(c)openStory(c.dataset.k)};
-$("hear").onclick=()=>beatHear(1);
+$("hear").onclick=()=>{ endTurn(); beatHear(1); };
 $("mine").onclick=beatMine;
-$("prev").onclick=()=>{if(mode==="title")return; if(n>0){n--;render()}else{titleCard(key)}};
+$("playMe").onclick=playRecording;
+$("stopMe").onclick=stopPlayback;
+$("prev").onclick=()=>{if(mode==="title")return; endTurn();
+  if(n>0){n--;render()}else{titleCard(key)}};
 $("next").onclick=()=>{
+  endTurn();
   if(mode==="title"){ stopAll(); n=0; render(); return; }
   if(n<S.screens.length-1){n++;render()} else startQuiz();
 };
+/* never leave the microphone running when he moves on */
+function endTurn(){
+  if(REC.on) { REC.on=false;
+    try{ if(REC.rec && REC.rec.state!=="inactive") REC.rec.stop(); }catch(e){ releaseMic(); }
+    document.body.classList.remove("recording");
+    $("recDot").classList.remove("on");
+    $("mine").textContent="🙋 My turn";
+    $("mine").classList.remove("rec"); $("mine").classList.add("mine");
+  }
+  releaseMic(); clearRecording();
+}
 $("rate").oninput=e=>{rate=+e.target.value;player.playbackRate=rate};
 $("repeatQ").onclick=()=>{const q=S.questions[qi];if(q)clip(key+"_q"+(qi+1),q.q)};
 $("again").onclick=()=>{n=0;show("reader");render()};
-["home1","home2","home3"].forEach(id=>$(id).onclick=()=>{stopAll();mode="idle";show("home")});
+["home1","home2","home3"].forEach(id=>$(id).onclick=()=>{endTurn();stopAll();mode="idle";show("home")});
 $("help").onclick=e=>{if(e.target.id==="help")$("help").classList.remove("on")};
 document.addEventListener("keydown",e=>{
   if(!$("reader").classList.contains("on"))return;
@@ -554,7 +852,8 @@ document.addEventListener("keydown",e=>{
   <button class="btn next" onclick="document.getElementById('help').classList.remove('on')">Close</button>`;
 })();
 ["statusBtn","helpBtn2"].forEach(id=>$(id).onclick=()=>$("help").classList.add("on"));
-buildHome();
+buildHome();                         /* draw the originals immediately  */
+loadLibrary().then(()=>{ buildHome(); });   /* then add the JSON stories */
 </script>
 </body>
 </html>
