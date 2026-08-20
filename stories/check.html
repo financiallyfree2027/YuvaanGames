@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Story check</title>
+<style>
+ body{font-family:-apple-system,"Segoe UI",sans-serif;background:#fdfaf4;color:#241d15;
+      margin:0;padding:18px;font-size:17px;line-height:1.5}
+ h1{font-size:22px;margin:0 0 4px}
+ p.sub{color:#8b8175;margin:0 0 16px;font-size:14px}
+ .row{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid #eadfd0}
+ .tag{flex:0 0 34px;font-weight:700;font-size:15px}
+ .ok{color:#2fae7c}.no{color:#e0574f}.wait{color:#8b8175}
+ .k{font-weight:700}
+ .v{color:#6b6055;font-size:14px;word-break:break-all}
+ #box{margin-top:16px;padding:12px;background:#fff;border:2px solid #eadfd0;border-radius:12px}
+ .demo{position:relative;height:150px;background:#dff0ff;border-radius:10px;overflow:hidden;margin-top:8px}
+ .demo .el{position:absolute;left:50%;top:88%;width:34%;transform:translate(-50%,-100%)}
+ .demo .in{position:relative;width:100%;padding-top:100%}
+ .demo img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain}
+ button{font:inherit;font-weight:700;background:#3d8ddb;color:#fff;border:0;
+        border-radius:12px;padding:12px 18px;margin-top:12px}
+</style>
+</head>
+<body>
+<h1>Story check</h1>
+<p class="sub">Open this on the iPad and send a screenshot.</p>
+<div id="out"></div>
+
+<div id="box">
+  <div class="k">Can this device draw a character?</div>
+  <div class="demo"><div class="el"><div class="in">
+    <img id="demoimg" src="story-assets/characters/milo_happy.svg" alt=""></div></div></div>
+  <div class="v" id="demonote">measuring…</div>
+</div>
+
+<button id="soundBtn">Tap to test sound + microphone</button>
+<div id="tap"></div>
+
+<script>
+const out=document.getElementById('out');
+function row(k,ok,v){
+  out.insertAdjacentHTML('beforeend',
+    `<div class="row"><div class="tag ${ok===null?'wait':(ok?'ok':'no')}">${ok===null?'…':(ok?'✓':'✕')}</div>`+
+    `<div><div class="k">${k}</div><div class="v">${v||''}</div></div></div>`);
+}
+row('Address',/localhost|127\./.test(location.hostname)||location.protocol==='https:',
+    location.href);
+row('Browser',true,navigator.userAgent);
+row('CSS aspect-ratio',CSS.supports('aspect-ratio','1'),
+    CSS.supports('aspect-ratio','1')?'supported':'NOT supported (needs the padding fallback)');
+row('CSS variables',CSS.supports('--a','1'),'');
+row('Microphone API',!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia),
+    location.protocol==='https:'||location.hostname==='localhost'?'':'needs https');
+let fmt=[];
+if(window.MediaRecorder&&MediaRecorder.isTypeSupported)
+  ['audio/mp4','audio/webm;codecs=opus','audio/webm','audio/aac'].forEach(m=>{
+    if(MediaRecorder.isTypeSupported(m)) fmt.push(m); });
+row('Can record audio',!!window.MediaRecorder&&fmt.length>0, fmt.join(' , ')||'no supported format');
+row('Screen',true, innerWidth+' x '+innerHeight+
+    (innerWidth<innerHeight?'  (PORTRAIT)':'  (landscape)'));
+
+(async()=>{
+  for(const [name,url] of [['story list','data/index.json'],
+                           ['asset catalogue','story-assets/assets.json'],
+                           ['first story','data/moon-rescue.json'],
+                           ['narration list','data/audio-missions.json']]){
+    try{ const r=await fetch(url+'?t='+Date.now());
+      row(name, r.ok, r.status+' '+r.statusText); }
+    catch(e){ row(name,false,String(e)); }
+  }
+  try{ const r=await fetch('assets/audio/moon-rescue_s01.mp3?t='+Date.now());
+       row('a narration clip', r.ok, r.status+''); }
+  catch(e){ row('a narration clip',false,String(e)); }
+  // is this the newest build?
+  try{ const r=await fetch('index.html?t='+Date.now()); const t=await r.text();
+    const fresh=t.includes('padding-top:100%')&&t.includes('--elScale');
+    row('Newest version loaded', fresh,
+        fresh?'yes — this is the current build':'NO — the iPad is showing a cached old copy');
+  }catch(e){ row('Newest version loaded',false,String(e)); }
+})();
+
+const img=document.getElementById('demoimg');
+function measure(){
+  const r=img.getBoundingClientRect();
+  const ok=r.height>20&&r.width>20;
+  document.getElementById('demonote').innerHTML =
+    (ok?'<span class="ok">✓ drawn at '+Math.round(r.width)+'x'+Math.round(r.height)+'px</span>'
+       :'<span class="no">✕ collapsed to '+Math.round(r.width)+'x'+Math.round(r.height)+'px — this is the bug</span>');
+}
+img.complete?measure():img.onload=measure;
+img.onerror=()=>document.getElementById('demonote').innerHTML='<span class="no">✕ the picture file did not load</span>';
+
+document.getElementById('soundBtn').onclick=async()=>{
+  const t=document.getElementById('tap'); t.innerHTML='';
+  const a=new Audio('assets/audio/moon-rescue_s01.mp3');
+  try{ await a.play(); t.insertAdjacentHTML('beforeend','<div class="row"><div class="tag ok">✓</div><div><div class="k">Sound plays</div></div></div>'); }
+  catch(e){ t.insertAdjacentHTML('beforeend','<div class="row"><div class="tag no">✕</div><div><div class="k">Sound blocked</div><div class="v">'+e+'</div></div></div>'); }
+  try{ const s=await navigator.mediaDevices.getUserMedia({audio:true});
+       s.getTracks().forEach(x=>x.stop());
+       t.insertAdjacentHTML('beforeend','<div class="row"><div class="tag ok">✓</div><div><div class="k">Microphone allowed</div></div></div>'); }
+  catch(e){ t.insertAdjacentHTML('beforeend','<div class="row"><div class="tag no">✕</div><div><div class="k">Microphone refused</div><div class="v">'+e+'</div></div></div>'); }
+};
+</script>
+</body>
+</html>

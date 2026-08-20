@@ -62,7 +62,9 @@ body.myturn .words{background:#effcfa}
 .stage .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 /* The assets are square (viewBox 0 0 200 200) but a viewBox-only SVG gives the
    browser no dependable intrinsic height, so the box is squared explicitly. */
-.stage .el{position:absolute;transform-origin:50% 50%;will-change:transform}
+.stage{--elScale:1}
+.stage .el{position:absolute;transform-origin:50% 50%;will-change:transform;
+  width:calc(var(--w,26) * var(--elScale) * 1%)}
 /* square box without CSS aspect-ratio, which older iPad Safari does not support:
    padding-top is a percentage of WIDTH, so 100% gives a perfect square. */
 .stage .el .in{position:relative;width:100%;padding-top:100%}
@@ -205,7 +207,10 @@ input[type=range]{width:74px;accent-color:var(--tint)}
 /* ---------------- portrait / narrow: stack, picture on top ---------------- */
 @media (max-aspect-ratio: 9/10), (max-width:760px){
   .split{flex-direction:column}
-  .pic{flex:0 0 36%;border-left:none;border-bottom:3px solid var(--line)}
+  .pic{flex:0 0 42%;border-left:none;border-bottom:3px solid var(--line)}
+  /* short, wide picture panel — shrink the cast so it fits inside it */
+  .stage{--elScale:.52}
+  .card .stage{--elScale:.85}
   .words{flex:1 1 auto;padding:14px 18px;gap:12px}
   #text{font-size:clamp(28px,7vw,52px)}
   .title{display:none}
@@ -606,7 +611,7 @@ function sceneHTML(scene){
     const anim = e.anim ? ` anim-${e.anim}` : (isChar ? ' anim-idle' : '');
     const flip = e.flip ? ' flip' : '';
     const delay = e.delay ? `animation-delay:${e.delay}s;` : '';
-    h += `<div class="el${flip}" style="left:${x}%;top:${y}%;width:${w}%;`
+    h += `<div class="el${flip}" style="left:${x}%;top:${y}%;--w:${w};`
        + `transform:${tf};z-index:${z}">`
        + `<div class="in${anim}" style="${delay}"><img src="${url}" alt=""></div></div>`;
   });
