@@ -24,7 +24,7 @@ body{background:var(--bg);color:var(--ink);overflow:hidden;
 .title{font-size:13px;font-weight:700;color:var(--muted);white-space:nowrap;
   overflow:hidden;text-overflow:ellipsis;max-width:26vw}
 .stars{display:flex;gap:3px;flex:1 1 auto;overflow:hidden}
-.star{width:13px;height:13px;flex:0 0 auto;opacity:.16;transition:.25s}
+.star{width:13px;height:13px;flex:0 0 auto;opacity:.42;transition:.25s}
 .star.on{opacity:1;filter:drop-shadow(0 0 4px #ffb400)}
 .barbtn{border:2px solid var(--line);background:#fff;border-radius:11px;padding:4px 10px;
   font:inherit;font-size:12px;cursor:pointer;color:var(--muted);white-space:nowrap}
@@ -139,6 +139,8 @@ body.myturn .w.on{background:linear-gradient(180deg,var(--mine),#0b7f74);
   animation:recPulse 1s ease-in-out infinite}
 @keyframes recPulse{0%,100%{box-shadow:0 0 0 0 rgba(224,69,60,.55)}50%{box-shadow:0 0 0 15px rgba(224,69,60,0)}}
 .btn.play{background:#2fae7c;color:#fff;border-bottom-color:rgba(0,0,0,.25)}
+.btn.needtap{animation:needtap 1s ease-in-out infinite}
+@keyframes needtap{0%,100%{box-shadow:0 0 0 0 rgba(18,169,154,.6)}50%{box-shadow:0 0 0 16px rgba(18,169,154,0)}}
 .btn.hidden{display:none}
 /* a red dot on the picture while the mic is live */
 #recDot{position:fixed;top:52px;right:14px;z-index:20;display:none;align-items:center;gap:7px;
@@ -516,8 +518,12 @@ async function beatMine(){
   paceHighlight();                     /* highlight first, so he knows where to start */
   const ok = await startRecording();
   if(!ok){
-    /* no mic (or blocked, or opened from a file:// URL) — reading still works */
-    $("turnlabel").textContent="YOUR TURN 🎤✖";
+    /* Mic blocked or unavailable. Reading still works — and the button pulses
+       so a tap (a real gesture) can start it, which is what Chrome wants. */
+    $("turnlabel").textContent="YOUR TURN";
+    const mb=$("mine");
+    mb.classList.add("needtap");
+    setTimeout(()=>mb.classList.remove("needtap"),6000);
   }
 }
 
@@ -689,7 +695,16 @@ function addStar(){const v=Math.min(getC()+1,GOAL);setC(v);drawStars();
 
 /* ================= nav ================= */
 function show(id){document.querySelectorAll("body > .screen").forEach(s=>s.classList.remove("on"));$(id).classList.add("on")}
+function primeMic(){
+  /* called from a real user gesture so the permission prompt can appear */
+  if(!recSupported() || REC.primed) return;
+  REC.primed = true;
+  navigator.mediaDevices.getUserMedia({audio:true})
+    .then(st=>{ st.getTracks().forEach(t=>t.stop()); REC.allowed = true; })
+    .catch(()=>{ REC.allowed = false; });
+}
 function openStory(k){
+  primeMic();
   key=k;S=window.STORIES[k];n=0;
   document.documentElement.style.setProperty("--tint",S.tint);
   document.documentElement.style.setProperty("--glow",S.glow);
