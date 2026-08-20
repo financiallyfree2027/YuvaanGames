@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" width="800" height="500">
 <defs><linearGradient id="bg_toy_shop_g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FDFAF4"/><stop offset="1" stop-color="#F2C9A0"/></linearGradient><linearGradient id="bg_toy_shop_g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8B5E3C"/><stop offset="1" stop-color="#8B5E3C"/></linearGradient></defs>
 <rect x="0" y="0" width="800" height="374" fill="url(#bg_toy_shop_g1)"/>
 <rect x="0" y="0" width="26" height="374" fill="#F4A340" fill-opacity="0.10"/>

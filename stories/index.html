@@ -62,10 +62,12 @@ body.myturn .words{background:#effcfa}
 .stage .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 /* The assets are square (viewBox 0 0 200 200) but a viewBox-only SVG gives the
    browser no dependable intrinsic height, so the box is squared explicitly. */
-.stage .el{position:absolute;transform-origin:50% 50%;will-change:transform;aspect-ratio:1}
-.stage .el .in{width:100%;height:100%}
-.stage .el img{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none;
-  filter:drop-shadow(0 5px 9px rgba(0,0,0,.20))}
+.stage .el{position:absolute;transform-origin:50% 50%;will-change:transform}
+/* square box without CSS aspect-ratio, which older iPad Safari does not support:
+   padding-top is a percentage of WIDTH, so 100% gives a perfect square. */
+.stage .el .in{position:relative;width:100%;padding-top:100%}
+.stage .el img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;
+  display:block;pointer-events:none;filter:drop-shadow(0 5px 9px rgba(0,0,0,.20))}
 .stage .el.flip img{transform:scaleX(-1)}
 /* gentle, slow motion only — this is for a five-year-old */
 @keyframes sc_float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7%)}}
@@ -446,7 +448,15 @@ async function startRecording(){
   try{
     REC.chunks=[];
     const myGen = ++REC.gen;                      /* this take's identity */
-    REC.rec = new MediaRecorder(REC.stream);
+    /* Safari on iPad cannot record webm — pick whatever this browser supports */
+    let mime = '';
+    if(window.MediaRecorder && MediaRecorder.isTypeSupported){
+      for(const m of ['audio/mp4','audio/webm;codecs=opus','audio/webm','audio/aac']){
+        if(MediaRecorder.isTypeSupported(m)){ mime = m; break; }
+      }
+    }
+    REC.rec = mime ? new MediaRecorder(REC.stream,{mimeType:mime})
+                   : new MediaRecorder(REC.stream);
     REC.rec.ondataavailable = e=>{ if(e.data && e.data.size) REC.chunks.push(e.data); };
     REC.rec.onstop = ()=>{
       releaseMic();
@@ -695,6 +705,19 @@ function addStar(){const v=Math.min(getC()+1,GOAL);setC(v);drawStars();
 
 /* ================= nav ================= */
 function show(id){document.querySelectorAll("body > .screen").forEach(s=>s.classList.remove("on"));$(id).classList.add("on")}
+function unlockAudio(){
+  /* iOS will not play audio that a timer started. Priming the element inside a
+     real tap marks it as user-activated for the rest of the session. */
+  if(unlockAudio.done) return;
+  unlockAudio.done = true;
+  try{
+    player.muted = true;
+    const p = player.play();
+    if(p && p.then) p.then(()=>{ player.pause(); player.muted=false; })
+                     .catch(()=>{ player.muted=false; });
+    else { player.pause(); player.muted=false; }
+  }catch(e){ player.muted=false; }
+}
 function primeMic(){
   /* called from a real user gesture so the permission prompt can appear */
   if(!recSupported() || REC.primed) return;
@@ -704,7 +727,7 @@ function primeMic(){
     .catch(()=>{ REC.allowed = false; });
 }
 function openStory(k){
-  primeMic();
+  unlockAudio(); primeMic();
   key=k;S=window.STORIES[k];n=0;
   document.documentElement.style.setProperty("--tint",S.tint);
   document.documentElement.style.setProperty("--glow",S.glow);
