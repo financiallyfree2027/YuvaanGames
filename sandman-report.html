@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Spidey vs Sandman — 4 playable versions</title>
+<style>
+/* ===================== SHARED LOOK (matches the Spidey set) ===================== */
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  font-family:'Comic Sans MS','Chalkboard SE','Marker Felt',sans-serif;
+  background:linear-gradient(180deg,#1b2a44 0%,#2d1e3f 55%,#4a2f2a 100%);
+  color:#fff;min-height:100vh;
+  -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;
+}
+.wrap{max-width:1100px;margin:0 auto;padding:26px 18px 70px}
+h1{font-size:clamp(26px,6vw,46px);text-align:center;margin:6px 0 4px;
+   text-shadow:0 4px 0 rgba(0,0,0,.35)}
+.sub{text-align:center;color:#ffd9a0;font-size:clamp(14px,3.4vw,19px);margin:0 0 8px}
+.note{text-align:center;color:#b8c6d1;font-size:clamp(12px,3vw,15px);
+      margin:0 auto 26px;max-width:620px;line-height:1.5}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+.card{background:rgba(255,255,255,.07);border:4px solid rgba(255,255,255,.18);
+      border-radius:28px;padding:18px 18px 20px;display:flex;flex-direction:column;
+      box-shadow:0 8px 0 rgba(0,0,0,.25)}
+.card h2{margin:0 0 2px;font-size:clamp(19px,4.4vw,25px)}
+.tagline{color:#FFC93C;font-size:15px;margin:0 0 12px;font-weight:bold}
+/* padding-top instead of aspect-ratio — the tablet's browser does not support it */
+.previewBox{background:#0e1826;border-radius:20px;overflow:hidden;
+            border:3px solid rgba(255,255,255,.14);margin-bottom:14px;
+            position:relative;padding-top:62.5%}
+.previewBox canvas{position:absolute;top:0;left:0;width:100%;height:100%;display:block}
+.feel{font-size:15px;line-height:1.55;color:#e8eef5;margin:0 0 12px}
+.feel b{color:#FFC93C}
+.rows{font-size:14px;line-height:1.5;color:#c8d4e0;margin:0 0 14px}
+.rows div{display:flex;gap:8px;padding:3px 0;align-items:flex-start}
+.rows span.ic{flex:0 0 26px;font-size:17px;text-align:center}
+.hard{background:rgba(0,0,0,.25);border-radius:14px;padding:9px 12px;
+      font-size:13.5px;color:#ffd9a0;margin:0 0 14px;line-height:1.5}
+.playBtn{margin-top:auto;font:inherit;font-size:23px;font-weight:bold;
+   background:#4CAF50;color:#fff;border:5px solid #fff;border-radius:26px;
+   padding:14px 10px;box-shadow:0 7px 0 rgba(0,0,0,.3);cursor:pointer;
+   animation:btnPulse 2.4s ease-in-out infinite}
+.playBtn:active{transform:scale(.94);box-shadow:0 3px 0 rgba(0,0,0,.3)}
+@keyframes btnPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
+
+/* ===================== FULLSCREEN DEMO SHELL ===================== */
+#demo{position:fixed;inset:0;z-index:100;display:none;background:#0b1220;
+      touch-action:none;overflow:hidden}
+#demo.on{display:block}
+#demoStage{position:absolute;inset:0}
+#demoCanvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+#demoDom{position:absolute;inset:0;pointer-events:none}
+.actor{position:absolute;left:0;top:0;will-change:transform;pointer-events:none}
+
+/* Spidey */
+#spidey{width:90px;height:110px;transform-origin:45px 110px}
+#spidey.crouch #spInner{transform:translateY(8px) scaleY(.92);transform-origin:50% 100%}
+#spInner{width:100%;height:100%;animation:idleBounce 1.2s ease-in-out infinite}
+@keyframes idleBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+#spInner.shoot{animation:heroShoot .26s ease-out}
+@keyframes heroShoot{0%{transform:translateX(0)}35%{transform:translateX(-9px) rotate(-6deg)}100%{transform:translateX(0)}}
+#spidey.hurt{animation:hurtShake .45s ease-in-out}
+@keyframes hurtShake{0%,100%{transform:translate(var(--tx),var(--ty))}
+  25%{transform:translate(calc(var(--tx) - 9px),var(--ty))}
+  75%{transform:translate(calc(var(--tx) + 9px),var(--ty))}}
+#spidey .armL,#spidey .armR{transform-box:fill-box;transform-origin:50% 12%;transition:transform .25s ease}
+#spidey.celebrate .armL{transform:rotate(-155deg)}
+#spidey.celebrate .armR{transform:rotate(155deg)}
+
+/* Sandman shell (the sand itself is drawn on canvas) */
+#sandman{width:170px;height:210px}
+#sandman .core{transform-box:fill-box;transform-origin:50% 50%;
+   animation:corePulse 1.1s ease-in-out infinite}
+@keyframes corePulse{0%,100%{transform:scale(1);opacity:.95}50%{transform:scale(1.16);opacity:1}}
+#sandman.wet .sandBody{fill:#8a6a3a}
+#sandman.wet .sandBody2{fill:#6f5330}
+#sandman.solid{animation:solidShake .5s ease-in-out infinite}
+@keyframes solidShake{0%,100%{transform:translate(var(--tx),var(--ty)) rotate(0)}
+  50%{transform:translate(var(--tx),var(--ty)) rotate(1.6deg)}}
+#sandman.hurt .sandBody{fill:#ffd08a}
+#sandman .faceMad,#sandman .faceWet,#sandman .faceOw{display:none}
+#sandman.fMad .faceMad{display:inline}
+#sandman.fWet .faceWet{display:inline}
+#sandman.fOw  .faceOw{display:inline}
+#sandman.fMad .faceIdle,#sandman.fWet .faceIdle,#sandman.fOw .faceIdle{display:none}
+
+/* HUD — wordless */
+#hud{position:absolute;inset:0;pointer-events:none;z-index:20}
+.hudBtn{position:absolute;pointer-events:auto;border:5px solid #fff;border-radius:26px;
+   display:flex;align-items:center;justify-content:center;font-size:44px;
+   box-shadow:0 6px 0 rgba(0,0,0,.3);cursor:pointer}
+.hudBtn:active{transform:scale(.93);box-shadow:0 2px 0 rgba(0,0,0,.3)}
+#backBtn{left:14px;top:14px;width:78px;height:78px;background:#7b47c9;font-size:34px}
+#tally{position:absolute;top:20px;left:50%;transform:translateX(-50%);
+   background:#E53935;border:4px solid #fff;border-radius:22px;padding:7px 18px;
+   font-size:23px;font-weight:bold;white-space:nowrap;box-shadow:0 5px 0 rgba(0,0,0,.28)}
+#coreBar{position:absolute;top:88px;left:50%;transform:translateX(-50%);
+   font-size:27px;letter-spacing:5px;text-shadow:0 3px 0 rgba(0,0,0,.4)}
+#cue{position:absolute;top:150px;left:50%;transform:translateX(-50%);
+   font-size:62px;opacity:0;pointer-events:none}
+#cue.show{animation:cuePop 2.2s ease-out}
+@keyframes cuePop{0%{opacity:0;transform:translateX(-50%) scale(.4)}
+  22%{opacity:1;transform:translateX(-50%) scale(1.15)}
+  70%{opacity:1;transform:translateX(-50%) scale(1)}
+  100%{opacity:0;transform:translateX(-50%) scale(1)}}
+#actBtn{right:16px;bottom:26px;width:120px;height:120px;background:#1E5AE8;font-size:52px}
+#altBtn{left:16px;bottom:26px;width:120px;height:120px;background:#12A99A;font-size:52px}
+.stamWrap{position:absolute;left:16px;bottom:158px;width:120px;height:22px;
+   background:rgba(0,0,0,.45);border:3px solid #fff;border-radius:12px;overflow:hidden;display:none}
+.stamWrap i{display:block;height:100%;background:#FFC93C;width:100%}
+.attn{animation:attnPulse 1s ease-out infinite}
+@keyframes attnPulse{0%{box-shadow:0 6px 0 rgba(0,0,0,.3),0 0 0 0 rgba(255,201,60,.85)}
+  100%{box-shadow:0 6px 0 rgba(0,0,0,.3),0 0 0 34px rgba(255,201,60,0)}}
+
+/* zone watermarks */
+.zone{position:absolute;left:0;right:0;pointer-events:none;opacity:.24;
+      display:flex;align-items:center;justify-content:center;font-size:40px;z-index:18}
+#zTop{top:0;height:45%;align-items:flex-start;padding-top:12px}
+#zBot{bottom:0;height:45%;align-items:flex-end;padding-bottom:12px}
+#zTop.flash{background:radial-gradient(circle at 50% 20%,rgba(30,90,232,.4),transparent 70%)}
+#zBot.flash{background:radial-gradient(circle at 50% 80%,rgba(18,169,154,.45),transparent 70%)}
+
+/* overlays */
+.ovl{position:absolute;inset:0;z-index:30;background:rgba(9,14,26,.92);
+     display:none;flex-direction:column;align-items:center;justify-content:flex-start;
+     overflow-y:auto;overflow-x:hidden;padding:clamp(8px,2vh,22px) 16px clamp(14px,3vh,26px);
+     gap:clamp(6px,1.4vh,16px)}
+.ovl.on{display:flex}
+.ovl .big{font-size:clamp(30px,min(9vw,7vh),68px);margin-top:auto;letter-spacing:6px}
+.ovl .mid{font-size:clamp(17px,3.6vh,24px);color:#ffd9a0;text-align:center;line-height:1.5}
+.ovl .foot{margin-bottom:auto;font-size:clamp(15px,3vh,20px);color:#b8c6d1}
+.ovl .bigBtn{font:inherit;font-weight:bold;font-size:clamp(24px,3.6vh,40px);
+   background:#4CAF50;color:#fff;border:5px solid #fff;border-radius:28px;
+   padding:clamp(12px,2vh,22px) clamp(28px,5vw,54px);min-height:clamp(60px,9vh,96px);
+   box-shadow:0 7px 0 rgba(0,0,0,.3);cursor:pointer;animation:btnPulse 2.4s ease-in-out infinite}
+.ovl .bigBtn:active{transform:scale(.94)}
+.howRow{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin:4px 0}
+.howCard{background:rgba(255,255,255,.1);border:3px solid rgba(255,255,255,.25);
+   border-radius:20px;padding:12px 16px;font-size:clamp(18px,2.6vh,26px);text-align:center;min-width:120px}
+.howCard small{display:block;font-size:13px;color:#b8c6d1;margin-top:4px}
+.lvlDots{display:flex;gap:9px;justify-content:center;flex-wrap:wrap}
+.lvlDots i{width:15px;height:15px;border-radius:50%;background:rgba(255,255,255,.25);display:block}
+.lvlDots i.on{background:#FFC93C}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🕷️ Spidey vs Sandman 🏜️</h1>
+  <p class="sub">Four playable versions — try them all, pick the winner</p>
+  <p class="note">Every version starts gentle and gets harder. Sand pours out of Sandman
+  the whole time. Water makes sand go hard, and a hard Sandman shows his glowing core —
+  that's what the web-balls are for. No reading needed anywhere.</p>
+  <div class="grid" id="cards"></div>
+</div>
+
+<!-- ============ fullscreen demo ============ -->
+<div id="demo">
+  <div id="demoStage">
+    <canvas id="demoCanvas"></canvas>
+    <div id="demoDom">
+      <div class="actor" id="sandman"></div>
+      <div class="actor" id="spidey"><div id="spInner"></div></div>
+    </div>
+    <div class="zone" id="zTop">🥎</div>
+    <div class="zone" id="zBot">💧</div>
+    <div id="hud">
+      <div class="hudBtn" id="backBtn">⬅️</div>
+      <div id="tally">🏜️ 1 &nbsp; 🔁 0</div>
+      <div id="coreBar"></div>
+      <div id="cue"></div>
+      <div class="stamWrap" id="stamWrap"><i id="stamFill"></i></div>
+      <div class="hudBtn" id="altBtn">💧</div>
+      <div class="hudBtn" id="actBtn">🥎</div>
+    </div>
+    <div class="ovl" id="introOvl">
+      <div class="big" id="introTitle">🕷️ 💧 🏜️</div>
+      <div class="mid" id="introSub"></div>
+      <div class="howRow" id="introHow"></div>
+      <button class="bigBtn" id="introBtn">▶️</button>
+      <div class="foot lvlDots" id="introDots"></div>
+    </div>
+    <div class="ovl" id="winOvl">
+      <div class="big">🎉 ⭐ 🎉</div>
+      <div class="mid" id="winSub"></div>
+      <button class="bigBtn" id="nextBtn">▶️</button>
+      <div class="foot" id="winFoot"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+/* =====================================================================
+   SPIDEY vs SANDMAN — four playable versions in one report.
+   Built to match the spidey-games set: Comic Sans, flat palette,
+   emoji-only UI, no fail state, difficulty that starts kind.
+   Yuvaan is five and cannot read, so nothing here is a sentence.
+   Sand is drawn on <canvas> (hundreds of grains); the two characters
+   stay as DOM/SVG so Spidey is literally the same drawing as game5.
+   ===================================================================== */
+const $=id=>document.getElementById(id);
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const rand=(a,b)=>a+Math.random()*(b-a);
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+
+/* ---------------- ART: Spider-Man (verbatim from game5) ---------------- */
+function heroSVG(){
+  return `<svg viewBox="0 0 100 130" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+    <g class="armL"><rect x="24" y="72" width="12" height="32" rx="6" fill="#E53935"/>
+      <circle cx="30" cy="103" r="7" fill="#ef6f6c"/></g>
+    <g class="armR"><rect x="64" y="72" width="12" height="32" rx="6" fill="#E53935"/>
+      <circle cx="70" cy="103" r="7" fill="#ef6f6c"/></g>
+    <rect x="37" y="102" width="11" height="24" rx="5.5" fill="#E53935"/>
+    <rect x="52" y="102" width="11" height="24" rx="5.5" fill="#E53935"/>
+    <rect x="31" y="66" width="38" height="44" rx="17" fill="#1E5AE8"/>
+    <circle cx="34" cy="74" r="7" fill="#E53935"/><circle cx="66" cy="74" r="7" fill="#E53935"/>
+    <circle cx="50" cy="38" r="30" fill="#E53935"/>
+    <g stroke="#FFF" stroke-width="2" fill="none" opacity="0.4">
+      <path d="M32 20 Q50 32 68 20"/><path d="M26 32 Q50 46 74 32"/><path d="M24 44 Q50 60 76 44"/>
+      <line x1="50" y1="9" x2="28" y2="48"/><line x1="50" y1="9" x2="43" y2="56"/>
+      <line x1="50" y1="9" x2="57" y2="56"/><line x1="50" y1="9" x2="72" y2="48"/>
+    </g>
+    <ellipse cx="38" cy="42" rx="10.5" ry="14.5" fill="#FFF" stroke="#111" stroke-width="2.5" transform="rotate(-14 38 42)"/>
+    <ellipse cx="62" cy="42" rx="10.5" ry="14.5" fill="#FFF" stroke="#111" stroke-width="2.5" transform="rotate(14 62 42)"/>
+  </svg>`;
+}
+
+/* ---------------- ART: Sandman (crumbly, four faces, glowing core) ----------------
+   Faces follow the Doc Ock pattern: all drawn, CSS shows one.
+   Base hide is on the CLASS so a start-screen copy still renders. */
+function sandSVG(){
+  return `<svg class="sman" viewBox="0 0 170 210" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+    <defs><radialGradient id="sm_core"><stop offset="0%" stop-color="#FFF3C4"/>
+      <stop offset="55%" stop-color="#FFC93C"/><stop offset="100%" stop-color="#F4A340"/></radialGradient></defs>
+    <!-- crumbly legs, deliberately uneven -->
+    <path class="sandBody2" d="M52 208 C46 176 54 156 62 150 L84 150 L80 208 Z" fill="#b0863f"/>
+    <path class="sandBody2" d="M120 208 C126 174 116 156 108 150 L88 150 L92 208 Z" fill="#b0863f"/>
+    <!-- big lumpy body -->
+    <path class="sandBody" d="M85 44 C126 44 146 74 142 106 C139 132 128 152 85 152
+       C42 152 31 132 28 106 C24 74 44 44 85 44 Z" fill="#d9a95c"/>
+    <!-- fists -->
+    <ellipse class="sandBody" cx="27" cy="120" rx="24" ry="21" fill="#d9a95c"/>
+    <ellipse class="sandBody" cx="143" cy="120" rx="24" ry="21" fill="#d9a95c"/>
+    <!-- the glowing core, visible through the sand -->
+    <circle class="core" cx="85" cy="104" r="17" fill="url(#sm_core)"/>
+    <circle class="core" cx="85" cy="104" r="26" fill="#FFC93C" opacity=".25"/>
+    <!-- head lump -->
+    <path class="sandBody" d="M85 20 C112 20 124 38 122 56 C120 72 106 82 85 82
+       C64 82 50 72 48 56 C46 38 58 20 85 20 Z" fill="#e0b268"/>
+    <!-- FACE 1: idle grumble -->
+    <g class="faceIdle">
+      <ellipse cx="70" cy="52" rx="7" ry="8" fill="#3a2a12"/><ellipse cx="100" cy="52" rx="7" ry="8" fill="#3a2a12"/>
+      <path d="M70 68 Q85 62 100 68" stroke="#3a2a12" stroke-width="4" fill="none" stroke-linecap="round"/>
+    </g>
+    <!-- FACE 2: angry (charging) -->
+    <g class="faceMad">
+      <ellipse cx="70" cy="54" rx="7" ry="6" fill="#3a2a12"/><ellipse cx="100" cy="54" rx="7" ry="6" fill="#3a2a12"/>
+      <line x1="60" y1="42" x2="78" y2="48" stroke="#3a2a12" stroke-width="5" stroke-linecap="round"/>
+      <line x1="110" y1="42" x2="92" y2="48" stroke="#3a2a12" stroke-width="5" stroke-linecap="round"/>
+      <path d="M68 70 Q85 78 102 70" stroke="#3a2a12" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+    </g>
+    <!-- FACE 3: soaked / surprised -->
+    <g class="faceWet">
+      <circle cx="70" cy="52" r="9" fill="#fff"/><circle cx="70" cy="53" r="4.5" fill="#3a2a12"/>
+      <circle cx="100" cy="52" r="9" fill="#fff"/><circle cx="100" cy="53" r="4.5" fill="#3a2a12"/>
+      <ellipse cx="85" cy="70" rx="9" ry="11" fill="#3a2a12"/>
+      <path d="M118 46 q6 12 0 18" stroke="#8ED0FF" stroke-width="5" fill="none" stroke-linecap="round"/>
+    </g>
+    <!-- FACE 4: bonked -->
+    <g class="faceOw">
+      <path d="M62 46 l16 14 M78 46 l-16 14" stroke="#3a2a12" stroke-width="5" stroke-linecap="round"/>
+      <path d="M92 46 l16 14 M108 46 l-16 14" stroke="#3a2a12" stroke-width="5" stroke-linecap="round"/>
+      <ellipse cx="85" cy="72" rx="11" ry="8" fill="#3a2a12"/>
+    </g>
+  </svg>`;
+}
+
+/* ===================== AUDIO (WebAudio synth, no files) ===================== */
+const AU={ctx:null,master:null,muted:false};
+function audioInit(){
+  if(AU.ctx){AU.ctx.resume&&AU.ctx.resume();return;}
+  try{
+    const C=window.AudioContext||window.webkitAudioContext; if(!C) return;
+    AU.ctx=new C(); AU.master=AU.ctx.createGain();
+    AU.master.gain.value=0.16; AU.master.connect(AU.ctx.destination);
+  }catch(e){}
+}
+function tone(f,type,dur,vol){
+  if(!AU.ctx||AU.muted) return;
+  const t=AU.ctx.currentTime,o=AU.ctx.createOscillator(),g=AU.ctx.createGain();
+  o.type=type||'sine'; o.frequency.setValueAtTime(f,t);
+  g.gain.setValueAtTime(0.0001,t);
+  g.gain.linearRampToValueAtTime(vol||0.2,t+0.015);
+  g.gain.exponentialRampToValueAtTime(0.0001,t+(dur||0.2));
+  o.connect(g); g.connect(AU.master); o.start(t); o.stop(t+(dur||0.2)+0.03);
+}
+/* filtered noise = the sand hiss and the water hit */
+function noise(dur,vol,freq,type){
+  if(!AU.ctx||AU.muted) return;
+  const t=AU.ctx.currentTime,len=Math.floor(AU.ctx.sampleRate*(dur||0.2));
+  const buf=AU.ctx.createBuffer(1,len,AU.ctx.sampleRate),d=buf.getChannelData(0);
+  for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*(1-i/len);
+  const s=AU.ctx.createBufferSource(); s.buffer=buf;
+  const f=AU.ctx.createBiquadFilter(); f.type=type||'bandpass';
+  f.frequency.value=freq||1400; f.Q.value=0.8;
+  const g=AU.ctx.createGain(); g.gain.value=vol||0.25;
+  s.connect(f); f.connect(g); g.connect(AU.master); s.start(t);
+}
+const sThwip =()=>{noise(0.14,0.3,2600);tone(880,'square',0.07,0.09);};
+const sSplash=()=>{noise(0.42,0.4,900,'lowpass');tone(240,'sine',0.22,0.1);};
+const sHard  =()=>{tone(180,'square',0.16,0.16);tone(120,'triangle',0.3,0.12);};
+const sBonk  =()=>{tone(520,'square',0.09,0.16);setTimeout(()=>tone(300,'square',0.13,0.14),80);};
+const sYay   =()=>{[523,659,784,1047].forEach((f,i)=>setTimeout(()=>tone(f,'square',0.2,0.15),i*95));};
+const sOops  =()=>{tone(300,'sawtooth',0.16,0.1);setTimeout(()=>tone(190,'sawtooth',0.22,0.09),110);};
+const sPop   =()=>{tone(760,'sine',0.09,0.14);};
+
+/* ===================== SAND ENGINE (canvas) =====================
+   One grain array shared by every version. Grains fall, bounce off
+   the floor, dry out and fade. Wet grains are dark and stick. */
+const SAND={g:[],max:900};
+function sandBurst(x,y,n,opt){
+  opt=opt||{};
+  for(let i=0;i<n;i++){
+    if(SAND.g.length>=SAND.max) SAND.g.shift();
+    const a=opt.dir!==undefined? opt.dir+rand(-0.6,0.6) : rand(0,Math.PI*2);
+    const sp=opt.sp!==undefined? opt.sp*rand(0.5,1.3) : rand(30,150);
+    SAND.g.push({x:x+rand(-8,8),y:y+rand(-8,8),
+      vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-rand(0,60),
+      r:rand(1.6,4.2),life:0,max:opt.life||rand(1.1,2.4),wet:!!opt.wet});
+  }
+}
+function sandUpdate(dt,floorY){
+  for(let i=SAND.g.length-1;i>=0;i--){
+    const p=SAND.g[i];
+    p.life+=dt; p.vy+=760*dt; p.x+=p.vx*dt; p.y+=p.vy*dt;
+    if(p.y>floorY){ p.y=floorY; p.vy*=-0.28; p.vx*=0.62; if(Math.abs(p.vy)<24)p.vy=0; }
+    if(p.life>p.max) SAND.g.splice(i,1);
+  }
+}
+function sandDraw(ctx){
+  for(const p of SAND.g){
+    const k=1-p.life/p.max;
+    ctx.globalAlpha=clamp(k,0,1)*0.95;
+    ctx.fillStyle=p.wet?'#7a5a2e':(k>0.6?'#e8c483':'#c99b52');
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,6.283); ctx.fill();
+  }
+  ctx.globalAlpha=1;
+}
+/* water droplets — same idea, blue, and they wet the sand they touch */
+const WATER={d:[],max:700};
+function waterBurst(x,y,n,dir,sp){
+  for(let i=0;i<n;i++){
+    if(WATER.d.length>=WATER.max) WATER.d.shift();
+    WATER.d.push({x:x,y:y,vx:Math.cos(dir+rand(-0.32,0.32))*sp*rand(0.7,1.25),
+      vy:Math.sin(dir+rand(-0.32,0.32))*sp*rand(0.7,1.25)-rand(20,90),
+      r:rand(2.6,5.6),life:0,max:rand(0.7,1.5)});
+  }
+}
+function waterUpdate(dt,floorY){
+  for(let i=WATER.d.length-1;i>=0;i--){
+    const p=WATER.d[i];
+    p.life+=dt; p.vy+=920*dt; p.x+=p.vx*dt; p.y+=p.vy*dt;
+    if(p.life>p.max||p.y>floorY+10) WATER.d.splice(i,1);
+  }
+}
+function waterDraw(ctx){
+  for(const p of WATER.d){
+    ctx.globalAlpha=clamp(1-p.life/p.max,0,1)*0.9;
+    ctx.fillStyle='#8ED0FF';
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,6.283); ctx.fill();
+  }
+  ctx.globalAlpha=1;
+}
+/* floating emoji reward, drawn on canvas so it follows the world */
+const FLOATS=[];
+function floatIcon(x,y,txt,size){FLOATS.push({x,y,txt,size:size||44,life:0,max:1.1});}
+function floatsUpdate(dt){for(let i=FLOATS.length-1;i>=0;i--){const f=FLOATS[i];
+  f.life+=dt; f.y-=68*dt; if(f.life>f.max)FLOATS.splice(i,1);}}
+function floatsDraw(ctx){ctx.textAlign='center'; ctx.fillStyle='#fff';
+  for(const f of FLOATS){ctx.globalAlpha=clamp(1-f.life/f.max,0,1);
+    ctx.font=f.size+'px serif'; ctx.fillText(f.txt,f.x,f.y);}
+  ctx.globalAlpha=1; ctx.textAlign='start';}
+
+/* ===================== THE FOUR VERSIONS ===================== */
+const VERSIONS=[
+{
+  id:'A', name:'Hydrant Havoc', tag:'Soak him, then smash the core',
+  emoji:'🚒', accent:'#1E5AE8',
+  feel:`Sandman walks at Spidey while sand pours off him. Three fire hydrants sit on the
+        roof. <b>Tap the bottom</b> to burst the nearest one — if Sandman is standing in the
+        spray his sand goes dark and <b>sets hard</b>. While he's hard his core is open, so
+        <b>tap the top</b> to hit it with web-balls. He dries out and starts moving again.`,
+  rows:[['👆','Top of the screen — throw a web-ball'],
+        ['💧','Bottom of the screen — burst a hydrant'],
+        ['🏜️','Sand pours out of him non-stop'],
+        ['🧊','Wet sand hardens — that opens the core'],
+        ['🎯','Hit the core 4 times to win the round']],
+  hard:`Level 1 he shuffles slowly and stops right in the spray. By level 5 he walks faster,
+        the hard phase is half as long, and he starts throwing sand-fists you have to dodge
+        by moving Spidey with the same bottom tap.`
+},
+{
+  id:'B', name:'Core Hunt', tag:'The core hides inside the storm',
+  emoji:'🔎', accent:'#12A99A',
+  feel:`Sandman is a swirling column and his glowing core drifts around <b>inside</b> him,
+        sometimes surfacing near the edge. Web-balls only stick when the core is showing.
+        <b>Bottom tap sprays water</b>, which slows the swirl down so the core is easier to
+        follow. It's a watching-and-waiting game.`,
+  rows:[['👆','Top — throw when the core shows'],
+        ['💧','Bottom — water slows the swirl'],
+        ['✨','Core glows brighter as it surfaces'],
+        ['🎀','Each hit wraps the core in web'],
+        ['🎯','Five wraps and the sand falls apart']],
+  hard:`Early on the core surfaces slowly and stays out for ages. Later it moves twice as fast,
+        dips deeper, and from level 4 two fake glows appear — hitting a fake just costs time,
+        never a life.`
+},
+{
+  id:'C', name:'Sand Storm', tag:'Hold the web-shield, watch your strength',
+  emoji:'🛡️', accent:'#7B47C9',
+  feel:`Sandman blasts a storm across the whole roof in waves. <b>Hold the bottom</b> to raise
+        a web-shield — but the shield runs out if you hold it too long, so you have to let go
+        between waves. In the quiet gaps the hydrants light up: <b>tap the top</b> to burst one
+        over him. Three soaks and he sets hard for the finish.`,
+  rows:[['✋','Hold bottom — web-shield up'],
+        ['⏳','It empties if you hold too long'],
+        ['👆','Top — burst a glowing hydrant'],
+        ['💧','Three soaks turn him solid'],
+        ['🎀','Then web the core to finish']],
+  hard:`Waves start slow and short with a long calm gap. By the last level the gaps are brief,
+        two waves overlap, and the shield drains faster — so holding it the whole time simply
+        stops working. That's the self-control lesson doing the teaching.`
+},
+{
+  id:'D', name:'Rooftop Run', tag:'A sand wave is chasing you',
+  emoji:'🏃', accent:'#E85D4A',
+  feel:`Sandman collapses into a rolling wave and comes after Spidey across the rooftops.
+        <b>Hold the bottom and let go</b> to web-swing forward — a longer hold jumps further.
+        <b>Tap the top</b> at the water towers ahead so they burst and slow the wave down.
+        At the end of the run the wave hits the soaked patch, sets hard, and you web the core.`,
+  rows:[['✋','Hold bottom, let go — swing forward'],
+        ['👆','Top — pop the water tower ahead'],
+        ['🌊','The wave never stops coming'],
+        ['🧊','Soaked ground slows it right down'],
+        ['🎀','Web the hardened core at the end']],
+  hard:`The wave starts a long way back and crawls. Each level it starts closer and rolls faster,
+        the roofs get further apart, and the towers stop being directly overhead — you have to
+        throw early. Getting caught just bounces you forward; the run never ends.`
+}
+];
+
+/* ---------------- report cards ---------------- */
+const cards=$('cards');
+VERSIONS.forEach((v,i)=>{
+  const c=document.createElement('div'); c.className='card';
+  c.innerHTML=
+    `<h2>${v.emoji} ${v.id} — ${v.name}</h2>
+     <p class="tagline">${v.tag}</p>
+     <div class="previewBox"><canvas class="prev" data-i="${i}"></canvas></div>
+     <p class="feel">${v.feel}</p>
+     <div class="rows">${v.rows.map(r=>`<div><span class="ic">${r[0]}</span><span>${r[1]}</span></div>`).join('')}</div>
+     <div class="hard">📈 ${v.hard}</div>
+     <button class="playBtn" data-play="${i}">▶️ Play ${v.id}</button>`;
+  cards.appendChild(c);
+});
+
+/* tiny looping preview in each card */
+document.querySelectorAll('canvas.prev').forEach(cv=>{
+  const i=+cv.dataset.i, ctx=cv.getContext('2d');
+  const W=cv.width=520,H=cv.height=325;
+  const grains=[];
+  for(let k=0;k<130;k++) grains.push({x:rand(0,W),y:rand(0,H),r:rand(1.4,3.6),
+     vy:rand(24,84),vx:rand(-18,18)});
+  let t=0;
+  (function draw(){
+    t+=0.016;
+    const g=ctx.createLinearGradient(0,0,0,H);
+    g.addColorStop(0,'#2a3b5c'); g.addColorStop(1,'#5c3f30');
+    ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+    ctx.fillStyle='#2f5570'; ctx.fillRect(0,H-46,W,46);
+    /* sandman lump */
+    const sx=W*0.66+Math.sin(t*0.9)*16, sy=H-58;
+    ctx.fillStyle=i===1?'#c99b52':'#d9a95c';
+    ctx.beginPath(); ctx.ellipse(sx,sy-52,52,58,0,0,6.283); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(sx,sy-108,34,30,0,0,6.283); ctx.fill();
+    ctx.fillStyle='#FFC93C'; ctx.globalAlpha=.55+Math.sin(t*3)*0.3;
+    ctx.beginPath(); ctx.arc(sx+(i===1?Math.sin(t*1.7)*22:0),sy-56,15,0,6.283); ctx.fill();
+    ctx.globalAlpha=1;
+    /* spidey */
+    const hx=W*0.2+(i===3?Math.sin(t*1.4)*30:0);
+    ctx.fillStyle='#E53935'; ctx.beginPath(); ctx.arc(hx,H-104,17,0,6.283); ctx.fill();
+    ctx.fillStyle='#1E5AE8'; ctx.fillRect(hx-11,H-92,22,30);
+    ctx.fillStyle='#fff';
+    ctx.beginPath(); ctx.ellipse(hx-6,H-106,5,7,-0.25,0,6.283); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(hx+6,H-106,5,7,0.25,0,6.283); ctx.fill();
+    /* falling sand */
+    for(const p of grains){ p.y+=p.vy*0.016; p.x+=p.vx*0.016;
+      if(p.y>H-46){p.y=sy-90;p.x=sx+rand(-46,46);} if(p.x<0||p.x>W)p.x=sx;
+      ctx.fillStyle='#e8c483'; ctx.globalAlpha=.8;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,6.283); ctx.fill(); }
+    ctx.globalAlpha=1;
+    /* per-version flourish */
+    if(i===0||i===2){ ctx.fillStyle='#8ED0FF'; ctx.globalAlpha=.8;
+      for(let k=0;k<16;k++){const px=W*0.42+k*7+Math.sin(t*4+k)*5,py=H-70-Math.sin(t*3+k*0.4)*26;
+        ctx.beginPath(); ctx.arc(px,py,3.4,0,6.283); ctx.fill();} ctx.globalAlpha=1; }
+    if(i===3){ ctx.fillStyle='#c99b52'; ctx.globalAlpha=.85;
+      ctx.beginPath(); ctx.moveTo(W,H-46);
+      for(let k=0;k<=20;k++){const px=W-k*14,py=H-46-Math.max(0,60-k*3)-Math.sin(t*4+k*0.6)*7;ctx.lineTo(px,py);}
+      ctx.lineTo(W-300,H-46); ctx.closePath(); ctx.fill(); ctx.globalAlpha=1; }
+    requestAnimationFrame(draw);
+  })();
+});
+
+/* ===================== DEMO SHELL ===================== */
+const demo=$('demo'), cv=$('demoCanvas'), ctx=cv.getContext('2d');
+const spidey=$('spidey'), spInner=$('spInner'), sandman=$('sandman');
+spInner.innerHTML=heroSVG(); sandman.innerHTML=sandSVG();
+
+let G=null;            // the running version
+let W=0,H=0,DPR=1;
+function fit(){
+  W=demo.clientWidth; H=demo.clientHeight; DPR=Math.min(2,window.devicePixelRatio||1);
+  cv.width=W*DPR; cv.height=H*DPR; ctx.setTransform(DPR,0,0,DPR,0,0);
+  if(G&&G.layout) G.layout();
+}
+window.addEventListener('resize',fit);
+window.addEventListener('orientationchange',()=>setTimeout(fit,250));
+
+function cue(sym){const c=$('cue');c.classList.remove('show');void c.offsetWidth;
+  c.textContent=sym;c.classList.add('show');}
+function attn(el,ms){if(!el)return; if(ms===0){el.classList.remove('attn');return;}
+  el.classList.remove('attn');void el.offsetWidth;el.classList.add('attn');
+  setTimeout(()=>el.classList.remove('attn'),ms||2600);}
+function flashZone(which){const z=$(which==='top'?'zTop':'zBot');
+  z.classList.add('flash'); setTimeout(()=>z.classList.remove('flash'),600);}
+function setActor(el,x,y,extra){
+  el.style.setProperty('--tx',x+'px'); el.style.setProperty('--ty',y+'px');
+  el.style.transform='translate('+x+'px,'+y+'px)'+(extra||'');
+}
+function face(cls){
+  sandman.classList.remove('fMad','fWet','fOw');
+  if(cls) sandman.classList.add(cls);
+}
+
+/* start / stop */
+document.querySelectorAll('[data-play]').forEach(b=>{
+  b.addEventListener('click',()=>{ audioInit(); openDemo(+b.dataset.play); });
+});
+$('backBtn').addEventListener('click',closeDemo);
+function openDemo(i){
+  demo.classList.add('on');
+  document.body.style.overflow='hidden';
+  fit();
+  G=makeGame(VERSIONS[i].id);
+  G.showIntro();
+}
+function closeDemo(){
+  if(G&&G.stop) G.stop();
+  G=null; demo.classList.remove('on'); document.body.style.overflow='';
+  SAND.g.length=0; WATER.d.length=0; FLOATS.length=0;
+  $('introOvl').classList.remove('on'); $('winOvl').classList.remove('on');
+}
+</script>
+<script>
+/* =====================================================================
+   The four playable versions. Each returns the same little interface:
+   { showIntro, layout, stop }  — the shell drives the rest.
+   No fail state anywhere: being hit costs a turn on the 🔁 counter,
+   which is celebrated, never punished.
+   ===================================================================== */
+function makeGame(kind){
+
+/* ---- shared per-run state ---- */
+const S={
+  level:1, tries:0, hits:0, need:4, phase:'intro', t:0, raf:0,
+  down:false, downZone:null, downT:0, fireCD:0,
+  stam:1, shUp:false, shLock:0,
+};
+const MAXLV=5;
+let floorY=0, heroX=0, heroY=0;
+
+/* per-version level tables — kind and slow at level 1 on purpose */
+/* Tuned by play-testing the whole fight automatically, then watching the
+   clock: level 1 should take about half a minute of real effort, not
+   two seconds. Every dial only ever moves one way as the levels climb. */
+const TABLE={
+  /* A: soak him, hit the core, the shell shatters, do it again */
+  A:[/*1*/{spd:34,solid:2.6,spray:1.5,fists:0,need:3},
+     /*2*/{spd:46,solid:2.3,spray:1.3,fists:1,need:4},
+     /*3*/{spd:60,solid:2.0,spray:1.2,fists:2,need:4},
+     /*4*/{spd:76,solid:1.7,spray:1.1,fists:2,need:5},
+     /*5*/{spd:94,solid:1.4,spray:1.0,fists:3,need:6}],
+  /* B: the core surfaces briefly, then dives and hides after every hit */
+  B:[{orb:0.75,surf:2.4,thr:0.86,hide:1.1,dec:0,need:4},
+     {orb:1.00,surf:2.0,thr:0.88,hide:1.2,dec:0,need:5},
+     {orb:1.30,surf:1.6,thr:0.90,hide:1.3,dec:2,need:5},
+     {orb:1.65,surf:1.3,thr:0.92,hide:1.4,dec:3,need:6},
+     {orb:2.05,surf:1.0,thr:0.94,hide:1.5,dec:4,need:6}],
+  /* C: one soak per calm gap, so three whole storms must be survived */
+  C:[{wave:4.0,gap:2.6,dens:5, drain:0.40,soaks:3,fin:3},
+     {wave:4.4,gap:2.3,dens:7, drain:0.48,soaks:3,fin:3},
+     {wave:4.8,gap:2.0,dens:9, drain:0.56,soaks:4,fin:3},
+     {wave:5.2,gap:1.7,dens:12,drain:0.64,soaks:4,fin:4},
+     {wave:5.6,gap:1.4,dens:15,drain:0.74,soaks:5,fin:4}],
+  /* D: the wave is genuinely faster than a lazy run — towers are not optional */
+  D:[{wv:190,lead:470,gapW:0.30,towers:4,accel:5, need:3},
+     {wv:225,lead:430,gapW:0.34,towers:4,accel:7, need:3},
+     {wv:260,lead:380,gapW:0.38,towers:3,accel:9, need:4},
+     {wv:295,lead:330,gapW:0.42,towers:3,accel:11,need:4},
+     {wv:330,lead:280,gapW:0.46,towers:3,accel:13,need:5}]
+};
+const LV=()=>TABLE[kind][Math.min(S.level,MAXLV)-1];
+
+/* ---- version-specific worlds ---- */
+const A={x:0,walk:0,wet:0,solidT:0,fists:[],sprayT:0,sprayX:0,hyd:[],cool:0};
+const B={ang:0,r:0,slow:0,decoys:[],cx:0,cy:0,coreX:0,coreY:0,showing:false};
+const C={mode:'calm',modeT:2.0,storm:[],soak:0,hydGlow:0,solid:false};
+const D={camX:0,wave:0,roofs:[],towers:[],wet:[],vy:0,onRoof:true,charge:0,chDir:1,end:0,done:false};
+const balls=[];   /* web-balls, all versions */
+
+/* ================= layout ================= */
+function layout(){
+  floorY=H-Math.max(80,H*0.14);
+  /* version D scrolls, so a resize must not teleport Spidey back to the start */
+  if(kind!=='D'){ heroX=W*0.20; heroY=floorY; }
+  if(kind==='A'){
+    A.hyd=[0.42,0.60,0.78].map(f=>({x:W*f,used:0}));
+    if(!A.x) A.x=W*0.92;
+  }
+  if(kind==='B'){ B.cx=W*0.68; B.cy=floorY-130; }
+  if(kind==='C'){ heroX=W*0.24; }
+  if(kind==='D' && !D.roofs.length) buildRun();
+}
+
+/* ================= intro ================= */
+const HOW={
+  A:[['👆','🥎'],['👇','💧'],['💧+🏜️','🧊'],['🧊','🎯']],
+  B:[['👆','🥎'],['👇','💧'],['✨','🎯'],['🎀×5','🎉']],
+  C:[['✋','🛡️'],['⏳','🔁'],['👆','💧'],['💧×3','🎯']],
+  D:[['✋→✋̶','🕸️'],['👆','💧'],['🌊','🏃'],['🧊','🎀']]
+};
+function showIntro(){
+  S.phase='intro';
+  $('introTitle').textContent={A:'🚒 🕷️ 🏜️',B:'🔎 ✨ 🏜️',C:'🛡️ 🌪️ 🏜️',D:'🏃 🌊 🏜️'}[kind];
+  $('introSub').textContent='';
+  $('introHow').innerHTML=HOW[kind].map(h=>
+    `<div class="howCard">${h[0]}<small>→</small>${h[1]}</div>`).join('');
+  $('introDots').innerHTML=Array.from({length:MAXLV},(_,i)=>
+    `<i class="${i<S.level?'on':''}"></i>`).join('');
+  $('introOvl').classList.add('on');
+  $('hud').style.display='none';
+  layout(); draw(0);
+}
+$('introBtn').onclick=()=>{ if(!G) return; audioInit(); G.begin(); };
+$('nextBtn').onclick =()=>{ if(!G) return; audioInit(); G.next(); };
+
+function begin(){
+  $('introOvl').classList.remove('on');
+  $('winOvl').classList.remove('on');
+  $('hud').style.display='block';
+  resetLevel();
+  S.phase='play';
+  hudSync();
+  /* one wordless nudge at the very start */
+  setTimeout(()=>{ if(S.phase!=='play')return;
+    cue(kind==='C'?'✋':'👆'); attn(kind==='C'?$('altBtn'):$('actBtn'),2600); },600);
+  if(!S.raf) S.raf=requestAnimationFrame(loop);
+}
+function next(){
+  if(S.level<MAXLV){ S.level++; showIntro(); }
+  else { S.level=1; S.tries=0; showIntro(); }
+}
+
+/* ================= level reset ================= */
+function resetLevel(){
+  SAND.g.length=0; WATER.d.length=0; FLOATS.length=0; balls.length=0;
+  S.hits=0; S.stam=1; S.shUp=false; S.shLock=0; S.fireCD=0;
+  sandman.className='actor'; spidey.className='actor';
+  face(null);
+  layout();
+  if(kind==='A'){ A.x=W*1.05; A.wet=0; A.solidT=0; A.fists.length=0; A.sprayT=0; A.cool=0;
+    A.fistT=2.4; S.need=LV().need; $('altBtn').textContent='💧'; $('actBtn').textContent='🥎';
+    $('stamWrap').style.display='none'; }
+  if(kind==='B'){ B.ang=0; B.r=0.2; B.slow=0; B.hide=0; B.decoys=[]; S.need=LV().need;
+    for(let i=0;i<LV().dec;i++) B.decoys.push({a:rand(0,6.28),r:rand(0.3,0.9)});
+    $('altBtn').textContent='💧'; $('actBtn').textContent='🥎';
+    $('stamWrap').style.display='none'; }
+  if(kind==='C'){ C.mode='calm'; C.modeT=2.4; C.storm.length=0; C.soak=0; C.solid=false;
+    C.usedGap=false; S.need=LV().soaks; $('altBtn').textContent='🛡️'; $('actBtn').textContent='💧';
+    $('stamWrap').style.display='block'; }
+  if(kind==='D'){ buildRun(); S.need=LV().need; $('altBtn').textContent='🕸️'; $('actBtn').textContent='💧';
+    $('stamWrap').style.display='none'; }
+}
+
+/* ================= HUD ================= */
+function hudSync(){
+  $('tally').innerHTML='🏜️ '+S.level+' &nbsp; 🔁 '+S.tries;
+  let bar='';
+  for(let i=0;i<S.need;i++) bar+= i<S.hits?'🎀':'⚪';
+  $('coreBar').textContent=bar;
+  $('stamFill').style.width=Math.round(S.stam*100)+'%';
+  $('stamFill').style.background=S.shLock>0?'#E53935':'#FFC93C';
+}
+function addTry(){
+  S.tries++; hudSync(); sOops();
+  if(S.tries%5===0){ floatIcon(heroX,heroY-150,'⭐',52); sPop(); }
+}
+
+/* ================= input — two zones, same as the set ================= */
+const TOP_MAX=0.45, BOT_MIN=0.55;
+function zoneOf(e){
+  const f=(e.clientY||0)/Math.max(1,window.innerHeight);
+  return f<TOP_MAX?'top':(f>BOT_MIN?'bot':'dead');
+}
+function onDown(e){
+  if(S.phase!=='play') return;
+  const z=zoneOf(e); if(z==='dead') return;
+  e.preventDefault(); doDown(z);
+}
+function doDown(z){
+  S.down=true; S.downZone=z; S.downT=0; flashZone(z);
+  if(z==='top') topAction(); else botDown();
+}
+function doUp(){
+  if(S.down && S.downZone==='bot') botUp();
+  S.down=false; S.downZone=null;
+}
+function onUp(e){ if(S.phase!=='play') return; e.preventDefault(); doUp(); }
+/* Every listener is recorded so stop() can take them all off again.
+   Without this they pile up each time a version is opened and one tap
+   would fire four times. */
+const stage=$('demoStage');
+const BOUND=[];
+function on(el,ev,fn){ el.addEventListener(ev,fn); BOUND.push([el,ev,fn]); }
+on(stage,'pointerdown',onDown);
+['pointerup','pointercancel'].forEach(ev=>on(stage,ev,onUp));
+on($('actBtn'),'pointerdown',e=>{e.stopPropagation();e.preventDefault();
+  if(S.phase==='play')doDown('top');});
+['pointerup','pointercancel','pointerleave'].forEach(ev=>
+  on($('actBtn'),ev,e=>{e.stopPropagation();if(S.downZone==='top')doUp();}));
+on($('altBtn'),'pointerdown',e=>{e.stopPropagation();e.preventDefault();
+  if(S.phase==='play')doDown('bot');});
+['pointerup','pointercancel','pointerleave'].forEach(ev=>
+  on($('altBtn'),ev,e=>{e.stopPropagation();if(S.downZone==='bot')doUp();}));
+
+/* ---- what the two zones mean, per version ---- */
+function topAction(){
+  if(kind==='A'||kind==='B'){ throwBall(); }
+  if(kind==='C'){ burstHydrantC(); }
+  if(kind==='D'){ popTower(); }
+}
+function botDown(){
+  if(kind==='A'){ burstHydrantA(); }
+  if(kind==='B'){ sprayB(); }
+  if(kind==='C'){ shieldUp(); }
+  /* once he has arrived at the finish there is nothing left to swing to —
+     the run is over and the only job is webbing the core */
+  if(kind==='D'){ if(D.done) return; D.charge=0; D.chDir=1; spidey.classList.add('crouch'); }
+}
+function botUp(){
+  if(kind==='C') shieldDown();
+  if(kind==='D'){ spidey.classList.remove('crouch'); swing(); }
+}
+
+/* ================= web-balls ================= */
+function throwBall(){
+  if(S.fireCD>0) return;              /* silent cooldown = self control */
+  S.fireCD=0.34; sThwip();
+  spInner.classList.remove('shoot'); void spInner.offsetWidth; spInner.classList.add('shoot');
+  let tx,ty;
+  if(kind==='A'){ tx=A.x; ty=floorY-120; }
+  else { tx=B.coreX; ty=B.coreY; }
+  const a=Math.atan2(ty-(heroY-110),tx-heroX);
+  balls.push({x:heroX+30,y:heroY-110,vx:Math.cos(a)*640,vy:Math.sin(a)*640,life:0,g:0});
+}
+function updateBalls(dt){
+  for(let i=balls.length-1;i>=0;i--){
+    /* a web-line that was aimed at something flies straight — with gravity
+       on top of a straight aim every long shot silently missed */
+    const b=balls[i]; b.life+=dt; b.x+=b.vx*dt; b.y+=b.vy*dt;
+    b.vy+=(b.g===undefined?190:b.g)*dt;
+    /* version D is a scrolling world, so a ball must be culled against the
+       CAMERA, not against the screen width — otherwise every shot dies
+       the instant it is thrown */
+    const sx=kind==='D'? b.x-D.camX : b.x;
+    let gone=b.life>2.2||sx>W+120||sx<-120||b.y>H+80;
+    if(kind==='A'&&!gone) gone=hitCheckA(b);
+    if(kind==='B'&&!gone) gone=hitCheckB(b);
+    if(kind==='C'&&!gone) gone=hitCheckC(b);
+    if(kind==='D'&&!gone) gone=hitCheckD(b);
+    if(gone) balls.splice(i,1);
+  }
+}
+function drawBalls(){
+  for(const b of balls){
+    ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(b.x,b.y,11,0,6.283); ctx.fill();
+    ctx.strokeStyle='#B8C6D1'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(b.x-8,b.y); ctx.lineTo(b.x+8,b.y);
+    ctx.moveTo(b.x,b.y-8); ctx.lineTo(b.x,b.y+8); ctx.stroke();
+  }
+}
+function coreHit(x,y){
+  S.hits++; sBonk(); floatIcon(x,y-40,pick(['✨','💥','🎀']),50);
+  sandBurst(x,y,26,{sp:180});
+  sandman.classList.add('hurt'); face('fOw');
+  setTimeout(()=>{sandman.classList.remove('hurt');
+    if(S.phase==='play') face(null);},420);
+  /* the hardened shell SHATTERS on a hit — you have to earn the next
+     opening all over again. This is what stops tap-spam from winning. */
+  if(kind==='A'){
+    A.solidT=0; A.wet=0; sandman.classList.remove('solid','wet');
+    A.x=Math.min(W*1.15,A.x+rand(200,280));
+  }
+  if(kind==='B'){ B.r=0.1; B.hide=LV().hide; B.showing=false; }
+  hudSync();
+  if(S.hits>=S.need) win(); else cue('🏜️');
+}
+
+/* ================= WIN ================= */
+function win(){
+  S.phase='win'; sYay();
+  sandBurst(kind==='A'?A.x:(kind==='B'?B.cx:W*0.7),floorY-90,180,{sp:280});
+  face(null); sandman.style.opacity='0.25';
+  setTimeout(()=>{
+    spidey.classList.add('celebrate');
+    $('winSub').textContent='';
+    $('winFoot').innerHTML='🏜️ '+S.level+' / '+MAXLV+' &nbsp; 🔁 '+S.tries;
+    $('nextBtn').textContent=S.level<MAXLV?'▶️':'🔁';
+    $('winOvl').classList.add('on');
+  },900);
+}
+
+/* ================= VERSION A — Hydrant Havoc ================= */
+function burstHydrantA(){
+  if(A.cool>0) return; A.cool=0.5;
+  /* auto-pick the hydrant nearest Sandman: the child chooses WHEN, not WHERE */
+  let best=null,bd=1e9;
+  for(const h of A.hyd){ const d=Math.abs(h.x-A.x); if(d<bd){bd=d;best=h;} }
+  if(!best) return;
+  sSplash(); A.sprayT=LV().spray; A.sprayX=best.x;
+  waterBurst(best.x,floorY-24,54,-Math.PI/2,300);
+  floatIcon(best.x,floorY-90,'💧',44);
+}
+function hitCheckA(b){
+  if(A.solidT<=0) return false;                       /* only the hard core can be hit */
+  if(Math.hypot(b.x-A.x,b.y-(floorY-116))<62){ coreHit(A.x,floorY-116); return true; }
+  return false;
+}
+function updateA(dt){
+  const L=LV();
+  A.cool=Math.max(0,A.cool-dt);
+  /* sand always pouring */
+  if(Math.random()<0.85) sandBurst(A.x+rand(-40,40),floorY-rand(60,190),2,{sp:26,dir:1.57});
+  /* water spray */
+  if(A.sprayT>0){
+    A.sprayT-=dt;
+    waterBurst(A.sprayX,floorY-26,4,-Math.PI/2,290);
+    if(Math.abs(A.x-A.sprayX)<86 && A.solidT<=0){
+      A.wet+=dt*1.5; face('fWet');
+      sandBurst(A.x,floorY-100,3,{sp:40,wet:true});
+      if(A.wet>=1){ A.wet=0; A.solidT=L.solid; sHard();
+        sandman.classList.add('solid','wet'); cue('🎯'); attn($('actBtn'),2000); }
+    }
+  }
+  if(A.solidT>0){
+    A.solidT-=dt;
+    if(A.solidT<=0){ sandman.classList.remove('solid','wet'); face(null); cue('🏜️'); }
+  } else {
+    /* walk toward Spidey */
+    A.x-=L.spd*dt;
+    face(A.x<W*0.5?'fMad':null);
+    if(A.x<heroX+92){ /* bump — costs a turn, never the level */
+      addTry(); A.x=W*0.94; A.wet=0;
+      spidey.classList.add('hurt'); setTimeout(()=>spidey.classList.remove('hurt'),460);
+      sandBurst(heroX,heroY-80,40,{sp:200}); cue('🔁');
+    }
+    /* sand fists */
+    if(L.fists>0){
+      A.fistT=(A.fistT||2.4)-dt;
+      if(A.fistT<=0){ A.fistT=rand(2.0,3.4);
+        if(A.fists.length<L.fists){
+          const a=Math.atan2((heroY-120)-(floorY-130),heroX-A.x);
+          A.fists.push({x:A.x,y:floorY-130,vx:Math.cos(a)*230,vy:Math.sin(a)*230-60,life:0});
+          sThwip();
+        } }
+    }
+  }
+  for(let i=A.fists.length-1;i>=0;i--){
+    const f=A.fists[i]; f.life+=dt; f.vy+=430*dt; f.x+=f.vx*dt; f.y+=f.vy*dt;
+    sandBurst(f.x,f.y,2,{sp:20});
+    if(Math.hypot(f.x-heroX,f.y-(heroY-70))<52){
+      addTry(); spidey.classList.add('hurt');
+      setTimeout(()=>spidey.classList.remove('hurt'),460);
+      A.fists.splice(i,1); continue;
+    }
+    if(f.life>3||f.y>floorY) A.fists.splice(i,1);
+  }
+  setActor(sandman,A.x-85,floorY-208);
+  setActor(spidey,heroX-45,heroY-110);
+}
+function drawA(){
+  for(const h of A.hyd){
+    ctx.fillStyle=Math.abs(h.x-A.x)<120?'#ff6b5e':'#E53935';
+    ctx.fillRect(h.x-11,floorY-40,22,40);
+    ctx.beginPath(); ctx.arc(h.x,floorY-42,14,0,6.283); ctx.fill();
+    ctx.fillRect(h.x-22,floorY-34,44,9);
+  }
+  for(const f of A.fists){
+    ctx.fillStyle='#c99b52'; ctx.beginPath(); ctx.arc(f.x,f.y,25,0,6.283); ctx.fill();
+    ctx.fillStyle='#a87e3f'; ctx.beginPath(); ctx.arc(f.x-7,f.y-6,9,0,6.283); ctx.fill();
+  }
+}
+
+/* ================= VERSION B — Core Hunt ================= */
+function sprayB(){
+  if(B.cool>0) return; B.cool=0.6;
+  sSplash(); B.slow=1.8;
+  waterBurst(B.cx,floorY-40,60,-Math.PI/2.3,340);
+  floatIcon(B.cx,B.cy,'💧',44);
+}
+function hitCheckB(b){
+  if(!B.showing) return false;
+  if(Math.hypot(b.x-B.coreX,b.y-B.coreY)<48){ coreHit(B.coreX,B.coreY); B.r=0.15; return true; }
+  for(const d of B.decoys){
+    const dx=B.cx+Math.cos(d.a)*d.r*90, dy=B.cy+Math.sin(d.a)*d.r*70;
+    if(Math.hypot(b.x-dx,b.y-dy)<42){ sPop(); floatIcon(dx,dy,'💨',40); return true; }
+  }
+  return false;
+}
+function updateB(dt){
+  const L=LV();
+  B.cool=Math.max(0,(B.cool||0)-dt);
+  B.slow=Math.max(0,B.slow-dt);
+  B.hide=Math.max(0,(B.hide||0)-dt);
+  const k=B.slow>0?0.35:1;
+  B.ang+=L.orb*k*dt*2.2;
+  /* the core breathes in and out; "showing" means it has fully surfaced,
+     and it stays hidden for a moment after every hit */
+  B.r=0.55+Math.sin(S.t*(1.5/L.surf))*0.45;
+  const wasShow=B.showing;
+  B.showing=(B.hide<=0)&&B.r>L.thr;
+  if(B.showing&&!wasShow){ sPop(); if(S.hits===0) attn($('actBtn'),1400); }
+  B.coreX=B.cx+Math.cos(B.ang)*B.r*95;
+  B.coreY=B.cy+Math.sin(B.ang*1.3)*B.r*66;
+  B.decoys.forEach(d=>{ d.a+=L.orb*k*dt*1.7; });
+  /* the column pours sand constantly */
+  sandBurst(B.cx+rand(-56,56),B.cy+rand(-60,70),3,{sp:34,dir:1.57});
+  if(B.slow>0) sandBurst(B.cx+rand(-40,40),B.cy+40,1,{sp:20,wet:true});
+  setActor(sandman,B.cx-85,B.cy-104,' scale(1.05)');
+  sandman.style.opacity=B.showing?'0.55':'0.92';
+  setActor(spidey,heroX-45,heroY-110);
+}
+function drawB(){
+  /* swirl ring so the child can see the storm turning */
+  ctx.strokeStyle='rgba(232,196,131,.4)'; ctx.lineWidth=8;
+  for(let i=0;i<3;i++){
+    ctx.beginPath();
+    ctx.ellipse(B.cx,B.cy+i*34-30,100-i*14,34,Math.sin(B.ang+i)*0.24,0,6.283);
+    ctx.stroke();
+  }
+  for(const d of B.decoys){
+    const dx=B.cx+Math.cos(d.a)*d.r*90, dy=B.cy+Math.sin(d.a)*d.r*70;
+    ctx.globalAlpha=.55; ctx.fillStyle='#b8c6d1';
+    ctx.beginPath(); ctx.arc(dx,dy,15,0,6.283); ctx.fill(); ctx.globalAlpha=1;
+  }
+  /* the real core, drawn bright when it has surfaced */
+  const g=ctx.createRadialGradient(B.coreX,B.coreY,3,B.coreX,B.coreY,B.showing?52:30);
+  g.addColorStop(0,'#FFF3C4'); g.addColorStop(0.5,'#FFC93C'); g.addColorStop(1,'rgba(244,163,64,0)');
+  ctx.fillStyle=g; ctx.beginPath(); ctx.arc(B.coreX,B.coreY,B.showing?52:30,0,6.283); ctx.fill();
+  if(B.showing){
+    ctx.strokeStyle='#FFC93C'; ctx.lineWidth=5;
+    ctx.setLineDash([9,9]); ctx.lineDashOffset=-S.t*40;
+    ctx.beginPath(); ctx.arc(B.coreX,B.coreY,46,0,6.283); ctx.stroke(); ctx.setLineDash([]);
+  }
+}
+
+/* ================= VERSION C — Sand Storm ================= */
+function shieldUp(){
+  if(S.shLock>0||S.stam<=0.05) return;
+  S.shUp=true; sThwip();
+}
+function shieldDown(){ S.shUp=false; }
+function burstHydrantC(){
+  if(C.solid){ /* finishing blow: web the core */
+    if(S.fireCD>0) return; S.fireCD=0.34; sThwip();
+    spInner.classList.remove('shoot'); void spInner.offsetWidth; spInner.classList.add('shoot');
+    const a=Math.atan2((floorY-116)-(heroY-110),W*0.7-heroX);
+    balls.push({x:heroX+30,y:heroY-110,vx:Math.cos(a)*640,vy:Math.sin(a)*640,life:0,g:0});
+    return;
+  }
+  /* hydrants only work in the quiet gap, and only ONCE per gap —
+     so the storms in between have to be survived, not skipped */
+  if(C.mode!=='calm'||C.usedGap) return;
+  if(S.fireCD>0) return; S.fireCD=0.4;
+  C.usedGap=true;
+  sSplash(); C.soak++;
+  waterBurst(W*0.7,floorY-30,70,-Math.PI/2,330);
+  floatIcon(W*0.7,floorY-140,'💧',48);
+  sandBurst(W*0.7,floorY-120,26,{sp:60,wet:true});
+  S.hits=C.soak; hudSync();
+  face('fWet');
+  if(C.soak>=LV().soaks){
+    C.solid=true; sHard(); sandman.classList.add('solid','wet');
+    cue('🎯'); attn($('actBtn'),2600);
+    S.need=LV().soaks+LV().fin; hudSync();
+  }
+}
+function hitCheckC(b){
+  if(!C.solid) return false;
+  if(Math.hypot(b.x-W*0.7,b.y-(floorY-116))<66){ coreHit(W*0.7,floorY-116); return true; }
+  return false;
+}
+function updateC(dt){
+  const L=LV();
+  /* shield stamina — this IS the self-control lesson */
+  if(S.shUp){ S.stam-=L.drain*dt;
+    if(S.stam<=0){ S.stam=0; S.shUp=false; S.shLock=0.75; floatIcon(heroX,heroY-160,'🛡️💤',44); } }
+  else { S.stam=Math.min(1,S.stam+0.5*dt); }
+  if(S.shLock>0) S.shLock-=dt;
+  sandBurst(W*0.7+rand(-46,46),floorY-rand(70,190),2,{sp:26,dir:1.57});
+  if(!C.solid){
+    C.modeT-=dt;
+    if(C.modeT<=0){
+      if(C.mode==='calm'){ C.mode='storm'; C.modeT=L.wave; face('fMad'); cue('🌪️'); }
+      else { C.mode='calm'; C.modeT=L.gap; C.usedGap=false; face(null);
+             cue('💧'); attn($('actBtn'),1800); }
+    }
+    if(C.mode==='storm'){
+      C.spawn=(C.spawn||0)-dt;
+      if(C.spawn<=0){ C.spawn=0.55/L.dens*3;
+        C.storm.push({x:W*0.7,y:floorY-rand(60,200),vx:-rand(260,400),vy:rand(-40,40),life:0}); }
+    }
+  }
+  for(let i=C.storm.length-1;i>=0;i--){
+    const s=C.storm[i]; s.life+=dt; s.x+=s.vx*dt; s.y+=s.vy*dt;
+    sandBurst(s.x,s.y,2,{sp:22});
+    /* shield is a disc in front of Spidey */
+    if(S.shUp && Math.hypot(s.x-(heroX+66),s.y-(heroY-92))<104){
+      sPop(); S.stam=Math.min(1,S.stam+0.06); floatIcon(s.x,s.y,'🛡️',38);
+      sandBurst(s.x,s.y,16,{sp:150}); C.storm.splice(i,1); continue;
+    }
+    if(!S.shUp && Math.hypot(s.x-heroX,s.y-(heroY-70))<54){
+      addTry(); spidey.classList.add('hurt');
+      setTimeout(()=>spidey.classList.remove('hurt'),460);
+      C.storm.splice(i,1); continue;
+    }
+    if(s.x<-60||s.life>4) C.storm.splice(i,1);
+  }
+  setActor(sandman,W*0.7-85,floorY-208);
+  setActor(spidey,heroX-45,heroY-110);
+}
+function drawC(){
+  /* hydrant lights up only in the calm gap — the wordless "now!" */
+  const glow=(C.mode==='calm'&&!C.solid);
+  ctx.fillStyle=glow?'#ff6b5e':'#8a3b35';
+  ctx.fillRect(W*0.7-11,floorY-40,22,40);
+  ctx.beginPath(); ctx.arc(W*0.7,floorY-42,14,0,6.283); ctx.fill();
+  if(glow){ ctx.strokeStyle='#FFC93C'; ctx.lineWidth=5;
+    ctx.setLineDash([8,8]); ctx.lineDashOffset=-S.t*36;
+    ctx.beginPath(); ctx.arc(W*0.7,floorY-40,44,0,6.283); ctx.stroke(); ctx.setLineDash([]); }
+  for(const s of C.storm){
+    ctx.fillStyle='#c99b52'; ctx.globalAlpha=.9;
+    ctx.beginPath(); ctx.ellipse(s.x,s.y,26,15,0,0,6.283); ctx.fill(); ctx.globalAlpha=1;
+  }
+  if(S.shUp){
+    const cx=heroX+66, cy=heroY-92;
+    ctx.strokeStyle='rgba(255,255,255,.9)'; ctx.lineWidth=4;
+    ctx.beginPath(); ctx.arc(cx,cy,98,0,6.283); ctx.stroke();
+    ctx.fillStyle='rgba(142,208,255,.22)'; ctx.fill();
+    ctx.lineWidth=2; ctx.strokeStyle='rgba(255,255,255,.55)';
+    for(let i=0;i<6;i++){ const a=i*1.047;
+      ctx.beginPath(); ctx.moveTo(cx,cy);
+      ctx.lineTo(cx+Math.cos(a)*98,cy+Math.sin(a)*98); ctx.stroke(); }
+    for(let r=32;r<98;r+=22){ ctx.beginPath(); ctx.arc(cx,cy,r,0,6.283); ctx.stroke(); }
+  }
+}
+
+/* ================= VERSION D — Rooftop Run ================= */
+function buildRun(){
+  D.roofs=[]; D.towers=[]; D.wet=[]; D.camX=0; D.done=false;
+  const L=LV(); let x=0;
+  for(let i=0;i<7;i++){
+    const w=rand(230,330);
+    D.roofs.push({x:x,w:w,y:floorY-rand(0,60)});
+    x+=w+Math.max(90,W*L.gapW*rand(0.8,1.15));
+  }
+  /* a wide flat finish roof — without it Spidey sails past the last
+     building, falls out of the world and gets recycled to the start */
+  D.roofs.push({x:x,w:Math.max(2200,W*4),y:floorY,fin:true});
+  D.end=x+120;
+  for(let i=0;i<L.towers;i++){
+    const r=D.roofs[1+i*2] || D.roofs[D.roofs.length-2];
+    D.towers.push({x:r.x+r.w*0.5,y:r.y-210,used:false});
+  }
+  heroX=D.roofs[0].x+80; heroY=D.roofs[0].y;
+  D.wave=heroX-L.lead; D.vy=0; D.onRoof=true; D.charge=0;
+}
+function swing(){
+  if(!D.onRoof||D.done) return;
+  const p=clamp(D.charge,0.12,1);
+  D.vx=340+p*420; D.vy=-360-p*230; D.onRoof=false;
+  sThwip(); floatIcon(heroX,heroY-140,'🕸️',40);
+}
+function popTower(){
+  if(S.fireCD>0) return; S.fireCD=0.34; sThwip();
+  spInner.classList.remove('shoot'); void spInner.offsetWidth; spInner.classList.add('shoot');
+  /* at the finish the only target is the core; otherwise the next tower ahead */
+  if(D.done){
+    const a=Math.atan2((floorY-120)-(heroY-110),(D.end+260)-heroX);
+    balls.push({x:heroX+30,y:heroY-110,vx:Math.cos(a)*680,vy:Math.sin(a)*680,life:0,g:0});
+    return;
+  }
+  let best=null,bd=1e9;
+  for(const t of D.towers){ if(t.used) continue;
+    const d=t.x-heroX; if(d>-60&&d<bd){bd=d;best=t;} }
+  if(!best){ balls.push({x:heroX+30,y:heroY-110,vx:600,vy:-160,life:0}); return; }
+  const a=Math.atan2(best.y-(heroY-110),best.x-heroX);
+  balls.push({x:heroX+30,y:heroY-110,vx:Math.cos(a)*680,vy:Math.sin(a)*680,life:0,g:0,t:best});
+}
+function hitCheckD(b){
+  if(b.t&&!b.t.used&&Math.hypot(b.x-b.t.x,b.y-b.t.y)<54){
+    b.t.used=true; sSplash();
+    waterBurst(b.t.x,b.t.y+40,80,Math.PI/2,260);
+    D.wet.push({x:b.t.x,t:0});
+    floatIcon(b.t.x,b.t.y,'💧',48);
+    return true;
+  }
+  if(D.done&&Math.hypot(b.x-(D.end+260),b.y-(floorY-120))<74){
+    coreHit(D.end+260,floorY-120); return true;
+  }
+  return false;
+}
+function updateD(dt){
+  const L=LV();
+  if(S.down&&S.downZone==='bot'&&D.onRoof){
+    D.charge+=D.chDir*dt/1.05;
+    if(D.charge>1){D.charge=1;D.chDir=-1;} if(D.charge<0){D.charge=0;D.chDir=1;}
+  }
+  if(!D.onRoof){
+    D.vy+=1250*dt; heroX+=(D.vx||0)*dt; heroY+=D.vy*dt;
+    let landed=null;
+    for(const r of D.roofs)
+      if(heroX>r.x-10&&heroX<r.x+r.w+10&&heroY>=r.y&&D.vy>0) landed=r;
+    if(landed){ heroY=landed.y; D.onRoof=true; D.vy=0; D.vx=0; D.charge=0; sPop();
+      sandBurst(heroX,heroY,10,{sp:80}); }
+    else if(heroY>H+140){
+      /* missed the jump — never a loss, he is dropped back onto the
+         NEAREST roof behind him, never all the way to the start */
+      addTry();
+      let r=D.roofs[0];
+      for(const q of D.roofs) if(q.x<=heroX+40) r=q;
+      heroX=r.x+50; heroY=r.y-260; D.vy=0; D.vx=0; D.onRoof=false; cue('🔁'); }
+  }
+  /* the wave — it speeds up the longer you dawdle, so towers matter */
+  let spd=L.wv+(D.age=(D.age||0)+dt)*L.accel;
+  for(const w of D.wet){ w.t+=dt; if(Math.abs(D.wave-w.x)<190) spd*=0.34; }
+  D.wave+=spd*dt;
+  sandBurst(D.wave+rand(-40,40),floorY-rand(0,140),4,{sp:70,dir:0});
+  if(D.wave>heroX-40&&!D.done){
+    addTry(); spidey.classList.add('hurt');
+    setTimeout(()=>spidey.classList.remove('hurt'),460);
+    /* caught: a shove forward, never a restart */
+    heroX+=90; D.wave=heroX-L.lead*0.8; D.age=Math.max(0,D.age-3); cue('🔁');
+  }
+  /* reached the end: the wave slams the soaked patch and sets hard */
+  if(heroX>D.end&&!D.done){
+    D.done=true; D.wave=Math.min(D.wave,heroX-320);
+    heroX=D.end+20; D.vx=0; D.vy=0;      /* he plants his feet for the finish */
+    sHard(); sandman.classList.add('solid','wet'); face('fWet');
+    cue('🎯'); attn($('actBtn'),2600);
+  }
+  if(D.done){ D.wave=Math.min(D.wave,D.end+40); }   /* the wave stops at the finish */
+  D.camX+=((heroX-W*0.34)-D.camX)*Math.min(1,dt*4);
+  D.camX=Math.max(0,D.camX);
+  setActor(spidey,heroX-D.camX-45,heroY-110);
+  if(D.done) setActor(sandman,D.end+260-D.camX-85,floorY-208);
+  else       setActor(sandman,-400,0);
+}
+function drawD(){
+  ctx.save(); ctx.translate(-D.camX,0);
+  for(const r of D.roofs){
+    ctx.fillStyle='#3E6B8C'; ctx.fillRect(r.x,r.y,r.w,H-r.y+40);
+    ctx.fillStyle='#2F5570'; ctx.fillRect(r.x,r.y-12,r.w,14);
+  }
+  for(const w of D.wet){
+    ctx.fillStyle='rgba(142,208,255,.4)';
+    ctx.fillRect(w.x-95,floorY-14,190,16);
+  }
+  for(const t of D.towers){
+    ctx.fillStyle=t.used?'#5c6b78':'#8ED0FF';
+    ctx.fillRect(t.x-38,t.y-6,76,72);
+    ctx.fillStyle=t.used?'#44525c':'#5aa9dd';
+    ctx.fillRect(t.x-44,t.y-20,88,18);
+    if(!t.used){ ctx.strokeStyle='#FFC93C'; ctx.lineWidth=4;
+      ctx.setLineDash([7,7]); ctx.lineDashOffset=-S.t*32;
+      ctx.beginPath(); ctx.arc(t.x,t.y+28,58,0,6.283); ctx.stroke(); ctx.setLineDash([]); }
+  }
+  /* the wave itself */
+  ctx.fillStyle='#c99b52'; ctx.beginPath();
+  ctx.moveTo(D.wave-520,H+60);
+  for(let k=0;k<=26;k++){
+    const px=D.wave-520+k*20;
+    const h=Math.min(200,k*9)+Math.sin(S.t*5+k*0.5)*10;
+    ctx.lineTo(px,floorY+30-h);
+  }
+  ctx.lineTo(D.wave,H+60); ctx.closePath(); ctx.fill();
+  ctx.fillStyle='#a87e3f'; ctx.globalAlpha=.6;
+  ctx.beginPath(); ctx.ellipse(D.wave-90,floorY-70,80,60,0,0,6.283); ctx.fill();
+  ctx.globalAlpha=1;
+  ctx.restore();
+  /* charge meter, drawn as a growing web bar under Spidey */
+  if(S.down&&S.downZone==='bot'&&D.onRoof){
+    const bx=heroX-D.camX-60, by=heroY+16;
+    ctx.fillStyle='rgba(0,0,0,.5)'; ctx.fillRect(bx,by,120,16);
+    ctx.fillStyle='#FFC93C'; ctx.fillRect(bx+2,by+2,116*D.charge,12);
+  }
+}
+
+/* ================= backdrop ================= */
+function drawSky(){
+  const g=ctx.createLinearGradient(0,0,0,H);
+  if(kind==='C'){ g.addColorStop(0,'#4a3a2a'); g.addColorStop(1,'#7a5a34'); }
+  else { g.addColorStop(0,'#25406b'); g.addColorStop(0.6,'#5c3f52'); g.addColorStop(1,'#7a5236'); }
+  ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+  /* skyline */
+  ctx.fillStyle='rgba(20,30,50,.55)';
+  for(let i=0;i<9;i++){
+    const bw=W/9, bx=i*bw, bh=90+((i*57)%120);
+    ctx.fillRect(bx+6,floorY-bh-60,bw-12,bh+60);
+  }
+  if(kind!=='D'){
+    ctx.fillStyle='#3E6B8C'; ctx.fillRect(0,floorY,W,H-floorY);
+    ctx.fillStyle='#2F5570'; ctx.fillRect(0,floorY-12,W,14);
+  }
+}
+
+/* ================= loop ================= */
+let last=performance.now();
+function loop(now){
+  const dt=Math.min(0.05,(now-last)/1000); last=now; S.t+=dt;
+  if(S.phase==='play'){
+    S.fireCD=Math.max(0,S.fireCD-dt);
+    if(kind==='A') updateA(dt);
+    if(kind==='B') updateB(dt);
+    if(kind==='C') updateC(dt);
+    if(kind==='D') updateD(dt);
+    updateBalls(dt);
+    hudSync();
+  }
+  sandUpdate(dt,kind==='D'?floorY+40:floorY);
+  waterUpdate(dt,floorY);
+  floatsUpdate(dt);
+  draw(dt);
+  S.raf=requestAnimationFrame(loop);
+}
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  drawSky();
+  if(kind==='D') drawD();
+  /* sand, water, web-balls and reward icons all live in WORLD space.
+     Version D scrolls, so everything after this point is drawn through
+     the camera; the other three versions have no camera at all. */
+  ctx.save(); if(kind==='D') ctx.translate(-D.camX,0);
+  sandDraw(ctx);
+  if(kind==='A') drawA();
+  if(kind==='B') drawB();
+  if(kind==='C') drawC();
+  waterDraw(ctx);
+  drawBalls();
+  floatsDraw(ctx);
+  ctx.restore();
+}
+function stop(){
+  if(S.raf) cancelAnimationFrame(S.raf); S.raf=0; S.phase='dead';
+  BOUND.forEach(([el,ev,fn])=>el.removeEventListener(ev,fn)); BOUND.length=0;
+  $('introBtn').onclick=null; $('nextBtn').onclick=null;
+  sandman.style.opacity=''; sandman.className='actor'; spidey.className='actor';
+  $('stamWrap').style.display='none';
+}
+
+layout();
+/* dbg exposes the internals so the whole fight can be play-tested
+   automatically — cheap, and it keeps the versions honest. */
+return { showIntro, begin, next, layout, stop,
+         dbg:()=>({S,A,B,C,D,heroX,heroY,floorY,balls}) };
+}
+
+</script>
+</body>
+</html>
