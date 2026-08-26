@@ -62,7 +62,12 @@ const LetterGame={
     /* decoys are drawn from letters that really appear in these words,
        so the wrong answers are plausible rather than random noise */
     const alphabet='bcdfghjlmnprstvwxz'.split('').concat(['a','e','i','o','u']);
-    const others=shuffle(alphabet.filter(c=>c!==right)).slice(0,q.decoys);
+    /* Every SECOND time a word comes back, one wrong letter quietly drops
+       out — help without ever showing him which one is right.  The floor
+       is two decoys: narrowing it to a coin-flip would just reward a child
+       who taps without looking, which is the whole thing we are fixing. */
+    const decoys=Math.max(2, q.decoys-Math.floor((q.again||0)/2));
+    const others=shuffle(alphabet.filter(c=>c!==right)).slice(0,decoys);
     const opts=shuffle(others.concat([right]));
 
     const br=row(10);
@@ -75,12 +80,7 @@ const LetterGame={
           slots[q.miss].className='slot filled';
           br.querySelectorAll('button').forEach(x=>x.dataset.dead='1');
           cb.correct(q.w,b);
-        }else{
-          /* a wrong letter fades out so the choice narrows — helpful,
-             never punishing */
-          b.style.opacity='.35';
-          cb.wrong(q.w,b);
-        }
+        }else cb.wrong(q.w,b);
       };
       br.appendChild(b);
     });

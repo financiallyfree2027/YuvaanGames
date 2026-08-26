@@ -128,11 +128,16 @@ function slotBox(ch,filled,dashed){
   d.textContent=ch||'';
   return d;
 }
+/* The buttons wake up a moment after the picture appears.  Because the
+   first tap now counts, he must not be able to slap the screen before he
+   has even seen the word — the short warm-up makes him look first. */
+let WARMUP=650;
 function letterBtn(ch,big){
   const b=document.createElement('button');
-  b.className='lbtn'+(big?' big':'');
+  b.className='lbtn warm'+(big?' big':'');
   b.textContent=ch.toUpperCase();
   b.addEventListener('pointerdown',()=>sTap());
+  setTimeout(()=>b.classList.remove('warm'),WARMUP);
   return b;
 }
 function row(gap,cls){
@@ -144,12 +149,26 @@ function row(gap,cls){
 /* =====================================================================
    THE GAME LOOP
    ===================================================================== */
-const S={level:1,i:0,list:[],misses:0,levelMisses:0,phase:'menu'};
+/* ---------------------------------------------------------------------
+   THE ONE-TAP RULE.
+   Yuvaan worked out that tapping A and then E always got him through —
+   one of the two had to be right.  So he was practising "tap everything"
+   instead of reading.
+   Now the FIRST tap is his answer.  Get it right and the word is done.
+   Get it wrong and nothing bad happens — no cross, no noise of failure —
+   the word is simply read to him again and goes to the BACK OF THE QUEUE
+   to be asked once more later.  A level is only finished when every word
+   has been answered right first time, so tapping both can never clear it.
+   --------------------------------------------------------------------- */
+const S={level:1,i:0,list:[],queue:[],solved:0,total:0,
+         misses:0,levelMisses:0,phase:'menu',answered:false};
 let GAME=null;                 /* set by the game file */
 
 function startLevel(n){
   S.level=n; S.i=0; S.levelMisses=0;
   S.list=GAME.buildLevel(n);
+  S.queue=S.list.slice();      /* the words still to get right */
+  S.total=S.list.length; S.solved=0; S.answered=false;
   S.phase='play';
   $('menu').classList.remove('on');
   $('map').classList.remove('on');
@@ -160,28 +179,68 @@ function startLevel(n){
 }
 function render(){
   hud();
-  if(S.i>=S.list.length){ levelDone(); return; }
+  if(!S.queue.length){ levelDone(); return; }
+  S.answered=false;
+  /* On a retry the buttons take a little longer to wake up.  Reflex-tapping
+     the other letter is then slower than actually looking and thinking,
+     which is the habit we want. */
+  const back=S.queue[0].again||0;
+  WARMUP = back===0 ? 650 : Math.min(1600, 900+back*250);
   const body=$('qArea'); body.innerHTML='';
-  GAME.render(S.list[S.i], body, {correct,wrong});
+  GAME.render(S.queue[0], body, {correct,wrong});
 }
 function hud(){
   $('lvlTag').textContent='📗 '+S.level;
-  $('progFill').style.width=Math.round(S.i/S.list.length*100)+'%';
+  $('progFill').style.width=Math.round(S.solved/Math.max(1,S.total)*100)+'%';
   let dots='';
-  for(let k=0;k<S.list.length;k++) dots += k<S.i?'●':'○';
+  for(let k=0;k<S.total;k++) dots += k<S.solved?'●':'○';
   $('dots').textContent=dots;
   $('missTag').textContent='🔁 '+S.levelMisses;
 }
+/* once he has tapped, the rest of the buttons stop listening — the first
+   tap is the answer, so a lucky second tap cannot rescue it */
+function lockButtons(){
+  document.querySelectorAll('#qArea button').forEach(b=>{
+    b.disabled=true; b.style.pointerEvents='none';
+  });
+}
 function correct(word,el){
+  if(S.answered) return;
+  S.answered=true; lockButtons();
   sYes(); if(el){bounce(el); popAt(el,pick(['⭐','🎉','✨','👏','🌟']));}
   confetti(9); say(word,0.86);
-  setTimeout(()=>{ S.i++; render(); },900);
+  S.queue.shift(); S.solved++;
+  setTimeout(()=>render(),950);
 }
 function wrong(word,el){
+  if(S.answered) return;
+  S.answered=true; lockButtons();
   S.misses++; S.levelMisses++; sNo(); if(el) wobble(el);
   hud();
-  /* never a loss — it simply says the word again and waits */
-  setTimeout(()=>sound(word),280);
+  /* THE WORD DOES NOT CHANGE.  He stays on this one until he gets it
+     right — no skipping ahead, no moving on with a word unlearned.
+     The buttons are locked, he hears the word again, and then the very
+     same question comes back with the letters in a different order. */
+  const q=S.queue[0];
+  q.again=(q.again||0)+1;
+  listenAgain(q);
+}
+/* No cross, no red, no "wrong".  Just a big ear, the picture, and the
+   word read slowly — then on to the next word.  This one comes back. */
+function listenAgain(q){
+  const panel=document.createElement('div');
+  panel.className='again';
+  panel.innerHTML=`<div class="againEar">👂</div>`;
+  const pb=picBox(q.pic,150); pb.style.margin='0 auto';
+  panel.appendChild(pb);
+  const wordEl=document.createElement('div');
+  wordEl.className='againWord';
+  wordEl.textContent=q.w.toUpperCase().split('').join(' ');
+  panel.appendChild(wordEl);
+  $('qArea').appendChild(panel);
+  setTimeout(()=>sound(q.w),200);
+  setTimeout(()=>say(q.w,0.6),1500);
+  setTimeout(()=>render(),2600);
 }
 /* stars: 3 for a clean run, 2 for a few slips, 1 for finishing at all.
    The floor is 1 — he can never come away with nothing. */
@@ -192,7 +251,7 @@ function starsFor(miss,total){
 }
 function levelDone(){
   S.phase='done';
-  const st=starsFor(S.levelMisses,S.list.length);
+  const st=starsFor(S.levelMisses,S.total);
   const idx=S.level-1;
   const prevStars=save.stars[idx], prevBest=save.best[idx];
   if(st>save.stars[idx]) save.stars[idx]=st;
@@ -208,7 +267,7 @@ function levelDone(){
   $('winWords').innerHTML=S.list.map(q=>
     `<span class="ww">${(q.w||'').toUpperCase()}</span>`).join('');
   $('winNote').textContent = S.levelMisses===0
-    ? 'Perfect!' : (S.levelMisses<prevBest||prevBest===0 ? 'Best yet: '+S.levelMisses+' 🔁'
+    ? 'Every one first try!' : (S.levelMisses<prevBest||prevBest===0 ? 'Best yet: '+S.levelMisses+' 🔁'
                                                         : 'Your record: '+prevBest+' 🔁');
   $('nextBtn').textContent = S.level<NLV ? '▶️ '+(S.level+1) : '🗺️';
   say(st===3?'Perfect! Well done Yuvaan!':'Well done Yuvaan!',0.88);

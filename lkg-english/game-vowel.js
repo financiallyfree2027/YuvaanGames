@@ -67,9 +67,21 @@ const VowelGame={
     slots.forEach(s=>wr.appendChild(s));
     root.appendChild(wr);
 
-    const br=row(q.opts.length>3?10:20);
-    q.opts.forEach(o=>{
-      const b=letterBtn(o, q.opts.length<=3);
+    /* If a word keeps coming back, quietly take one WRONG letter away each
+       time.  It never shows him the answer, it just narrows the field so a
+       stuck child still gets there.  Two options is the floor. */
+    /* reshuffled every single time, so "the other one" is never in the
+       same place twice */
+    let opts=shuffle(q.opts);
+    const back=q.again||0;
+    if(back>0 && opts.length>2){
+      const wrongs=shuffle(opts.filter(o=>o!==q.w[q.miss]));
+      const keep=Math.max(1, wrongs.length-back);
+      opts=shuffle(wrongs.slice(0,keep).concat([q.w[q.miss]]));
+    }
+    const br=row(opts.length>3?10:20);
+    opts.forEach(o=>{
+      const b=letterBtn(o, opts.length<=3);
       b.onclick=()=>{
         if(b.dataset.dead) return;
         if(o===q.w[q.miss]){
