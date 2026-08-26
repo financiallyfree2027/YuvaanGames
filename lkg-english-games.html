@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>LKG English — 8 games to try</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{font-family:'Comic Sans MS','Chalkboard SE','Marker Felt',sans-serif;
+  background:linear-gradient(180deg,#FDFAF4 0%,#eaf3fb 60%,#dfeaf5 100%);
+  color:#241D15;min-height:100vh;-webkit-user-select:none;user-select:none}
+.wrap{max-width:1150px;margin:0 auto;padding:24px 16px 70px}
+h1{font-size:clamp(24px,5.5vw,42px);text-align:center;margin:6px 0 2px;color:#3D8DDB}
+.sub{text-align:center;color:#8B5E3C;font-size:clamp(14px,3.2vw,19px);margin:0 0 6px}
+.note{text-align:center;color:#6b6055;font-size:clamp(12px,2.8vw,15px);
+  margin:0 auto 22px;max-width:640px;line-height:1.55}
+h2.sec{font-size:clamp(19px,4vw,27px);margin:30px 0 4px;color:#7B47C9;
+  border-bottom:4px solid rgba(123,71,201,.25);padding-bottom:6px}
+h2.sec small{display:block;font-size:15px;color:#6b6055;font-weight:normal;margin-top:4px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(258px,1fr));gap:16px;margin-top:14px}
+.card{background:#fff;border:4px solid #dfe7ef;border-radius:24px;padding:15px 15px 17px;
+  display:flex;flex-direction:column;box-shadow:0 6px 0 rgba(36,29,21,.10)}
+.card h3{margin:0 0 3px;font-size:18px;color:#241D15}
+.tag{color:#12A99A;font-weight:bold;font-size:14px;margin:0 0 10px}
+.mini{background:#f4f8fc;border:3px solid #e2ecf5;border-radius:16px;
+  padding:10px;margin-bottom:11px;height:132px;display:flex;align-items:center;
+  justify-content:center;gap:9px;overflow:hidden}
+.mini svg{width:58px;height:58px}
+.mini .chip{background:#fff;border:3px solid #241D15;border-radius:12px;
+  min-width:40px;height:48px;display:flex;align-items:center;justify-content:center;
+  font-size:26px;font-weight:bold}
+.mini .chip.hi{background:#FFC93C}
+.mini .word{font-size:30px;font-weight:bold;letter-spacing:3px}
+.desc{font-size:14.5px;line-height:1.55;color:#4a4239;margin:0 0 10px}
+.desc b{color:#E85D4A}
+.teach{background:#f6f2ff;border-radius:12px;padding:8px 11px;font-size:13px;
+  color:#5a4a7a;line-height:1.5;margin:0 0 12px}
+.play{margin-top:auto;font:inherit;font-size:20px;font-weight:bold;background:#2FAE7C;
+  color:#fff;border:4px solid #fff;border-radius:18px;padding:12px 8px;cursor:pointer;
+  box-shadow:0 5px 0 rgba(36,29,21,.22)}
+.play:active{transform:scale(.95);box-shadow:0 2px 0 rgba(36,29,21,.22)}
+
+/* ---------- fullscreen game ---------- */
+#game{position:fixed;inset:0;z-index:100;display:none;background:#FDFAF4;
+  overflow:hidden;touch-action:manipulation}
+#game.on{display:flex;flex-direction:column}
+#gTop{flex:0 0 auto;display:flex;align-items:center;gap:10px;padding:10px 12px}
+.tbtn{border:4px solid #fff;border-radius:16px;width:58px;height:58px;font-size:26px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 auto;
+  box-shadow:0 4px 0 rgba(36,29,21,.2)}
+#gBack{background:#7B47C9}
+#gSay{background:#3D8DDB}
+#gProg{flex:1;height:20px;background:#e4ecf4;border-radius:10px;overflow:hidden;
+  border:3px solid #fff;box-shadow:0 3px 0 rgba(36,29,21,.12)}
+#gProg i{display:block;height:100%;width:0;background:#2FAE7C;transition:width .4s}
+#gStars{font-size:26px;letter-spacing:2px;flex:0 0 auto}
+#gBody{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:6px 12px 14px;gap:10px;min-height:0}
+#gFx{position:fixed;inset:0;pointer-events:none;z-index:110}
+.pop{position:absolute;font-size:46px;animation:popUp 1.1s ease-out forwards}
+@keyframes popUp{0%{opacity:0;transform:translateY(0) scale(.5)}
+  25%{opacity:1;transform:translateY(-16px) scale(1.15)}
+  100%{opacity:0;transform:translateY(-90px) scale(1)}}
+.conf{position:absolute;width:12px;height:18px;border-radius:3px;animation:fall 1.9s linear forwards}
+@keyframes fall{0%{transform:translateY(-30px) rotate(0);opacity:1}
+  100%{transform:translateY(105vh) rotate(720deg);opacity:.9}}
+#done{position:fixed;inset:0;z-index:120;background:rgba(253,250,244,.97);display:none;
+  flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:20px}
+#done.on{display:flex}
+#done .big{font-size:clamp(40px,12vw,90px)}
+#done .msg{font-size:clamp(19px,4.6vw,28px);color:#2FAE7C;font-weight:bold;text-align:center}
+#done .sm{font-size:16px;color:#6b6055}
+#done button{font:inherit;font-size:24px;font-weight:bold;background:#3D8DDB;color:#fff;
+  border:5px solid #fff;border-radius:22px;padding:14px 34px;cursor:pointer;
+  box-shadow:0 6px 0 rgba(36,29,21,.25)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>📖 LKG English — practice games</h1>
+  <p class="sub">Eight ways to practise this week's worksheet</p>
+  <p class="note">Every game says the word out loud, so Yuvaan never has to guess in
+  silence. Nothing can be failed — a wrong tap just wobbles and lets him try again,
+  and the word is spoken again to help. Tap <b>▶️ Play</b> to try any of them.</p>
+
+  <h2 class="sec">Q1 — Fill in <i>a</i> or <i>e</i>
+    <small>m_n · m_p · j_t · p_d · g_m · t_g · d_n · s_d · p_n</small></h2>
+  <div class="grid" id="g1"></div>
+
+  <h2 class="sec">Q2 — Look at the picture, write the word
+    <small>bed · cat · cap · van · net · jar · pad · hen</small></h2>
+  <div class="grid" id="g2"></div>
+</div>
+
+<div id="game">
+  <div id="gTop">
+    <div class="tbtn" id="gBack">⬅️</div>
+    <div class="tbtn" id="gSay">🔊</div>
+    <div id="gProg"><i id="gProgFill"></i></div>
+    <div id="gStars"></div>
+  </div>
+  <div id="gBody"></div>
+</div>
+<div id="gFx"></div>
+<div id="done">
+  <div class="big">🎉</div>
+  <div class="msg" id="doneMsg"></div>
+  <div class="sm" id="doneSub"></div>
+  <button id="doneBtn">▶️ Again</button>
+</div>
+<script>
+/* =====================================================================
+   PICTURE LIBRARY for the LKG English worksheet games.
+   Sixteen flat SVG drawings, all on a 0 0 200 200 canvas, drawn only
+   from the project palette so they sit next to the Spidey games and the
+   story art without clashing.
+   Every picture must be recognisable to a five-year-old at a glance —
+   that is the whole exercise, so no clever stylisation.
+   ===================================================================== */
+const PAL = {
+  red:'#E85D4A', orange:'#F4A340', yellow:'#FFC93C', green:'#2FAE7C',
+  blue:'#3D8DDB', teal:'#12A99A', purple:'#7B47C9', pink:'#FF8AC5',
+  brown:'#8B5E3C', skin:'#F2C9A0', cream:'#FDFAF4', ink:'#241D15',
+  grey:'#B8C6D1'
+};
+
+const PICS = {
+
+/* ---------- Q1 words: short a / short e ---------- */
+men:`<svg viewBox="0 0 200 200">
+  <g>
+    <circle cx="52" cy="76" r="26" fill="#F2C9A0"/>
+    <path d="M26 76a26 26 0 0 1 52 0z" fill="#241D15"/>
+    <circle cx="44" cy="78" r="3.5" fill="#241D15"/><circle cx="60" cy="78" r="3.5" fill="#241D15"/>
+    <path d="M44 90q8 7 16 0" stroke="#241D15" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M22 168v-38a30 30 0 0 1 60 0v38z" fill="#3D8DDB"/>
+  </g>
+  <g>
+    <circle cx="100" cy="70" r="27" fill="#F2C9A0"/>
+    <path d="M73 70a27 27 0 0 1 54 0z" fill="#8B5E3C"/>
+    <circle cx="91" cy="72" r="3.5" fill="#241D15"/><circle cx="109" cy="72" r="3.5" fill="#241D15"/>
+    <path d="M91 85q9 8 18 0" stroke="#241D15" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M68 168v-40a32 32 0 0 1 64 0v40z" fill="#E85D4A"/>
+  </g>
+  <g>
+    <circle cx="148" cy="76" r="26" fill="#F2C9A0"/>
+    <path d="M122 76a26 26 0 0 1 52 0z" fill="#F4A340"/>
+    <circle cx="140" cy="78" r="3.5" fill="#241D15"/><circle cx="156" cy="78" r="3.5" fill="#241D15"/>
+    <path d="M140 90q8 7 16 0" stroke="#241D15" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M118 168v-38a30 30 0 0 1 60 0v38z" fill="#2FAE7C"/>
+  </g>
+</svg>`,
+
+map:`<svg viewBox="0 0 200 200">
+  <path d="M18 44l50-16 64 20 50-18v124l-50 18-64-20-50 16z" fill="#FDFAF4" stroke="#241D15" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M68 28v124M132 48v124" stroke="#241D15" stroke-width="3" stroke-dasharray="9 8"/>
+  <path d="M28 108q26-26 52-6t56-22" stroke="#E85D4A" stroke-width="5" fill="none" stroke-dasharray="10 9" stroke-linecap="round"/>
+  <path d="M118 66l16 16m0-16l-16 16" stroke="#E85D4A" stroke-width="6" stroke-linecap="round"/>
+  <path d="M34 74q10-16 20 0t-20 12z" fill="#2FAE7C"/>
+  <circle cx="156" cy="120" r="9" fill="#3D8DDB"/>
+</svg>`,
+
+jet:`<svg viewBox="0 0 200 200">
+  <path d="M14 108l150-22 22 8-10 16-152 12z" fill="#FDFAF4" stroke="#241D15" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M74 92L52 40h16l40 46z" fill="#3D8DDB" stroke="#241D15" stroke-width="3.5" stroke-linejoin="round"/>
+  <path d="M78 116l-16 44h15l34-40z" fill="#3D8DDB" stroke="#241D15" stroke-width="3.5" stroke-linejoin="round"/>
+  <path d="M150 84l14-30h12l-4 32z" fill="#E85D4A" stroke="#241D15" stroke-width="3.5" stroke-linejoin="round"/>
+  <circle cx="60" cy="106" r="5" fill="#8ED0FF" stroke="#241D15" stroke-width="2"/>
+  <circle cx="80" cy="104" r="5" fill="#8ED0FF" stroke="#241D15" stroke-width="2"/>
+  <circle cx="100" cy="102" r="5" fill="#8ED0FF" stroke="#241D15" stroke-width="2"/>
+  <circle cx="170" cy="102" r="4" fill="#241D15"/>
+</svg>`,
+
+pad:`<svg viewBox="0 0 200 200">
+  <rect x="38" y="30" width="124" height="146" rx="8" fill="#FDFAF4" stroke="#241D15" stroke-width="4"/>
+  <rect x="38" y="30" width="124" height="22" rx="8" fill="#F4A340" stroke="#241D15" stroke-width="4"/>
+  <g stroke="#3D8DDB" stroke-width="4" stroke-linecap="round">
+    <path d="M56 76h88M56 100h88M56 124h88M56 148h60"/>
+  </g>
+  <g fill="#241D15">
+    <circle cx="62" cy="41" r="4"/><circle cx="86" cy="41" r="4"/>
+    <circle cx="110" cy="41" r="4"/><circle cx="134" cy="41" r="4"/>
+  </g>
+</svg>`,
+
+gem:`<svg viewBox="0 0 200 200">
+  <path d="M60 50h80l34 40-74 82-74-82z" fill="#12A99A" stroke="#241D15" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M60 50l-34 40h148L140 50z" fill="#5fd8cb" stroke="#241D15" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M26 90h148L100 172z" fill="#12A99A" stroke="#241D15" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M60 50l40 40 40-40M100 90v82" stroke="#241D15" stroke-width="3.5" fill="none"/>
+  <path d="M74 62l-8 20" stroke="#FDFAF4" stroke-width="5" stroke-linecap="round" opacity=".8"/>
+</svg>`,
+
+tag:`<svg viewBox="0 0 200 200">
+  <path d="M104 26h62v62L86 168 24 106z" fill="#F4A340" stroke="#241D15" stroke-width="4" stroke-linejoin="round"/>
+  <circle cx="140" cy="52" r="12" fill="#FDFAF4" stroke="#241D15" stroke-width="4"/>
+  <path d="M148 34c14-14 32-8 32 6s-16 18-24 12" stroke="#241D15" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M56 96l34 34" stroke="#FDFAF4" stroke-width="6" stroke-linecap="round" opacity=".85"/>
+</svg>`,
+
+den:`<svg viewBox="0 0 200 200">
+  <path d="M10 170q10-96 90-96t90 96z" fill="#8B5E3C"/>
+  <path d="M10 170q10-96 90-96t90 96z" fill="none" stroke="#241D15" stroke-width="4"/>
+  <path d="M52 172q4-58 48-58t48 58z" fill="#241D15"/>
+  <g>
+    <ellipse cx="100" cy="146" rx="26" ry="22" fill="#F4A340"/>
+    <circle cx="90" cy="142" r="4.5" fill="#241D15"/><circle cx="110" cy="142" r="4.5" fill="#241D15"/>
+    <path d="M100 152l-5 5h10z" fill="#241D15"/>
+    <path d="M78 128l-6-14 16 8zM122 128l6-14-16 8z" fill="#F4A340" stroke="#241D15" stroke-width="2.5"/>
+  </g>
+  <path d="M28 96q14-10 28-2M144 94q14-8 28 2" stroke="#2FAE7C" stroke-width="6" fill="none" stroke-linecap="round"/>
+</svg>`,
+
+sad:`<svg viewBox="0 0 200 200">
+  <circle cx="100" cy="100" r="72" fill="#FFC93C" stroke="#241D15" stroke-width="4"/>
+  <path d="M28 84a72 72 0 0 1 144 0z" fill="#8B5E3C"/>
+  <path d="M28 84a72 72 0 0 1 144 0" fill="none" stroke="#241D15" stroke-width="4"/>
+  <ellipse cx="74" cy="104" rx="8" ry="10" fill="#241D15"/>
+  <ellipse cx="126" cy="104" rx="8" ry="10" fill="#241D15"/>
+  <path d="M58 88q16-10 30 0M112 88q14-10 30 0" stroke="#241D15" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M76 146q24-22 48 0" stroke="#241D15" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M70 116c5 7 8 12 8 16a8 8 0 0 1-16 0c0-4 3-9 8-16z" fill="#8ED0FF" stroke="#3D8DDB" stroke-width="2"/>
+</svg>`,
+
+pen:`<svg viewBox="0 0 200 200">
+  <path d="M28 172l10-34 104-104 24 24L62 162z" fill="#3D8DDB" stroke="#241D15" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M142 34l24 24 14-14a17 17 0 0 0-24-24z" fill="#E85D4A" stroke="#241D15" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M28 172l10-34 24 24z" fill="#FDFAF4" stroke="#241D15" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M38 138l24 24" stroke="#241D15" stroke-width="3.5"/>
+  <path d="M60 152l82-82" stroke="#FDFAF4" stroke-width="5" opacity=".55" stroke-linecap="round"/>
+</svg>`,
+
+/* ---------- Q2 words ---------- */
+bed:`<svg viewBox="0 0 200 200">
+  <rect x="14" y="60" width="16" height="112" rx="6" fill="#8B5E3C" stroke="#241D15" stroke-width="4"/>
+  <rect x="170" y="96" width="16" height="76" rx="6" fill="#8B5E3C" stroke="#241D15" stroke-width="4"/>
+  <rect x="22" y="112" width="156" height="34" rx="10" fill="#FDFAF4" stroke="#241D15" stroke-width="4"/>
+  <path d="M30 112h100l-4 34H30z" fill="#FF8AC5" stroke="#241D15" stroke-width="4" stroke-linejoin="round"/>
+  <rect x="34" y="82" width="56" height="32" rx="12" fill="#FDFAF4" stroke="#241D15" stroke-width="4"/>
+  <g fill="#E85D4A"><circle cx="52" cy="126" r="4"/><circle cx="76" cy="134" r="4"/><circle cx="100" cy="124" r="4"/></g>
+</svg>`,
+
+cat:`<svg viewBox="0 0 200 200">
+  <path d="M62 88L48 40l38 20zM138 88l14-48-38 20z" fill="#F4A340" stroke="#241D15" stroke-width="4" stroke-linejoin="round"/>
+  <ellipse cx="100" cy="146" rx="44" ry="34" fill="#F4A340" stroke="#241D15" stroke-width="4"/>
+  <circle cx="100" cy="92" r="42" fill="#F4A340" stroke="#241D15" stroke-width="4"/>
+  <ellipse cx="84" cy="86" rx="7" ry="9" fill="#241D15"/><ellipse cx="116" cy="86" rx="7" ry="9" fill="#241D15"/>
+  <path d="M100 104l-7 6h14z" fill="#E85D4A"/>
+  <path d="M100 110v6m-8 4q8 6 16 0" stroke="#241D15" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <g stroke="#241D15" stroke-width="3" stroke-linecap="round">
+    <path d="M56 96H30M56 104l-24 8M144 96h26M144 104l24 8"/>
+  </g>
+  <path d="M144 156q28 4 26-26" stroke="#F4A340" stroke-width="12" fill="none" stroke-linecap="round"/>
+  <path d="M144 156q28 4 26-26" stroke="#241D15" stroke-width="3" fill="none" stroke-linecap="round" opacity=".35"/>
+</svg>`,
+
+cap:`<svg viewBox="0 0 200 200">
+  <path d="M26 128q0-76 74-76t74 76z" fill="#E85D4A" stroke="#241D15" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M26 128h148q26 0 26 20H26z" fill="#c94a38" stroke="#241D15" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M100 52v76" stroke="#241D15" stroke-width="3" opacity=".5"/>
+  <path d="M62 66q38-22 76 0" stroke="#241D15" stroke-width="3" fill="none" opacity=".45"/>
+  <circle cx="100" cy="56" r="7" fill="#FFC93C" stroke="#241D15" stroke-width="3"/>
+</svg>`,
+
+van:`<svg viewBox="0 0 200 200">
+  <path d="M12 130V66h100v64zM112 130V86h34l30 30v14z" fill="#3D8DDB" stroke="#241D15" stroke-width="4" stroke-linejoin="round"/>
+  <rect x="24" y="76" width="34" height="26" rx="4" fill="#8ED0FF" stroke="#241D15" stroke-width="3"/>
+  <rect x="68" y="76" width="34" height="26" rx="4" fill="#8ED0FF" stroke="#241D15" stroke-width="3"/>
+  <path d="M120 94h22l20 20h-42z" fill="#8ED0FF" stroke="#241D15" stroke-width="3" stroke-linejoin="round"/>
+  <rect x="10" y="126" width="166" height="12" rx="6" fill="#241D15"/>
+  <circle cx="54" cy="146" r="20" fill="#241D15"/><circle cx="54" cy="146" r="8" fill="#B8C6D1"/>
+  <circle cx="142" cy="146" r="20" fill="#241D15"/><circle cx="142" cy="146" r="8" fill="#B8C6D1"/>
+</svg>`,
+
+net:`<svg viewBox="0 0 200 200">
+  <path d="M96 118L44 170" stroke="#8B5E3C" stroke-width="14" stroke-linecap="round"/>
+  <path d="M96 118L44 170" stroke="#241D15" stroke-width="3" stroke-linecap="round" opacity=".3"/>
+  <ellipse cx="118" cy="82" rx="62" ry="52" fill="#FDFAF4" stroke="#241D15" stroke-width="5" transform="rotate(-40 118 82)"/>
+  <g stroke="#3D8DDB" stroke-width="3" opacity=".9">
+    <path d="M78 52l70 54M96 34l60 46M62 74l68 52M118 30l40 30M84 106l44 34"/>
+    <path d="M150 42l-56 74M128 30l-58 76M168 62l-52 68M104 26l-46 60M158 96l-30 38"/>
+  </g>
+</svg>`,
+
+jar:`<svg viewBox="0 0 200 200">
+  <rect x="62" y="24" width="76" height="22" rx="8" fill="#B8C6D1" stroke="#241D15" stroke-width="4"/>
+  <path d="M70 46h60v14a44 44 0 0 1 22 38v58a14 14 0 0 1-14 14H62a14 14 0 0 1-14-14V98a44 44 0 0 1 22-38z"
+        fill="#8ED0FF" stroke="#241D15" stroke-width="4" stroke-linejoin="round" opacity=".85"/>
+  <rect x="60" y="112" width="80" height="34" rx="6" fill="#FDFAF4" stroke="#241D15" stroke-width="3.5"/>
+  <path d="M72 126h56M72 136h38" stroke="#3D8DDB" stroke-width="4" stroke-linecap="round"/>
+  <path d="M84 66v20" stroke="#FDFAF4" stroke-width="6" stroke-linecap="round" opacity=".9"/>
+</svg>`,
+
+hen:`<svg viewBox="0 0 200 200">
+  <path d="M118 44q-6-18 6-22 4 12 14 10-4 14-20 12z" fill="#E85D4A" stroke="#241D15" stroke-width="3.5" stroke-linejoin="round"/>
+  <ellipse cx="98" cy="118" rx="58" ry="46" fill="#FDFAF4" stroke="#241D15" stroke-width="4"/>
+  <circle cx="132" cy="70" r="28" fill="#FDFAF4" stroke="#241D15" stroke-width="4"/>
+  <path d="M158 68l20 8-20 8z" fill="#F4A340" stroke="#241D15" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M132 92q-4 12 6 14" stroke="#E85D4A" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <circle cx="140" cy="64" r="4.5" fill="#241D15"/>
+  <path d="M44 104q-22-10-30 6 16 6 22 18" fill="#FDFAF4" stroke="#241D15" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M70 112q22-14 44 0t-6 22q-24 6-38-22z" fill="#F4A340" opacity=".75"/>
+  <g stroke="#F4A340" stroke-width="7" stroke-linecap="round"><path d="M84 162v14M112 162v14"/></g>
+  <g stroke="#F4A340" stroke-width="5" stroke-linecap="round">
+    <path d="M84 176h-12M84 176h12M112 176h-12M112 176h12"/>
+  </g>
+</svg>`
+};
+
+/* the two worksheet exercises, as data */
+const Q1_WORDS = [
+  {w:'men', pic:'men', miss:1, opts:['a','e']},
+  {w:'map', pic:'map', miss:1, opts:['a','e']},
+  {w:'jet', pic:'jet', miss:1, opts:['a','e']},
+  {w:'pad', pic:'pad', miss:1, opts:['a','e']},
+  {w:'gem', pic:'gem', miss:1, opts:['a','e']},
+  {w:'tag', pic:'tag', miss:1, opts:['a','e']},
+  {w:'den', pic:'den', miss:1, opts:['a','e']},
+  {w:'sad', pic:'sad', miss:1, opts:['a','e']},
+  {w:'pen', pic:'pen', miss:1, opts:['a','e']}
+];
+const Q2_WORDS = [
+  {w:'bed',pic:'bed'},{w:'cat',pic:'cat'},{w:'cap',pic:'cap'},{w:'van',pic:'van'},
+  {w:'net',pic:'net'},{w:'jar',pic:'jar'},{w:'pad',pic:'pad'},{w:'hen',pic:'hen'}
+];
+
+</script>
+<script>
+/* =====================================================================
+   THE EIGHT GAMES.
+   Four for Q1 (choose a or e) and four for Q2 (spell the picture).
+   Shared rules, taken from the rest of Yuvaan's games:
+     - nothing can be lost.  A wrong tap wobbles and says the word again.
+     - the word is always spoken, so a pre-reader is never guessing blind.
+     - never-quit: the try counter goes UP and gets celebrated.
+     - no sentences to read anywhere in the play area.
+   ===================================================================== */
+const $=id=>document.getElementById(id);
+const shuffle=a=>a.slice().sort(()=>Math.random()-0.5);
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+
+/* ---------------- voice ---------------- */
+let BV=null;
+function loadV(){
+  if(!window.speechSynthesis) return;
+  const v=speechSynthesis.getVoices().filter(x=>/^en/i.test(x.lang));
+  if(!v.length) return;
+  const sc=x=>(/premium|enhanced|neural|natural/i.test(x.name)?10:0)
+    +(/google (uk|us) english/i.test(x.name)?5:0)
+    +(/ava|zoe|samantha|allison/i.test(x.name)?4:0)
+    -(/albert|bad|bells|boing|bubbles|jester|organ|superstar|trinoids|whisper|wobble|zarvox|fred|ralph/i.test(x.name)?20:0);
+  BV=v.slice().sort((a,b)=>sc(b)-sc(a))[0];
+}
+if(window.speechSynthesis){ speechSynthesis.onvoiceschanged=loadV; loadV(); }
+function say(text,rate){
+  if(!window.speechSynthesis) return;
+  try{
+    const u=new SpeechSynthesisUtterance(text);
+    u.rate=rate||0.82; u.pitch=1.05;
+    if(BV){u.voice=BV;u.lang=BV.lang;}
+    speechSynthesis.cancel(); speechSynthesis.speak(u);
+  }catch(e){}
+}
+/* sound out the letters, then the whole word — the way it is taught */
+function sound(word){
+  say(word.split('').join(', ')+' ... '+word, 0.72);
+}
+
+/* ---------------- little noises ---------------- */
+const AU={ctx:null};
+function beep(f,type,dur,vol){
+  try{
+    if(!AU.ctx){const C=window.AudioContext||window.webkitAudioContext; if(!C)return; AU.ctx=new C();}
+    const t=AU.ctx.currentTime,o=AU.ctx.createOscillator(),g=AU.ctx.createGain();
+    o.type=type||'sine'; o.frequency.setValueAtTime(f,t);
+    g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(vol||0.13,t+0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+(dur||0.18));
+    o.connect(g); g.connect(AU.ctx.destination); o.start(t); o.stop(t+(dur||0.18)+0.02);
+  }catch(e){}
+}
+const sYes =()=>{[660,880,1180].forEach((f,i)=>setTimeout(()=>beep(f,'square',0.13,0.1),i*80));};
+const sNo  =()=>{beep(250,'sine',0.16,0.09); setTimeout(()=>beep(200,'sine',0.2,0.08),110);};
+const sTap =()=>beep(560,'square',0.06,0.07);
+const sWin =()=>{[523,659,784,1047,1319].forEach((f,i)=>setTimeout(()=>beep(f,'square',0.2,0.11),i*110));};
+
+/* ---------------- effects ---------------- */
+function popAt(el,txt){
+  const r=el.getBoundingClientRect();
+  const d=document.createElement('div'); d.className='pop'; d.textContent=txt;
+  d.style.left=(r.left+r.width/2-24)+'px'; d.style.top=(r.top)+'px';
+  $('gFx').appendChild(d); setTimeout(()=>d.remove(),1200);
+}
+function confetti(n){
+  const box=$('gFx'), cols=['#E85D4A','#3D8DDB','#FFC93C','#2FAE7C','#FF8AC5','#7B47C9'];
+  for(let i=0;i<n;i++){
+    const c=document.createElement('div'); c.className='conf';
+    c.style.left=(Math.random()*100)+'vw';
+    c.style.background=cols[i%cols.length];
+    c.style.animationDuration=(1.3+Math.random()*1.1)+'s';
+    c.style.animationDelay=(Math.random()*0.5)+'s';
+    box.appendChild(c); setTimeout(()=>c.remove(),3200);
+  }
+}
+function wobble(el){
+  el.animate([{transform:'translateX(0)'},{transform:'translateX(-9px)'},
+    {transform:'translateX(9px)'},{transform:'translateX(0)'}],{duration:320});
+}
+function bounce(el){
+  el.animate([{transform:'scale(1)'},{transform:'scale(1.22)'},{transform:'scale(1)'}],{duration:340});
+}
+
+/* ---------------- shared game frame ---------------- */
+const G={def:null,i:0,right:0,tries:0,list:[],onTap:null};
+function openGame(def){
+  G.def=def; G.i=0; G.right=0; G.tries=0;
+  G.list=def.build();
+  $('game').classList.add('on');
+  $('done').classList.remove('on');
+  document.body.style.overflow='hidden';
+  try{ if(!AU.ctx){const C=window.AudioContext||window.webkitAudioContext; if(C) AU.ctx=new C();} }catch(e){}
+  step();
+}
+function closeGame(){
+  $('game').classList.remove('on'); $('done').classList.remove('on');
+  document.body.style.overflow='';
+  if(window.speechSynthesis) speechSynthesis.cancel();
+  $('gBody').innerHTML='';
+}
+function hud(){
+  $('gProgFill').style.width=Math.round(G.i/G.list.length*100)+'%';
+  let s=''; const earned=Math.min(3,Math.floor(G.right/Math.max(1,Math.ceil(G.list.length/3))));
+  for(let k=0;k<3;k++) s+= k<earned?'⭐':'☆';
+  $('gStars').textContent=s;
+}
+function step(){
+  hud();
+  if(G.i>=G.list.length){ finish(); return; }
+  $('gBody').innerHTML='';
+  G.def.render(G.list[G.i], $('gBody'));
+}
+function correct(word,el){
+  G.right++; sYes(); if(el){ bounce(el); popAt(el,pick(['⭐','🎉','✨','👏'])); }
+  confetti(10);
+  say(word,0.85);
+  setTimeout(()=>{ G.i++; step(); }, 950);
+}
+function wrong(word,el){
+  G.tries++; sNo(); if(el) wobble(el);
+  /* never a loss: it says the word again and lets him try once more */
+  setTimeout(()=>sound(word),260);
+}
+function finish(){
+  sWin(); confetti(60);
+  $('gProgFill').style.width='100%';
+  $('doneMsg').textContent='⭐ '.repeat(3).trim();
+  $('doneSub').textContent = G.tries===0
+    ? 'Every single one first try!'
+    : 'Tries taken: '+G.tries+' — keep going!';
+  $('done').classList.add('on');
+  say('Well done Yuvaan!',0.85);
+}
+$('gBack').onclick=closeGame;
+$('doneBtn').onclick=()=>{ $('done').classList.remove('on'); openGame(G.def); };
+$('gSay').onclick=()=>{ const it=G.list[G.i]; if(it) sound(it.w); };
+
+/* helper: build a picture tile */
+function picBox(name,size){
+  const d=document.createElement('div');
+  d.style.cssText=`width:${size}px;height:${size}px;max-width:46vw;max-height:32vh;
+    background:#fff;border:5px solid #241D15;border-radius:22px;padding:6px;
+    display:flex;align-items:center;justify-content:center;box-shadow:0 6px 0 rgba(36,29,21,.18)`;
+  d.innerHTML=PICS[name];
+  const s=d.querySelector('svg'); if(s){ s.style.width='100%'; s.style.height='100%'; }
+  return d;
+}
+function letterBtn(ch,big){
+  const b=document.createElement('button');
+  b.textContent=ch;
+  b.style.cssText=`font:inherit;font-weight:bold;font-size:${big?54:38}px;
+    width:${big?96:70}px;height:${big?96:70}px;border-radius:20px;border:5px solid #fff;
+    background:#3D8DDB;color:#fff;cursor:pointer;box-shadow:0 6px 0 rgba(36,29,21,.25);
+    display:flex;align-items:center;justify-content:center;flex:0 0 auto`;
+  b.onpointerdown=()=>{ sTap(); b.style.transform='scale(.93)'; };
+  b.onpointerup=b.onpointerleave=()=>{ b.style.transform=''; };
+  return b;
+}
+function slotBox(ch,filled){
+  const d=document.createElement('div');
+  d.textContent=ch||'';
+  d.style.cssText=`font-size:46px;font-weight:bold;width:66px;height:80px;border-radius:14px;
+    display:flex;align-items:center;justify-content:center;flex:0 0 auto;
+    background:${filled?'#FFC93C':'#fff'};border:5px solid #241D15;
+    border-bottom-width:${filled?5:10}px`;
+  return d;
+}
+function row(gap){
+  const d=document.createElement('div');
+  d.style.cssText=`display:flex;align-items:center;justify-content:center;gap:${gap||10}px;flex-wrap:wrap`;
+  return d;
+}
+
+/* =====================================================================
+   Q1 GAMES — choose a or e
+   ===================================================================== */
+
+/* A1: two big buttons under the picture */
+const A1={
+  id:'A1', name:'Tap the letter', tag:'Simplest — one picture, two buttons',
+  desc:'The picture and the word with a hole in it. Two big buttons: <b>a</b> and <b>e</b>. '+
+       'Tap one and the letter drops into the hole and the word is read out.',
+  teach:'Best first game. Only two choices, so he is never lost — and 50/50 guessing '+
+        'gets corrected immediately by hearing the real word.',
+  build:()=>shuffle(Q1_WORDS),
+  render(item,root){
+    root.appendChild(picBox(item.pic,200));
+    const wr=row(8);
+    const chars=item.w.split('');
+    const slots=chars.map((c,i)=>slotBox(i===item.miss?'':c.toUpperCase(), i!==item.miss));
+    slots.forEach(s=>wr.appendChild(s));
+    root.appendChild(wr);
+    const br=row(22);
+    shuffle(item.opts).forEach(o=>{
+      const b=letterBtn(o.toUpperCase(),true);
+      b.onclick=()=>{
+        if(o===item.w[item.miss]){
+          slots[item.miss].textContent=o.toUpperCase();
+          slots[item.miss].style.background='#FFC93C';
+          slots[item.miss].style.borderBottomWidth='5px';
+          correct(item.w,b);
+        } else wrong(item.w,b);
+      };
+      br.appendChild(b);
+    });
+    root.appendChild(br);
+    setTimeout(()=>sound(item.w),300);
+  }
+};
+
+/* A2: the letter has to be dragged into the hole */
+const A2={
+  id:'A2', name:'Drag the letter in', tag:'Same idea, but he must place it',
+  desc:'The <b>a</b> and <b>e</b> tiles sit at the bottom. He drags the right one up into '+
+       'the gap in the word. Wrong letter springs back.',
+  teach:'Dragging makes him commit to a choice with his hand, not just a tap — it slows '+
+        'him down and stops random tapping.',
+  build:()=>shuffle(Q1_WORDS),
+  render(item,root){
+    root.appendChild(picBox(item.pic,168));
+    const wr=row(8);
+    const chars=item.w.split('');
+    const slots=chars.map((c,i)=>slotBox(i===item.miss?'':c.toUpperCase(), i!==item.miss));
+    slots[item.miss].style.borderStyle='dashed';
+    slots.forEach(s=>wr.appendChild(s));
+    root.appendChild(wr);
+    const br=row(26);
+    shuffle(item.opts).forEach(o=>{
+      const b=letterBtn(o.toUpperCase(),true);
+      b.draggable=true;
+      b.style.cursor='grab';
+      let drag=null;
+      b.onpointerdown=e=>{
+        sTap();
+        drag=b.cloneNode(true);
+        drag.style.position='fixed'; drag.style.zIndex='130'; drag.style.pointerEvents='none';
+        drag.style.opacity='.92';
+        document.body.appendChild(drag);
+        const move=ev=>{ drag.style.left=(ev.clientX-48)+'px'; drag.style.top=(ev.clientY-48)+'px'; };
+        move(e);
+        const up=ev=>{
+          window.removeEventListener('pointermove',move);
+          window.removeEventListener('pointerup',up);
+          const r=slots[item.miss].getBoundingClientRect();
+          const inSlot=ev.clientX>r.left-40&&ev.clientX<r.right+40&&
+                       ev.clientY>r.top-40&&ev.clientY<r.bottom+40;
+          drag.remove(); drag=null;
+          if(inSlot && o===item.w[item.miss]){
+            slots[item.miss].textContent=o.toUpperCase();
+            slots[item.miss].style.background='#FFC93C';
+            slots[item.miss].style.borderStyle='solid';
+            slots[item.miss].style.borderBottomWidth='5px';
+            correct(item.w,slots[item.miss]);
+          } else if(inSlot){ wrong(item.w,slots[item.miss]); }
+        };
+        window.addEventListener('pointermove',move);
+        window.addEventListener('pointerup',up);
+      };
+      br.appendChild(b);
+    });
+    root.appendChild(br);
+    setTimeout(()=>sound(item.w),300);
+  }
+};
+
+/* A3: sort every picture into the A basket or the E basket */
+const A3={
+  id:'A3', name:'A basket, E basket', tag:'Sorting — sees the pattern across words',
+  desc:'One picture at a time in the middle, and two baskets: <b>A</b> and <b>E</b>. '+
+       'He drops the picture into the basket for the sound in the middle of that word.',
+  teach:'This is the one that builds the actual skill — hearing the vowel SOUND rather '+
+        'than memorising each word. The two baskets fill up so he sees the sets forming.',
+  build:()=>shuffle(Q1_WORDS),
+  render(item,root){
+    const v=item.w[item.miss];
+    const wrap=row(18);
+    const mk=(letter,col)=>{
+      const b=document.createElement('div');
+      b.style.cssText=`width:118px;height:132px;border-radius:20px;border:6px solid #241D15;
+        background:${col};display:flex;flex-direction:column;align-items:center;
+        justify-content:center;font-size:52px;font-weight:bold;color:#fff;cursor:pointer;
+        box-shadow:0 6px 0 rgba(36,29,21,.22)`;
+      b.textContent=letter.toUpperCase();
+      const cnt=document.createElement('div');
+      cnt.style.cssText='font-size:16px;color:#fff;opacity:.85';
+      cnt.textContent=(A3.count&&A3.count[letter]?A3.count[letter]:0)+' ✓';
+      b.appendChild(cnt);
+      b.onclick=()=>{
+        if(letter===v){
+          A3.count=A3.count||{a:0,e:0}; A3.count[letter]++;
+          correct(item.w,b);
+        } else wrong(item.w,b);
+      };
+      return b;
+    };
+    wrap.appendChild(mk('a','#E85D4A'));
+    const mid=document.createElement('div');
+    mid.style.cssText='display:flex;flex-direction:column;align-items:center;gap:8px';
+    mid.appendChild(picBox(item.pic,148));
+    const lab=document.createElement('div');
+    lab.style.cssText='font-size:34px;font-weight:bold;letter-spacing:5px';
+    lab.textContent=item.w.split('').map((c,i)=>i===item.miss?'_':c.toUpperCase()).join('');
+    mid.appendChild(lab);
+    wrap.appendChild(mid);
+    wrap.appendChild(mk('e','#12A99A'));
+    root.appendChild(wrap);
+    setTimeout(()=>sound(item.w),300);
+  }
+};
+A3.count={a:0,e:0};
+
+/* A4: listen first, picture only revealed after he chooses */
+const A4={
+  id:'A4', name:'Listen then choose', tag:'Ears first — the picture comes after',
+  desc:'The word is spoken with no picture showing. He picks <b>a</b> or <b>e</b> from the '+
+       'sound alone, and only then does the picture appear to confirm it.',
+  teach:'Hardest of the four and the best test of whether he really hears the difference '+
+        'between "pad" and "ped". Save it for when the others are easy.',
+  build:()=>shuffle(Q1_WORDS),
+  render(item,root){
+    const q=document.createElement('div');
+    q.style.cssText=`width:190px;height:190px;max-width:46vw;background:#7B47C9;color:#fff;
+      border:6px solid #fff;border-radius:26px;display:flex;align-items:center;
+      justify-content:center;font-size:76px;cursor:pointer;box-shadow:0 7px 0 rgba(36,29,21,.25)`;
+    q.textContent='🔊';
+    q.onclick=()=>sound(item.w);
+    root.appendChild(q);
+    const wr=row(8);
+    const slots=item.w.split('').map((c,i)=>slotBox(i===item.miss?'':c.toUpperCase(), i!==item.miss));
+    slots.forEach(s=>wr.appendChild(s));
+    root.appendChild(wr);
+    const br=row(22);
+    shuffle(item.opts).forEach(o=>{
+      const b=letterBtn(o.toUpperCase(),true);
+      b.onclick=()=>{
+        if(o===item.w[item.miss]){
+          slots[item.miss].textContent=o.toUpperCase();
+          slots[item.miss].style.background='#FFC93C';
+          q.innerHTML=PICS[item.pic];
+          q.style.background='#fff'; q.style.padding='8px';
+          const s=q.querySelector('svg'); if(s){s.style.width='100%';s.style.height='100%';}
+          correct(item.w,b);
+        } else wrong(item.w,b);
+      };
+      br.appendChild(b);
+    });
+    root.appendChild(br);
+    setTimeout(()=>sound(item.w),450);
+  }
+};
+
+/* =====================================================================
+   Q2 GAMES — look at the picture, build the word
+   ===================================================================== */
+
+/* B1: tap the letters in order */
+const B1={
+  id:'B1', name:'Tap the letters in order', tag:'Build the word left to right',
+  desc:'Picture at the top, three empty boxes under it, and jumbled letters below. '+
+       'He taps them in the right order. A wrong letter just wobbles and stays put.',
+  teach:'Closest thing to actually writing the word, without needing a pencil or a '+
+        'keyboard. Order matters, so he has to sound the word out as he goes.',
+  build:()=>shuffle(Q2_WORDS),
+  render(item,root){
+    root.appendChild(picBox(item.pic,180));
+    const chars=item.w.split('');
+    const wr=row(8);
+    const slots=chars.map(()=>slotBox('',false));
+    slots.forEach(s=>wr.appendChild(s));
+    root.appendChild(wr);
+    let at=0;
+    const pool=row(12);
+    const extra=['s','t','m','n','p','b'].filter(c=>!chars.includes(c));
+    const letters=shuffle(chars.concat(shuffle(extra).slice(0,2)));
+    letters.forEach(ch=>{
+      const b=letterBtn(ch.toUpperCase());
+      b.onclick=()=>{
+        if(ch===chars[at]){
+          slots[at].textContent=ch.toUpperCase();
+          slots[at].style.background='#FFC93C'; slots[at].style.borderBottomWidth='5px';
+          bounce(slots[at]); sTap(); at++;
+          b.style.visibility='hidden';
+          if(at>=chars.length) correct(item.w,wr);
+        } else wrong(item.w,b);
+      };
+      pool.appendChild(b);
+    });
+    root.appendChild(pool);
+    setTimeout(()=>sound(item.w),300);
+  }
+};
+
+/* B2: pick the whole word out of three */
+const B2={
+  id:'B2', name:'Which word is it?', tag:'Reading, not spelling',
+  desc:'The picture, and three whole words to choose from — the right one and two that '+
+       'look close, like <b>cat</b> / <b>cap</b> / <b>cup</b>.',
+  teach:'Trains him to read the WHOLE word and notice the last letter, which is exactly '+
+        'where cat/cap confusion lives. Easier than spelling, good for a tired evening.',
+  build:()=>shuffle(Q2_WORDS),
+  render(item,root){
+    root.appendChild(picBox(item.pic,180));
+    const all=Q2_WORDS.map(x=>x.w).concat(['cup','bad','hat','pin','job','ten']);
+    const near=all.filter(x=>x!==item.w &&
+      (x[0]===item.w[0]||x[2]===item.w[2]||x[1]===item.w[1]));
+    const opts=shuffle([item.w].concat(shuffle(near).slice(0,2)));
+    const wr=row(14);
+    opts.forEach(o=>{
+      const b=document.createElement('button');
+      b.textContent=o.toUpperCase();
+      b.style.cssText=`font:inherit;font-weight:bold;font-size:34px;letter-spacing:3px;
+        padding:16px 24px;border-radius:18px;border:5px solid #fff;background:#12A99A;
+        color:#fff;cursor:pointer;box-shadow:0 6px 0 rgba(36,29,21,.25)`;
+      b.onclick=()=>{ if(o===item.w) correct(item.w,b); else wrong(item.w,b); };
+      wr.appendChild(b);
+    });
+    root.appendChild(wr);
+    setTimeout(()=>sound(item.w),300);
+  }
+};
+
+/* B3: only the middle letter is missing */
+const B3={
+  id:'B3', name:'Fill the missing letter', tag:'Bridges Q1 and Q2',
+  desc:'The word is already there except one letter, which changes position each time — '+
+       'sometimes the first, sometimes the middle, sometimes the last.',
+  teach:'A gentler step than spelling the whole word, but harder than a/e because now '+
+        'ANY letter can be missing. Good middle rung between the two exercises.',
+  build:()=>shuffle(Q2_WORDS).map(x=>({...x,miss:Math.floor(Math.random()*3)})),
+  render(item,root){
+    root.appendChild(picBox(item.pic,180));
+    const chars=item.w.split('');
+    const wr=row(8);
+    const slots=chars.map((c,i)=>slotBox(i===item.miss?'':c.toUpperCase(), i!==item.miss));
+    slots[item.miss].style.borderStyle='dashed';
+    slots.forEach(s=>wr.appendChild(s));
+    root.appendChild(wr);
+    const right=chars[item.miss];
+    const others=shuffle('abcdefhjmnprstv'.split('').filter(c=>c!==right)).slice(0,3);
+    const pool=row(12);
+    shuffle(others.concat([right])).forEach(ch=>{
+      const b=letterBtn(ch.toUpperCase());
+      b.onclick=()=>{
+        if(ch===right){
+          slots[item.miss].textContent=ch.toUpperCase();
+          slots[item.miss].style.background='#FFC93C';
+          slots[item.miss].style.borderStyle='solid';
+          slots[item.miss].style.borderBottomWidth='5px';
+          correct(item.w,b);
+        } else wrong(item.w,b);
+      };
+      pool.appendChild(b);
+    });
+    root.appendChild(pool);
+    setTimeout(()=>sound(item.w),300);
+  }
+};
+
+/* B4: match four pictures to four words */
+const B4={
+  id:'B4', name:'Match the pairs', tag:'Four pictures, four words',
+  desc:'Four pictures on one side and four words jumbled on the other. He taps a picture, '+
+       'then the word that goes with it. Matched pairs light up green and stay.',
+  teach:'The only game here that holds several words in his head at once. Also the most '+
+        'game-like, so it is the one he will ask to play again.',
+  build(){
+    const src=shuffle(Q2_WORDS);
+    const rounds=[];
+    for(let i=0;i<src.length;i+=4){
+      const group=src.slice(i,i+4);
+      if(group.length===4) rounds.push({w:group.map(g=>g.w).join(' '),group});
+    }
+    return rounds;
+  },
+  render(item,root){
+    const board=document.createElement('div');
+    board.style.cssText='display:flex;gap:16px;align-items:flex-start;justify-content:center;flex-wrap:wrap';
+    const left=document.createElement('div');
+    left.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:10px';
+    const right=document.createElement('div');
+    right.style.cssText='display:flex;flex-direction:column;gap:10px';
+    let selPic=null, matched=0;
+    item.group.forEach(g=>{
+      const p=picBox(g.pic,104); p.style.cursor='pointer'; p.dataset.w=g.w;
+      p.onclick=()=>{
+        if(p.dataset.done) return;
+        sTap(); say(g.w,0.85);
+        if(selPic) selPic.style.outline='';
+        selPic=p; p.style.outline='6px solid #FFC93C';
+      };
+      left.appendChild(p);
+    });
+    shuffle(item.group).forEach(g=>{
+      const b=document.createElement('button');
+      b.textContent=g.w.toUpperCase();
+      b.style.cssText=`font:inherit;font-weight:bold;font-size:26px;letter-spacing:3px;
+        padding:12px 20px;border-radius:16px;border:4px solid #fff;background:#7B47C9;
+        color:#fff;cursor:pointer;box-shadow:0 5px 0 rgba(36,29,21,.22)`;
+      b.onclick=()=>{
+        if(b.dataset.done) return;
+        if(!selPic){ wobble(b); say('Tap a picture first',0.9); return; }
+        if(selPic.dataset.w===g.w){
+          b.style.background='#2FAE7C'; b.dataset.done='1';
+          selPic.style.outline='6px solid #2FAE7C'; selPic.dataset.done='1';
+          selPic=null; matched++; sYes(); confetti(8); popAt(b,'⭐');
+          say(g.w,0.85);
+          if(matched===item.group.length) setTimeout(()=>{ G.right++; G.i++; step(); },800);
+        } else { wrong(g.w,b); }
+      };
+      right.appendChild(b);
+    });
+    board.appendChild(left); board.appendChild(right);
+    root.appendChild(board);
+  }
+};
+
+/* =====================================================================
+   the report cards
+   ===================================================================== */
+const SET1=[A1,A2,A3,A4], SET2=[B1,B2,B3,B4];
+function miniFor(def){
+  if(def.id==='A1'||def.id==='A4')
+    return `${PICS.jet}<div class="chip">J</div><div class="chip hi">?</div><div class="chip">T</div>`;
+  if(def.id==='A2')
+    return `<div class="chip">M</div><div class="chip hi">?</div><div class="chip">P</div>
+            <div style="font-size:26px">⬅️</div><div class="chip">A</div>`;
+  if(def.id==='A3')
+    return `<div class="chip" style="background:#E85D4A;color:#fff;border-color:#E85D4A">A</div>
+            ${PICS.gem}
+            <div class="chip" style="background:#12A99A;color:#fff;border-color:#12A99A">E</div>`;
+  if(def.id==='B1')
+    return `${PICS.cat}<div class="chip">C</div><div class="chip">A</div><div class="chip hi">?</div>`;
+  if(def.id==='B2')
+    return `${PICS.cap}<div class="word" style="font-size:22px">CAP<br><span style="opacity:.4">CAT</span></div>`;
+  if(def.id==='B3')
+    return `${PICS.hen}<div class="chip">H</div><div class="chip hi">?</div><div class="chip">N</div>`;
+  return `${PICS.van}${PICS.net}<div class="word" style="font-size:18px">VAN<br>NET</div>`;
+}
+function card(def,host){
+  const c=document.createElement('div'); c.className='card';
+  c.innerHTML=`<h3>${def.id} — ${def.name}</h3>
+    <p class="tag">${def.tag}</p>
+    <div class="mini">${miniFor(def)}</div>
+    <p class="desc">${def.desc}</p>
+    <div class="teach">👉 ${def.teach}</div>`;
+  const b=document.createElement('button'); b.className='play'; b.textContent='▶️ Play '+def.id;
+  b.onclick=()=>openGame(def);
+  c.appendChild(b);
+  host.appendChild(c);
+}
+SET1.forEach(d=>card(d,$('g1')));
+SET2.forEach(d=>card(d,$('g2')));
+
+</script>
+</body>
+</html>

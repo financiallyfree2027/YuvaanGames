@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>LKG English — 8 games to try</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{font-family:'Comic Sans MS','Chalkboard SE','Marker Felt',sans-serif;
+  background:linear-gradient(180deg,#FDFAF4 0%,#eaf3fb 60%,#dfeaf5 100%);
+  color:#241D15;min-height:100vh;-webkit-user-select:none;user-select:none}
+.wrap{max-width:1150px;margin:0 auto;padding:24px 16px 70px}
+h1{font-size:clamp(24px,5.5vw,42px);text-align:center;margin:6px 0 2px;color:#3D8DDB}
+.sub{text-align:center;color:#8B5E3C;font-size:clamp(14px,3.2vw,19px);margin:0 0 6px}
+.note{text-align:center;color:#6b6055;font-size:clamp(12px,2.8vw,15px);
+  margin:0 auto 22px;max-width:640px;line-height:1.55}
+h2.sec{font-size:clamp(19px,4vw,27px);margin:30px 0 4px;color:#7B47C9;
+  border-bottom:4px solid rgba(123,71,201,.25);padding-bottom:6px}
+h2.sec small{display:block;font-size:15px;color:#6b6055;font-weight:normal;margin-top:4px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(258px,1fr));gap:16px;margin-top:14px}
+.card{background:#fff;border:4px solid #dfe7ef;border-radius:24px;padding:15px 15px 17px;
+  display:flex;flex-direction:column;box-shadow:0 6px 0 rgba(36,29,21,.10)}
+.card h3{margin:0 0 3px;font-size:18px;color:#241D15}
+.tag{color:#12A99A;font-weight:bold;font-size:14px;margin:0 0 10px}
+.mini{background:#f4f8fc;border:3px solid #e2ecf5;border-radius:16px;
+  padding:10px;margin-bottom:11px;height:132px;display:flex;align-items:center;
+  justify-content:center;gap:9px;overflow:hidden}
+.mini svg{width:58px;height:58px}
+.mini .chip{background:#fff;border:3px solid #241D15;border-radius:12px;
+  min-width:40px;height:48px;display:flex;align-items:center;justify-content:center;
+  font-size:26px;font-weight:bold}
+.mini .chip.hi{background:#FFC93C}
+.mini .word{font-size:30px;font-weight:bold;letter-spacing:3px}
+.desc{font-size:14.5px;line-height:1.55;color:#4a4239;margin:0 0 10px}
+.desc b{color:#E85D4A}
+.teach{background:#f6f2ff;border-radius:12px;padding:8px 11px;font-size:13px;
+  color:#5a4a7a;line-height:1.5;margin:0 0 12px}
+.play{margin-top:auto;font:inherit;font-size:20px;font-weight:bold;background:#2FAE7C;
+  color:#fff;border:4px solid #fff;border-radius:18px;padding:12px 8px;cursor:pointer;
+  box-shadow:0 5px 0 rgba(36,29,21,.22)}
+.play:active{transform:scale(.95);box-shadow:0 2px 0 rgba(36,29,21,.22)}
+
+/* ---------- fullscreen game ---------- */
+#game{position:fixed;inset:0;z-index:100;display:none;background:#FDFAF4;
+  overflow:hidden;touch-action:manipulation}
+#game.on{display:flex;flex-direction:column}
+#gTop{flex:0 0 auto;display:flex;align-items:center;gap:10px;padding:10px 12px}
+.tbtn{border:4px solid #fff;border-radius:16px;width:58px;height:58px;font-size:26px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 auto;
+  box-shadow:0 4px 0 rgba(36,29,21,.2)}
+#gBack{background:#7B47C9}
+#gSay{background:#3D8DDB}
+#gProg{flex:1;height:20px;background:#e4ecf4;border-radius:10px;overflow:hidden;
+  border:3px solid #fff;box-shadow:0 3px 0 rgba(36,29,21,.12)}
+#gProg i{display:block;height:100%;width:0;background:#2FAE7C;transition:width .4s}
+#gStars{font-size:26px;letter-spacing:2px;flex:0 0 auto}
+#gBody{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:6px 12px 14px;gap:10px;min-height:0}
+#gFx{position:fixed;inset:0;pointer-events:none;z-index:110}
+.pop{position:absolute;font-size:46px;animation:popUp 1.1s ease-out forwards}
+@keyframes popUp{0%{opacity:0;transform:translateY(0) scale(.5)}
+  25%{opacity:1;transform:translateY(-16px) scale(1.15)}
+  100%{opacity:0;transform:translateY(-90px) scale(1)}}
+.conf{position:absolute;width:12px;height:18px;border-radius:3px;animation:fall 1.9s linear forwards}
+@keyframes fall{0%{transform:translateY(-30px) rotate(0);opacity:1}
+  100%{transform:translateY(105vh) rotate(720deg);opacity:.9}}
+#done{position:fixed;inset:0;z-index:120;background:rgba(253,250,244,.97);display:none;
+  flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:20px}
+#done.on{display:flex}
+#done .big{font-size:clamp(40px,12vw,90px)}
+#done .msg{font-size:clamp(19px,4.6vw,28px);color:#2FAE7C;font-weight:bold;text-align:center}
+#done .sm{font-size:16px;color:#6b6055}
+#done button{font:inherit;font-size:24px;font-weight:bold;background:#3D8DDB;color:#fff;
+  border:5px solid #fff;border-radius:22px;padding:14px 34px;cursor:pointer;
+  box-shadow:0 6px 0 rgba(36,29,21,.25)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>📖 LKG English — practice games</h1>
+  <p class="sub">Eight ways to practise this week's worksheet</p>
+  <p class="note">Every game says the word out loud, so Yuvaan never has to guess in
+  silence. Nothing can be failed — a wrong tap just wobbles and lets him try again,
+  and the word is spoken again to help. Tap <b>▶️ Play</b> to try any of them.</p>
+
+  <h2 class="sec">Q1 — Fill in <i>a</i> or <i>e</i>
+    <small>m_n · m_p · j_t · p_d · g_m · t_g · d_n · s_d · p_n</small></h2>
+  <div class="grid" id="g1"></div>
+
+  <h2 class="sec">Q2 — Look at the picture, write the word
+    <small>bed · cat · cap · van · net · jar · pad · hen</small></h2>
+  <div class="grid" id="g2"></div>
+</div>
+
+<div id="game">
+  <div id="gTop">
+    <div class="tbtn" id="gBack">⬅️</div>
+    <div class="tbtn" id="gSay">🔊</div>
+    <div id="gProg"><i id="gProgFill"></i></div>
+    <div id="gStars"></div>
+  </div>
+  <div id="gBody"></div>
+</div>
+<div id="gFx"></div>
+<div id="done">
+  <div class="big">🎉</div>
+  <div class="msg" id="doneMsg"></div>
+  <div class="sm" id="doneSub"></div>
+  <button id="doneBtn">▶️ Again</button>
+</div>
+</body>
+</html>
