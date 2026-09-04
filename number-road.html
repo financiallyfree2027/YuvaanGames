@@ -14,11 +14,14 @@
     --sans:-apple-system,"Segoe UI","Helvetica Neue",Helvetica,Arial,sans-serif;
   }
   *{box-sizing:border-box;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;}
-  html,body{margin:0;height:100%;background:var(--cream);overflow:hidden;font-family:var(--sans);color:var(--ink);}
-  button{font-family:inherit;cursor:pointer;}
+  html,body{margin:0;height:100%;background:var(--cream);overflow:hidden;overscroll-behavior:none;
+    font-family:var(--sans);color:var(--ink);touch-action:manipulation;}
+  button{font-family:inherit;cursor:pointer;touch-action:manipulation;}
 
-  /* fixed 1000x640 board scaled to fit the window */
-  #board{position:absolute;left:50%;top:50%;width:1000px;height:640px;transform-origin:center center;}
+  /* Fixed 1000x640 board, scaled and positioned from the VISUAL viewport.
+     On Android the address bar makes the layout viewport taller than what is
+     actually on screen, so sizing from innerHeight cuts off the bottom. */
+  #board{position:fixed;left:50%;top:50%;width:1000px;height:640px;transform-origin:center center;}
   .screen{position:absolute;inset:0;display:none;}
   .screen.on{display:block;}
 
@@ -216,9 +219,26 @@ function nextStage(){ for(var i=1;i<=STAGES;i++){ if(!S.stars[i]) return i; } re
 
 /* ================= board scaling ================= */
 var board = document.getElementById('board'), scale = 1;
-function fit(){ scale = Math.min(window.innerWidth/1000, window.innerHeight/640)*0.98;
-  board.style.transform = 'translate(-50%,-50%) scale('+scale+')'; }
-window.addEventListener('resize', fit); fit();
+function fit(){
+  /* visualViewport is what the child can actually see; innerWidth/innerHeight
+     include the strip behind Android Chrome's address bar. */
+  var vv = window.visualViewport;
+  var w  = vv ? vv.width  : window.innerWidth;
+  var h  = vv ? vv.height : window.innerHeight;
+  var ox = vv && vv.offsetLeft ? vv.offsetLeft : 0;
+  var oy = vv && vv.offsetTop  ? vv.offsetTop  : 0;
+  scale = Math.min(w/1000, h/640) * 0.98;
+  board.style.left = (ox + w/2) + 'px';
+  board.style.top  = (oy + h/2) + 'px';
+  board.style.transform = 'translate(-50%,-50%) scale('+scale+')';
+}
+window.addEventListener('resize', fit);
+window.addEventListener('orientationchange', function(){ fit(); setTimeout(fit, 250); setTimeout(fit, 600); });
+if(window.visualViewport){
+  window.visualViewport.addEventListener('resize', fit);
+  window.visualViewport.addEventListener('scroll', fit);
+}
+fit();
 
 /* ================= helpers ================= */
 function rnd(a,b){ return a+Math.floor(Math.random()*(b-a+1)); }
