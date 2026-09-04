@@ -285,6 +285,45 @@
       <div class="desc">Swing, throw web-balls and block — then tangle up Doc Ock! 12 levels</div>
     </div>
 
+    <div class="card" id="cardNumberRoad">
+      <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="gnr" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#FDFAF4"/><stop offset="1" stop-color="#e6f4ec"/></linearGradient></defs>
+        <rect width="200" height="150" fill="url(#gnr)"/>
+        <g font-family="sans-serif" font-weight="bold" font-size="24" text-anchor="middle" fill="#1c2420">
+          <rect x="22" y="16" width="38" height="38" rx="8" fill="#fff" stroke="#bfe3cf" stroke-width="4"/><text x="41" y="43">2</text>
+          <text x="75" y="43" fill="#2a9a68" font-size="26">+</text>
+          <rect x="90" y="16" width="38" height="38" rx="8" fill="#fff" stroke="#bfe3cf" stroke-width="4"/><text x="109" y="43">3</text>
+          <text x="143" y="43" fill="#2a9a68" font-size="26">=</text>
+          <rect x="156" y="16" width="38" height="38" rx="8" fill="#fff" stroke="#e56b62" stroke-width="4"/><text x="175" y="43" fill="#e56b62">5</text>
+        </g>
+        <rect x="14" y="104" width="172" height="14" rx="7" fill="#e6f4ec" stroke="#7cbf9d" stroke-width="3"/>
+        <rect x="14" y="104" width="86" height="14" rx="7" fill="#e56b62"/>
+        <g stroke="#7cbf9d" stroke-width="3" stroke-linecap="round">
+          <line x1="14" y1="98" x2="14" y2="124"/><line x1="48" y1="98" x2="48" y2="124"/><line x1="83" y1="98" x2="83" y2="124"/>
+          <line x1="117" y1="98" x2="117" y2="124"/><line x1="152" y1="98" x2="152" y2="124"/><line x1="186" y1="98" x2="186" y2="124"/>
+        </g>
+        <g font-family="sans-serif" font-weight="bold" font-size="13" text-anchor="middle" fill="#2a9a68">
+          <text x="14" y="140">0</text><text x="48" y="140" fill="#e56b62">1</text><text x="83" y="140" fill="#e56b62">2</text>
+          <text x="117" y="140">3</text><text x="152" y="140">4</text><text x="186" y="140">5</text>
+        </g>
+        <g transform="translate(88 60) scale(.36)">
+          <path d="M34 46 C16 68 14 92 20 104 L80 104 C86 92 84 68 66 46 Z" fill="#2a9a68"/>
+          <rect x="36" y="86" width="14" height="38" rx="7" fill="#e56b62"/><rect x="50" y="86" width="14" height="38" rx="7" fill="#e56b62"/>
+          <rect x="33" y="116" width="19" height="12" rx="6" fill="#1f7d54"/><rect x="48" y="116" width="19" height="12" rx="6" fill="#1f7d54"/>
+          <rect x="31" y="48" width="38" height="44" rx="14" fill="#e56b62"/><rect x="31" y="82" width="38" height="8" rx="4" fill="#1f7d54"/>
+          <text x="50" y="78" text-anchor="middle" font-size="26" font-weight="800" fill="#fff5e6" font-family="Arial,Helvetica,sans-serif">Y</text>
+          <rect x="21" y="52" width="11" height="32" rx="5.5" fill="#e56b62"/><rect x="68" y="52" width="11" height="32" rx="5.5" fill="#e56b62"/>
+          <circle cx="50" cy="28" r="22" fill="#f1c9a5"/><path d="M28 24 C30 6 70 6 72 24 L72 30 L28 30 Z" fill="#2b2b2b"/>
+          <path d="M29 26 L71 26 L71 38 C64 44 36 44 29 38 Z" fill="#2a9a68"/>
+          <ellipse cx="41" cy="32" rx="5.5" ry="4.2" fill="#fff"/><ellipse cx="59" cy="32" rx="5.5" ry="4.2" fill="#fff"/>
+          <circle cx="42" cy="32.5" r="2.2" fill="#1c2420"/><circle cx="60" cy="32.5" r="2.2" fill="#1c2420"/>
+        </g>
+      </svg>
+      <div class="name">Number Road</div>
+      <div class="desc">Add the numbers, then watch Captain Y walk it - 20 stages up to 15</div>
+    </div>
+
     <div class="card" id="cardVowels">
       <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
         <defs><linearGradient id="gv" x1="0" y1="0" x2="0" y2="1">
@@ -472,6 +511,7 @@ document.getElementById('cardSpidey').onclick=()=>{ store.last='menu'; saveStore
 document.getElementById('cardWebBall').onclick=()=>{ store.last='menu'; saveStore(); location.href='spidey-games/game5-webball-bop.html'; };
 document.getElementById('cardVowels').onclick=()=>{ store.last='menu'; saveStore(); location.href='lkg-vowels.html'; };
 document.getElementById('cardLetters').onclick=()=>{ store.last='menu'; saveStore(); location.href='lkg-letters.html'; };
+document.getElementById('cardNumberRoad').onclick=()=>{ store.last='menu'; saveStore(); location.href='number-road.html'; };
 
 /* ================================================================
    PHYSICS GAME
