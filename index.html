@@ -324,6 +324,25 @@
       <div class="desc">Add the numbers, then watch Captain Y walk it - 20 stages up to 15</div>
     </div>
 
+    <div class="card" id="cardCoinCount">
+      <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="gcc" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#FDFAF4"/><stop offset="1" stop-color="#fdf1d8"/></linearGradient></defs>
+        <rect width="200" height="150" fill="url(#gcc)"/>
+        <rect x="16" y="18" width="52" height="44" rx="10" fill="#fff" stroke="#bfe3cf" stroke-width="3.5"/>
+        <g transform="translate(42,40)"><circle cx="0" cy="0" r="13" fill="#f2b134" stroke="#d4901c" stroke-width="1.7"/><circle cx="0" cy="0" r="8.8" fill="none" stroke="#ffd88a" stroke-width="1.4"/><text x="0" y="4.4" text-anchor="middle" font-size="13.3" font-weight="800" fill="#8a5a09" font-family="Arial,Helvetica,sans-serif">₹</text></g>
+        <text x="82" y="48" text-anchor="middle" font-size="26" font-weight="800" fill="#2a9a68" font-family="Arial,Helvetica,sans-serif">+</text>
+        <rect x="96" y="18" width="52" height="44" rx="10" fill="#fff" stroke="#bfe3cf" stroke-width="3.5"/>
+        <g transform="translate(112,40)"><circle cx="0" cy="0" r="11" fill="#f2b134" stroke="#d4901c" stroke-width="1.4"/><circle cx="0" cy="0" r="7.5" fill="none" stroke="#ffd88a" stroke-width="1.2"/><text x="0" y="3.7" text-anchor="middle" font-size="11.2" font-weight="800" fill="#8a5a09" font-family="Arial,Helvetica,sans-serif">₹</text></g><g transform="translate(133,40)"><circle cx="0" cy="0" r="11" fill="#f2b134" stroke="#d4901c" stroke-width="1.4"/><circle cx="0" cy="0" r="7.5" fill="none" stroke="#ffd88a" stroke-width="1.2"/><text x="0" y="3.7" text-anchor="middle" font-size="11.2" font-weight="800" fill="#8a5a09" font-family="Arial,Helvetica,sans-serif">₹</text></g>
+        <text x="162" y="48" text-anchor="middle" font-size="24" font-weight="800" fill="#2a9a68" font-family="Arial,Helvetica,sans-serif">=</text>
+        <text x="184" y="50" text-anchor="middle" font-size="30" font-weight="800" fill="#d4901c" font-family="Arial,Helvetica,sans-serif">3</text>
+        <rect x="20" y="80" width="160" height="52" rx="16" fill="#fdf1d8" stroke="#f0dcae" stroke-width="3"/>
+        <g transform="translate(52,106)"><circle cx="0" cy="0" r="15" fill="#f2b134" stroke="#d4901c" stroke-width="2.0"/><circle cx="0" cy="0" r="10.2" fill="none" stroke="#ffd88a" stroke-width="1.6"/><text x="0" y="5.1" text-anchor="middle" font-size="15.3" font-weight="800" fill="#8a5a09" font-family="Arial,Helvetica,sans-serif">₹</text></g><g transform="translate(100,106)"><circle cx="0" cy="0" r="15" fill="#f2b134" stroke="#d4901c" stroke-width="2.0"/><circle cx="0" cy="0" r="10.2" fill="none" stroke="#ffd88a" stroke-width="1.6"/><text x="0" y="5.1" text-anchor="middle" font-size="15.3" font-weight="800" fill="#8a5a09" font-family="Arial,Helvetica,sans-serif">₹</text></g><g transform="translate(148,106)"><circle cx="0" cy="0" r="15" fill="#f2b134" stroke="#d4901c" stroke-width="2.0"/><circle cx="0" cy="0" r="10.2" fill="none" stroke="#ffd88a" stroke-width="1.6"/><text x="0" y="5.1" text-anchor="middle" font-size="15.3" font-weight="800" fill="#8a5a09" font-family="Arial,Helvetica,sans-serif">₹</text></g>
+      </svg>
+      <div class="name">Coin Count</div>
+      <div class="desc">Count the coins in both purses - 20 stages, always 1 to 5 each</div>
+    </div>
+
     <div class="card" id="cardVowels">
       <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
         <defs><linearGradient id="gv" x1="0" y1="0" x2="0" y2="1">
@@ -512,6 +531,7 @@ document.getElementById('cardWebBall').onclick=()=>{ store.last='menu'; saveStor
 document.getElementById('cardVowels').onclick=()=>{ store.last='menu'; saveStore(); location.href='lkg-vowels.html'; };
 document.getElementById('cardLetters').onclick=()=>{ store.last='menu'; saveStore(); location.href='lkg-letters.html'; };
 document.getElementById('cardNumberRoad').onclick=()=>{ store.last='menu'; saveStore(); location.href='number-road.html'; };
+document.getElementById('cardCoinCount').onclick=()=>{ store.last='menu'; saveStore(); location.href='coin-count.html'; };
 
 /* ================================================================
    PHYSICS GAME
