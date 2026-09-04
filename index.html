@@ -343,6 +343,27 @@
       <div class="desc">Count the coins in both purses - 20 stages, always 1 to 5 each</div>
     </div>
 
+    <div class="card" id="cardNumToCoins">
+      <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="gntc" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#FDFAF4"/><stop offset="1" stop-color="#fdf1d8"/></linearGradient></defs>
+        <rect width="200" height="150" fill="url(#gntc)"/>
+        <!-- the numeral 1, an arrow, then 1 coin: a number turning into coins -->
+        <rect x="14" y="16" width="46" height="46" rx="10" fill="#fff" stroke="#bfe3cf" stroke-width="3.5"/>
+        <text x="37" y="50" text-anchor="middle" font-size="30" font-weight="800" fill="#1c2420" font-family="Arial,Helvetica,sans-serif">2</text>
+        <path d="M68 39h18M81 33l7 6-7 6" stroke="#2a9a68" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <rect x="96" y="16" width="46" height="46" rx="10" fill="#fff" stroke="#f0dcae" stroke-width="3.5"/>
+        <g transform="translate(110,39)"><circle cx="0" cy="0" r="10" fill="#f2b134" stroke="#d4901c" stroke-width="1.3"/><circle cx="0" cy="0" r="6.8" fill="none" stroke="#ffd88a" stroke-width="1.1"/><text x="0" y="3.4" text-anchor="middle" font-size="10.2" font-weight="800" fill="#8a5a09" font-family="Arial,Helvetica,sans-serif">₹</text></g><g transform="translate(129,39)"><circle cx="0" cy="0" r="10" fill="#f2b134" stroke="#d4901c" stroke-width="1.3"/><circle cx="0" cy="0" r="6.8" fill="none" stroke="#ffd88a" stroke-width="1.1"/><text x="0" y="3.4" text-anchor="middle" font-size="10.2" font-weight="800" fill="#8a5a09" font-family="Arial,Helvetica,sans-serif">₹</text></g>
+        <text x="160" y="50" text-anchor="middle" font-size="26" font-weight="800" fill="#2a9a68" font-family="Arial,Helvetica,sans-serif">+</text>
+        <rect x="172" y="16" width="24" height="46" rx="8" fill="#fff" stroke="#bfe3cf" stroke-width="3.5"/>
+        <text x="184" y="50" text-anchor="middle" font-size="26" font-weight="800" fill="#1c2420" font-family="Arial,Helvetica,sans-serif">1</text>
+        <rect x="20" y="80" width="160" height="52" rx="16" fill="#fdf1d8" stroke="#f0dcae" stroke-width="3"/>
+        <g transform="translate(52,106)"><circle cx="0" cy="0" r="15" fill="#f2b134" stroke="#d4901c" stroke-width="2.0"/><circle cx="0" cy="0" r="10.2" fill="none" stroke="#ffd88a" stroke-width="1.6"/><text x="0" y="5.1" text-anchor="middle" font-size="15.3" font-weight="800" fill="#8a5a09" font-family="Arial,Helvetica,sans-serif">₹</text></g><g transform="translate(100,106)"><circle cx="0" cy="0" r="15" fill="#f2b134" stroke="#d4901c" stroke-width="2.0"/><circle cx="0" cy="0" r="10.2" fill="none" stroke="#ffd88a" stroke-width="1.6"/><text x="0" y="5.1" text-anchor="middle" font-size="15.3" font-weight="800" fill="#8a5a09" font-family="Arial,Helvetica,sans-serif">₹</text></g><g transform="translate(148,106)"><circle cx="0" cy="0" r="15" fill="#f2b134" stroke="#d4901c" stroke-width="2.0"/><circle cx="0" cy="0" r="10.2" fill="none" stroke="#ffd88a" stroke-width="1.6"/><text x="0" y="5.1" text-anchor="middle" font-size="15.3" font-weight="800" fill="#8a5a09" font-family="Arial,Helvetica,sans-serif">₹</text></g>
+      </svg>
+      <div class="name">Numbers to Coins</div>
+      <div class="desc">Answer the sum, then each number turns into that many coins</div>
+    </div>
+
     <div class="card" id="cardVowels">
       <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
         <defs><linearGradient id="gv" x1="0" y1="0" x2="0" y2="1">
@@ -532,6 +553,7 @@ document.getElementById('cardVowels').onclick=()=>{ store.last='menu'; saveStore
 document.getElementById('cardLetters').onclick=()=>{ store.last='menu'; saveStore(); location.href='lkg-letters.html'; };
 document.getElementById('cardNumberRoad').onclick=()=>{ store.last='menu'; saveStore(); location.href='number-road.html'; };
 document.getElementById('cardCoinCount').onclick=()=>{ store.last='menu'; saveStore(); location.href='coin-count.html'; };
+document.getElementById('cardNumToCoins').onclick=()=>{ store.last='menu'; saveStore(); location.href='numbers-to-coins.html'; };
 
 /* ================================================================
    PHYSICS GAME
