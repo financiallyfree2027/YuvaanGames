@@ -364,6 +364,35 @@
       <div class="desc">Answer the sum, then each number turns into that many coins</div>
     </div>
 
+    <div class="card" id="cardWhereGrows">
+      <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="gwg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#dceffa"/><stop offset="1" stop-color="#eef7fd"/></linearGradient></defs>
+        <rect width="200" height="150" fill="url(#gwg)"/>
+        <rect y="86" width="200" height="24" fill="#8fcf7e"/>
+        <rect y="86" width="200" height="4" fill="#a8dd96"/>
+        <rect y="110" width="200" height="40" fill="#b98756"/>
+        <rect y="110" width="200" height="4" fill="#a5744a"/>
+        <rect x="158" y="56" width="7" height="32" fill="#8b5e3c"/>
+        <circle cx="161" cy="46" r="21" fill="#4ea03a"/>
+        <circle cx="145" cy="56" r="13" fill="#5cb043"/><circle cx="177" cy="56" r="13" fill="#5cb043"/>
+        <circle cx="24" cy="22" r="11" fill="#ffd452"/>
+        <path d="M152 40q-8-3-9 6t8 12q3 2 5 0 2 2 5 0 9-3 8-12t-9-6q-4-1-4 1-1-2-4-1Z" fill="#d8392f"/>
+        <ellipse cx="44" cy="96" rx="17" ry="12" fill="#ef8b33" stroke="#cf6f21" stroke-width="2"/>
+        <path d="M44 84v24M32 86q-3 10 0 20M56 86q3 10 0 20" stroke="#cf6f21" stroke-width="1.6" fill="none"/>
+        <path d="M44 84v-6" stroke="#4b7a26" stroke-width="3" stroke-linecap="round"/>
+        <ellipse cx="98" cy="97" rx="16" ry="11" fill="#4e9c42" stroke="#37752f" stroke-width="2"/>
+        <path d="M88 88q-3 9 0 18M98 86q-2 11 0 22M108 88q3 9 0 18" stroke="#8fcf7e" stroke-width="2.4" fill="none"/>
+        <path d="M50 106v-8M44 100l6-4M56 100l-6-4" stroke="#3f9c52" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+        <path d="M50 108l-7 20q7 5 14 0Z" fill="#ef8b33" stroke="#cf6f21" stroke-width="2" stroke-linejoin="round"/>
+        <ellipse cx="120" cy="128" rx="17" ry="12" fill="#c69a63" stroke="#8f6635" stroke-width="2"/>
+        <circle cx="113" cy="124" r="2.2" fill="#8f6635"/><circle cx="126" cy="132" r="2.2" fill="#8f6635"/>
+        <path d="M120 116v-6M114 112l6-2M126 112l-6-2" stroke="#3f9c52" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+      </svg>
+      <div class="name">Where Does It Grow?</div>
+      <div class="desc">38 fruits and vegetables &mdash; under the ground, on the ground, or up on a tree</div>
+    </div>
+
     <div class="card" id="cardVowels">
       <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
         <defs><linearGradient id="gv" x1="0" y1="0" x2="0" y2="1">
@@ -554,6 +583,7 @@ document.getElementById('cardLetters').onclick=()=>{ store.last='menu'; saveStor
 document.getElementById('cardNumberRoad').onclick=()=>{ store.last='menu'; saveStore(); location.href='number-road.html'; };
 document.getElementById('cardCoinCount').onclick=()=>{ store.last='menu'; saveStore(); location.href='coin-count.html'; };
 document.getElementById('cardNumToCoins').onclick=()=>{ store.last='menu'; saveStore(); location.href='numbers-to-coins.html'; };
+document.getElementById('cardWhereGrows').onclick=()=>{ store.last='menu'; saveStore(); location.href='where-it-grows.html'; };
 
 /* ================================================================
    PHYSICS GAME
