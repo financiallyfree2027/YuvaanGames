@@ -393,6 +393,23 @@
       <div class="desc">38 fruits and vegetables &mdash; under the ground, on the ground, or up on a tree</div>
     </div>
 
+    <div class="card" id="cardBraveStage">
+      <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="gbs" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#ffd98e"/><stop offset="1" stop-color="#ffb870"/></linearGradient></defs>
+        <rect width="200" height="150" fill="url(#gbs)"/>
+        <rect y="112" width="200" height="38" fill="#c98b4f"/>
+        <rect width="14" height="150" fill="#c1121f"/><rect x="186" width="14" height="150" fill="#c1121f"/>
+        <rect width="200" height="16" fill="#c1121f"/>
+        <path d="M0 16q12 12 25 0q12 12 25 0q12 12 25 0q12 12 25 0q12 12 25 0q12 12 25 0q12 12 25 0q12 12 25 0" fill="#c1121f"/>
+        <rect x="62" y="30" width="76" height="16" rx="5" fill="#6a3d9a" stroke="#ffd23f" stroke-width="2"/>
+        <path d="M92 38l2-4 2 4 4 .5-3 3 1 4-4-2-4 2 1-4-3-3Z" fill="#ffd23f"/><path d="M104 38l2-4 2 4 4 .5-3 3 1 4-4-2-4 2 1-4-3-3Z" fill="#ffd23f"/>
+        <g transform="translate(36,0)"><rect x="-4" y="100" width="3.5" height="20" rx="1.7" fill="#2b2d42"/><rect x="0.5" y="100" width="3.5" height="20" rx="1.7" fill="#2b2d42"/><rect x="-7" y="80" width="14" height="22" rx="6" fill="#e63946"/><circle cx="0" cy="71" r="9" fill="#f1c27d"/><path d="M-9 70q0-10 9-10t9 10q-3-5-9-5t-9 5Z" fill="#3b2314"/></g><g transform="translate(62,0)"><rect x="-4" y="100" width="3.5" height="20" rx="1.7" fill="#2b2d42"/><rect x="0.5" y="100" width="3.5" height="20" rx="1.7" fill="#2b2d42"/><rect x="-7" y="80" width="14" height="22" rx="6" fill="#3fae49"/><circle cx="0" cy="71" r="9" fill="#f1c27d"/><path d="M-9 70q0-10 9-10t9 10q-3-5-9-5t-9 5Z" fill="#3b2314"/></g><g transform="translate(104,0)"><rect x="-4" y="100" width="3.5" height="20" rx="1.7" fill="#2b2d42"/><rect x="0.5" y="100" width="3.5" height="20" rx="1.7" fill="#2b2d42"/><rect x="-7" y="80" width="14" height="22" rx="6" fill="#4361ee"/><circle cx="0" cy="71" r="9" fill="#f1c27d"/><path d="M-9 70q0-10 9-10t9 10q-3-5-9-5t-9 5Z" fill="#3b2314"/></g><g transform="translate(130,0)"><rect x="-4" y="100" width="3.5" height="20" rx="1.7" fill="#2b2d42"/><rect x="0.5" y="100" width="3.5" height="20" rx="1.7" fill="#2b2d42"/><rect x="-7" y="80" width="14" height="22" rx="6" fill="#9b5de5"/><circle cx="0" cy="71" r="9" fill="#f1c27d"/><path d="M-9 70q0-10 9-10t9 10q-3-5-9-5t-9 5Z" fill="#3b2314"/></g><g transform="translate(156,0)"><rect x="-4" y="100" width="3.5" height="20" rx="1.7" fill="#2b2d42"/><rect x="0.5" y="100" width="3.5" height="20" rx="1.7" fill="#2b2d42"/><rect x="-7" y="80" width="14" height="22" rx="6" fill="#f8961e"/><circle cx="0" cy="71" r="9" fill="#f1c27d"/><path d="M-9 70q0-10 9-10t9 10q-3-5-9-5t-9 5Z" fill="#3b2314"/></g>
+      </svg>
+      <div class="name">Brave Stage</div>
+      <div class="desc">Help Red and Green be brave and dance on the stage - 13 choices</div>
+    </div>
+
     <div class="card" id="cardVowels">
       <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
         <defs><linearGradient id="gv" x1="0" y1="0" x2="0" y2="1">
@@ -584,6 +601,7 @@ document.getElementById('cardNumberRoad').onclick=()=>{ store.last='menu'; saveS
 document.getElementById('cardCoinCount').onclick=()=>{ store.last='menu'; saveStore(); location.href='coin-count.html'; };
 document.getElementById('cardNumToCoins').onclick=()=>{ store.last='menu'; saveStore(); location.href='numbers-to-coins.html'; };
 document.getElementById('cardWhereGrows').onclick=()=>{ store.last='menu'; saveStore(); location.href='where-it-grows.html'; };
+document.getElementById('cardBraveStage').onclick=()=>{ store.last='menu'; saveStore(); location.href='brave-stage.html'; };
 
 /* ================================================================
    PHYSICS GAME
